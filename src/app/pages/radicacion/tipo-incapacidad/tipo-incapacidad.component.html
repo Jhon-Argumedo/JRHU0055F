@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <p class="mt-4">Seleccione el tipo de Incapacidad:</p>
+            <div class="row align-items-md-stretch">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3" *ngFor="let ti of tiposIncList">
+                    <a (click)="go('/incapacidades/radicacion/radicar-incapacidad', ti.nombreTipoIncapacidad)" class="nav-item-link">
+                        <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                            <i class="fa-sharp fa-solid fa-viruses d-block fs-2 text-danger me-2"></i>
+                            <strong class="option-tipo">{{ti.nombreTipoIncapacidad}}</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <div>
+                <p class="fs-1">Enfermedad general</p>
+                <p>La incapacidad por enfermedad general, de acuerdo con lo definido por la Circular 11
+                    de 1995 de la Superintendencia Nacional de Salud, es el reconocimiento de la prestación
+                    de tipo económico y pago de la misma que hacen las EPS a sus afiliados cotizantes no
+                    pensionados, por todo el tiempo en que estén inhabilitados física o mentalmente para
+                    desempeñar en forma temporal su profesión u oficio habitual. En ningún caso se le pagará
+                    a un afiliado al sistema simultáneamente incapacidad por enfermedad general, incapacidad
+                    por enfermedad profesional y pensión de invalidez absoluta o por gran invalidez.</p>
+            </div>
+            <hr />
+            <div>
+                <p class="fs-1">Accidente laboral</p>
+                <p>La legislación determina que “un accidente de trabajo es toda lesión corporal que
+                    el trabajador sufra con ocasión o por consecuencia del trabajo que ejecute por cuenta
+                    ajena” (art. 115 LGSS) esta definición sigue siendo válida para contar los accidentes
+                    de trabajo, pero con la aprobación de la ley 20/2007 los trabajadores autónomos
+                    (no trabajan por cuenta ajena) si tienen derecho a las prestaciones por contingencia
+                    profesionales, en el caso de los autónomos económicamente dependientes es obligatoria
+                    la cotización y por tanto la prestación y para el resto de los autónomos esta cotización
+                    es voluntaria.</p>
+            </div>
+            <hr />
+            <div>
+                <p class="fs-1">Enfermedad laboral</p>
+                <p>El artículo 4° de la Ley 1562 de 2012 define como enfermedad laboral aquella que es
+                    contraída como resultado de la exposición a factores de riesgo inherentes a la actividad
+                    laboral o del medio en el que el trabajador se ha visto obligado a trabajar. El Gobierno
+                    Nacional es quien determina de forma periódica las enfermedades que se consideran como
+                    laborales. En los casos en que una enfermedad no figure en la tabla de enfermedades
+                    laborales, pero se demuestre la relación de causalidad con los factores de riesgo
+                    ocupacionales será reconocida como enfermedad laboral, conforme lo establecido en las
+                    normas legales vigentes.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-10 pt-3">
+            <nav class="mt-2"
+                style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+                aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" routerLinkActive="fw-bold">
+                        <a routerLink="dashboard" class="text-decoration-none">Inicio</a>
+                    </li>
+                    <li class="breadcrumb-item" routerLinkActive="fw-bold">
+                        <a routerLink="/incapacidades/radicacion/tipo-incapacidad" class="text-decoration-none">Radicar
+                            incapacidad</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ tipoInc }}</li>
+                </ol>
+            </nav>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="showAlertValidation">
+                <strong>Por favor verifica que los campos esten diligenciados correctamente.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="p-sm-4 mb-4 bg-light rounded-5 border">
+                <div class="container-fluid p-4">
+                    <h1 class="fw-bold text-center">Radicar Incapacidad</h1>
+                    <h3 class="fw-light text-center text-muted">{{ tipoInc }}</h3>
+                    <form class="row g-4 needs-validation" [formGroup]="form" (ngSubmit)="onSubmit()">
+                        
+                        <div class="col-12">
+                            <label for="contrato" class="form-label">
+                                Contrato<span class="fw-bold text-danger me-1">*</span>
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="Seleccione el contrato correspondiente a la incapacidad a radicar."></i>
+                            </label>
+                            <select class="form-select" id="contrato" [(ngModel)]="incapacidad.empNd"
+                                formControlName="contrato" [ngClass]="{'is-invalid': f['contrato'].errors && submitted}">
+                                <option value="">Choose...</option>
+                                <option>...</option>
+                            </select>
+
+                            <div *ngIf="f['contrato'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['contrato'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="empresaPrincipal" class="form-label">Empresa principal</label>
+                            <input [value]="incapacidad.tdcTdEpl" type="text" class="form-control"
+                            id="empresaPrincipal" disabled/>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="empresaUsuaria" class="form-label">Empresa usuaria</label>
+                            <input [value]="incapacidad.tdcTdEpl" type="text" class="form-control" 
+                            id="empresaUsuaria" disabled />
+                        </div>
+
+                        <div class="col-12 col-md-8">
+                            <label for="subtipoIncapacidad" class="form-label">
+                                Subtipo incapacidad
+                                <span class="fw-bold text-danger me-1">*</span>
+                            </label>
+                            <select class="form-select" id="subtipoIncapacidad" [(ngModel)]="incapacidad.empNd"
+                            formControlName="subtipoIncapacidad" [ngClass]="{'is-invalid': f['subtipo'].errors && submitted}">
+                                <option value="">Choose...</option>
+                                <option>...</option>
+                            </select>
+                            <div *ngIf="f['subtipo'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['subtipo'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5 col-lg-4">
+                            <label for="numeroIncapacidad" class="form-label">
+                                Numero incapacidad
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="Digite el número único de su incapacidad."></i>
+                            </label>
+                            <input type="text" class="form-control" id="numeroIncapacidad" />
+                            <div class="invalid-feedback">
+                                Please provide a valid zip.
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5">
+                            <label for="codDiag" class="form-label">
+                                Codigo diagnostico
+                                <span class="fw-bold text-danger me-1">*</span>
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="Seleccione el código de su diagnóstico EJ:J029, B342. "></i>
+                            </label>
+                            <input type="text" class="form-control" id="codDiag" [(ngModel)]="incapacidad.empNd"
+                            formControlName="codDiag" [ngClass]="{'is-invalid': f['codDiag'].errors && submitted}"/>
+                            <div *ngIf="f['codDiag'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['codDiag'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-7">
+                            <label for="descripcionDiagnostico" class="form-label">Descripción diagnostico</label>
+                            <input type="text" class="form-control" id="descripcionDiagnostico" disabled />
+                            <div class="invalid-feedback">
+                                Please provide a valid zip.
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 col-lg-5">
+                            <label for="fInicio" class="form-label">
+                                Fecha inicio
+                                <span class="fw-bold text-danger me-1">*</span>
+                            </label>
+                            <input type="date" class="form-control" id="fInicio" [(ngModel)]="incapacidad.empNd"
+                            formControlName="fInicio" [ngClass]="{'is-invalid': f['fInicio'].errors && submitted}"/>
+                            <div *ngIf="f['fInicio'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['fInicio'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-3 col-lg-3">
+                            <label for="noDias" class="form-label">
+                                N° Dias
+                                <span class="fw-bold text-danger me-1">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="noDias" [(ngModel)]="incapacidad.empNd"
+                            formControlName="noDias" [ngClass]="{'is-invalid': f['noDias'].errors && submitted}"/>
+                            <div *ngIf="f['noDias'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['noDias'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+                            <label for="noDias" class="form-label">
+                                ¿Prorroga?
+                                <span class="fw-bold text-danger me-1">*</span>
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" data-bs-title="Se entiende por prórroga de la incapacidad, la 
+                                    que se expide con posterioridad a la inicial, por la misma enfermedad o lesión, o por 
+                                    otra que tenga relación directa con esta, así se trate de código diferente de diagnóstico 
+                                    (CIE), y siempre y cuando entre una y otra no haya una interrupción mayor a treinta (30) 
+                                    días calendario."></i>
+                            </label>
+                            <div class="d-block">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="prorrogaS" [(ngModel)]="incapacidad.empNd"
+                                    formControlName="prorroga" [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}"/>
+                                    <label class="form-check-label" for="prorrogaS">Si</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="prorrogaN" [(ngModel)]="incapacidad.empNd"
+                                    formControlName="prorroga" [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}"/>
+                                    <label class="form-check-label" for="prorrogaN">No</label>
+                                </div>
+                                <div *ngIf="f['prorroga'].errors && submitted" class="invalid-feedback">
+                                    <div *ngIf="f['prorroga'].errors['required']">Este campo es requerido</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5" *ngIf="tipoInc == 'ACCIDENTE LABORAL' || 'ENFERMEDAD LABORAL'">
+                            <label for="fechaAccidente" class="form-label">
+                                Fecha accidente
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
+                            </label>
+                            <input type="date" class="form-control" id="fechaAccidente" />
+                            <div class="invalid-feedback">
+                                Please provide a valid zip.
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5" *ngIf="tipoInc == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
+                            <label for="fechaAccidente" class="form-label">
+                                Fecha fuero Materno
+                            </label>
+                            <input type="date" class="form-control" id="fechaAccidente" />
+                            <div class="invalid-feedback">
+                                Please provide a valid zip.
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="col-12 d-flex justify-content-center me-2">
+                            <a href="tipoIncapacidad.xhtml" class="btn rounded-pill btn-lg btn-warning">
+                                <i class="fa-solid fa-arrow-left me-sm-2"></i>
+                                Regresar
+                            </a>
+                            <button type="submit" class="btn btn-lg btn-warning rounded-pill ms-2">
+                                Siguiente
+                                <i class="fa-solid fa-arrow-right ms-sm-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

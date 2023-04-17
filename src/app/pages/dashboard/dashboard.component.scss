@@ -1,0 +1,45 @@
+.pricing-header {
+    max-width: 700px;
+}
+
+.card {
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+}
+
+.fs-item-menu {
+    letter-spacing: 5px;
+    font-weight: bold;
+}
+
+/*Extra small devices (portrait phones, less than 576px)
+// No media query since this is the default in Bootstrap*/
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+    .fs-item-menu{
+        font-size: 18px;
+        letter-spacing: 5px
+    }
+}
+
+/* Medium devices (tablets, 768px and up)*/
+@media (max-width: 768px) {
+    .fs-item-menu{
+        letter-spacing: 3px
+    }
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (max-width: 992px) {
+    .fs-item-menu{
+        letter-spacing: 1px
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (max-width: 1200px) {
+    .fs-item-menu{
+
+    }
+}

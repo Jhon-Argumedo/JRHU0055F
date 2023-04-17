@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav class="mt-4"
+            style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+                aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="bootstrap.xhtml" class="text-decoration-none">Inicio</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a routerLink="/incapacidades/devolucion/incapacidades-devueltas" class="text-decoration-none">Incapacidades devueltas</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Cargar documentos</li>
+                </ol>
+            </nav>
+            <p class="fs-1 text-center mt-5 mb-3 fw-light">Seguimiento de Incapacidades</p>
+            <p class="text-muted">Aqui podras cargar los documentos pendientes para poder terminar de radicar la incapacidad anteriormente solicitada.</p>
+            <hr>
+        </div>
+        <div class="col-12">
+            <div class="alert alert-light alert-dismissible fade show  border border-danger" role="alert">
+                <h5 class="alert-heading text-danger">IMPORTANTE</h5>
+                Los soportes deben ser completamente <strong> escaneados,
+                    libres de contraseña, sin documentos cifrados, tener toda la información del
+                    paciente,</strong> incapacidad
+                y médico que lo emite para que puedan ser procesados.
+            </div>
+            <hr />
+            <div class="table-responsive">
+                <table class="table text-center">
+                    <caption>Documentos requeridos para la radicacion.</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Carga</th>
+                            <th scope="col">Tamaño</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Certificado incapacidad</td>
+                            <td>certificado_incapacidad</td>
+                            <td>512Kb | PDF</td>
+                            <td>
+                                <span class="badge rounded-pill text-bg-success">
+                                    Cargado
+                                    <i class="fa-regular fa-circle-check"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-danger rounded-pill btn-sm" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" data-bs-title="Quitar documento">
+                                    <i class="fa-solid fa-xmark mx-1"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Resumen de la Atención o Epicrisis</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span class="badge rounded-pill text-bg-secondary">
+                                    Pendiente
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-dark rounded-pill btn-sm" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" data-bs-title="Cargar documento">
+                                    <i class="fa-solid fa-upload"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+export class Incapacidad {
+    tenSigla:string;
+    tdcTd:string;
+    empNd:number;
+    incSerie:string;
+    incNumero:number;
+    tdcTdEpl:string;
+    eplNd:number;
+    tdcTdPal:string;
+    empNdPal:number;
+    ctoNumero:number;
+    incFecExp:Date;
+    incTipo:string;
+    incFecAcc:Date;
+    incFecIni:Date;
+    incDias:number;
+    incFecFin:Date;
+    incProrro:string;
+    incUsuario:number;
+    incFecha:Date;
+    incRadicacion:number;
+    incEstado:string;
+    incFechaCreacion:Date;
+    incFecFueroMat:Date;
+}
