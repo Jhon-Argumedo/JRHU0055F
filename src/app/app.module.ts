@@ -20,6 +20,8 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { ErrorComponent } from './shared/error/error.component';
 import {NgxWebstorageModule} from 'ngx-webstorage';
+import { NotFoundPageComponent } from './pages/soporte/not-found-page/not-found-page.component';
+import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {NgxWebstorageModule} from 'ngx-webstorage';
     GenerarGersComponent,
     FooterComponent,
     HeaderComponent,
-    ErrorComponent
+    ErrorComponent,
+    NotFoundPageComponent,
+    AppInicioComponent
   ],
   imports: [
     FormsModule,

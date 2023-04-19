@@ -8,10 +8,13 @@ import { ObservacionIncapacidadComponent } from './pages/radicacion/observacion-
 import { RadicarIncapacidadComponent } from './pages/radicacion/radicar-incapacidad/radicar-incapacidad.component';
 import { TipoIncapacidadComponent } from './pages/radicacion/tipo-incapacidad/tipo-incapacidad.component';
 import { HistorialIncapacidadesComponent } from './pages/seguimiento/historial-incapacidades/historial-incapacidades.component';
+import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
+import { NotFoundPageComponent } from './pages/soporte/not-found-page/not-found-page.component';
 import { ErrorComponent } from './shared/error/error.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'app-inicio/:az-codigo/:dea-codigo/:tipo-doc/:numero-doc/:nombre-usuario/:tipo-doc-emp/:numero-doc-emp', component: AppInicioComponent },
   { path: 'incapacidades/radicacion/radicar-incapacidad/:tipo-inc', component: RadicarIncapacidadComponent },
   { path: 'incapacidades/radicacion/tipo-incapacidad', component: TipoIncapacidadComponent },
   { path: 'incapacidades/radicacion/observaciones-incapacidad', component: ObservacionIncapacidadComponent },
@@ -20,7 +23,8 @@ const routes: Routes = [
   { path: 'incapacidades/devolucion/incapacidades-devueltas', component: IncapacidadesDevueltasComponent },
   { path: 'incapacidades/devolucion/documentos-devolucion', component: DocumentosDevolucionComponent },
   { path: 'incapacidades/error', component: ErrorComponent },
-  { path: '**', pathMatch: 'full', redirectTo: 'dashboard' }
+  { path: 'incapacidades/error/not-page-found', component: NotFoundPageComponent },
+  { path: '**', pathMatch: 'full', redirectTo: 'incapacidades/error/not-page-found' }
 ];
 
 @NgModule({

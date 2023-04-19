@@ -12,7 +12,7 @@
                         <a routerLink="/incapacidades/radicacion/tipo-incapacidad" class="text-decoration-none">Radicar
                             incapacidad</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ tipoInc }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ tipoInc.nombreTipoIncapacidad }}</li>
                 </ol>
             </nav>
             <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="showAlertValidation">
@@ -22,7 +22,7 @@
             <div class="p-sm-4 mb-4 bg-light rounded-5 border">
                 <div class="container-fluid p-4">
                     <h1 class="fw-bold text-center">Radicar Incapacidad</h1>
-                    <h3 class="fw-light text-center text-muted">{{ tipoInc }}</h3>
+                    <h3 class="fw-light text-center text-muted">{{ tipoInc.nombreTipoIncapacidad }}</h3>
                     <form class="row g-4 needs-validation" [formGroup]="form" (ngSubmit)="onSubmit()">
                         
                         <div class="col-12">
@@ -158,7 +158,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-5" *ngIf="tipoInc == 'ACCIDENTE LABORAL' || 'ENFERMEDAD LABORAL'">
+                        <div class="col-12 col-md-5" *ngIf="tipoInc.nombreTipoIncapacidad == 'ACCIDENTE LABORAL' || 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
                                 Fecha accidente
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
@@ -171,7 +171,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-5" *ngIf="tipoInc == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
+                        <div class="col-12 col-md-5" *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
                             <label for="fechaAccidente" class="form-label">
                                 Fecha fuero Materno
                             </label>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
+import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 
 @Component({
     selector: 'app-dashboard',
@@ -9,17 +10,24 @@ import { LocalStorageService } from 'ngx-webstorage';
 })
 export class DashboardComponent {
 
+    usuarioSesion:UsuarioSesion = new UsuarioSesion();
+    nombreUsuario:string;
     valid:boolean = true;
+    azCodigo:number;
+    deaCodigo:number;
+    idUsuario:string;
 
     constructor(private router: Router,
-        private storage: LocalStorageService) { }
+        private storage: LocalStorageService,
+        ) { }
 
     ngOnInit(): void {
         if(!this.valid) {
             this.router.navigate(['error']);
         }
-        this.storage.store('username', 'John');
-        console.log(this.storage.retrieve('username'));
+
+        this.usuarioSesion = this.storage.retrieve('usuarioSesion');
+        this.nombreUsuario = this.usuarioSesion.nombreUsuario.split(' ', 1)[0];
     }
 
     go(route: string) {

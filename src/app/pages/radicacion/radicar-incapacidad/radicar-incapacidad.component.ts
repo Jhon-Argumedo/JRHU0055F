@@ -4,6 +4,11 @@ import { Tooltip } from 'bootstrap';
 
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Incapacidad } from 'src/app/model/incapacidad';
+import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
+import { SubtipoIncapacidadService } from './subtipo-incapacidad.service';
+import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
+import { ToastrService } from 'ngx-toastr';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Component({
     selector: 'app-radicar-incapacidad',
@@ -12,8 +17,11 @@ import { Incapacidad } from 'src/app/model/incapacidad';
 })
 export class RadicarIncapacidadComponent implements OnInit {
 
-    tipoInc: string = '';
-    showAlertValidation:Boolean = false;
+    tipoInc: TipoIncapacidad;
+    tipoIncStr: string = '';
+    showAlertValidation: boolean = false;
+
+    subtipos: SubtipoIncapacidad[] = [];
 
     incapacidad: Incapacidad = new Incapacidad();
     submitted: boolean = false;
@@ -26,7 +34,11 @@ export class RadicarIncapacidadComponent implements OnInit {
         prorroga: new FormControl('')
     });
 
-    constructor(private route: ActivatedRoute, private fb: FormBuilder) {
+    constructor(private route: ActivatedRoute,
+        private fb: FormBuilder,
+        private subtipoIncService: SubtipoIncapacidadService,
+        private toastr: ToastrService,
+        private storage: LocalStorageService) {
 
     }
 
@@ -43,11 +55,11 @@ export class RadicarIncapacidadComponent implements OnInit {
 
     ngOnInit(): void {
         this.buildForm();
-        Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]'))
-            .forEach(tooltipNode => new Tooltip(tooltipNode));
+        Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
-        this.tipoInc = this.route.snapshot.params['tipo-inc'];
-        this.tipoInc = this.tipoInc.replace('_', ' ');
+        this.tipoInc = this.storage.retrieve('tipoInc');
+
+        this.findAllSubtipoInc();
     }
 
     onSubmit() {
@@ -55,12 +67,20 @@ export class RadicarIncapacidadComponent implements OnInit {
         this.showAlertValidation = false;
 
         if (this.form.invalid) {
-            window.scroll(0,0);
+            window.scroll(0, 0);
             this.showAlertValidation = true;
             return;
         }
+    }
 
-
+    findAllSubtipoInc() {
+        this.subtipoIncService.findAllById(this.tipoInc.codigoTipoIncapacidad).subscribe(data => {
+            this.subtipos = data;
+            console.log(data);
+        }, error => {
+            console.error(error);
+            this.toastr.error(error.error);
+        });
     }
 
     get f(): { [key: string]: AbstractControl } {

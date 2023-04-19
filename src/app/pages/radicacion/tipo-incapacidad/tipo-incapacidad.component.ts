@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LocalStorageService } from 'ngx-webstorage';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { TipoIncapacidadService } from './tipo-incapacidad.service';
 
@@ -15,7 +16,8 @@ export class TipoIncapacidadComponent {
 
     constructor(private router: Router, private route: ActivatedRoute,
         private tipoIncService: TipoIncapacidadService,
-        private toast:ToastrService) {
+        private toast:ToastrService,
+        private storage: LocalStorageService) {
 
     }
 
@@ -23,10 +25,10 @@ export class TipoIncapacidadComponent {
         this.findAllTipoIncapacidad();
     }
 
-    go(ruta: string, tipoInc: string) {
-        tipoInc = tipoInc.replace(' ', '_');
+    go(ruta: string, tipoInc: TipoIncapacidad) {
+        this.storage.store('tipoInc', tipoInc);
         console.log(tipoInc);
-        this.router.navigate([ruta + '/' + tipoInc]);
+        this.router.navigate([ruta + '/' + tipoInc.nombreTipoIncapacidad.replace(' ', '_')]);
 
         window.scroll(0, 0);
     }
