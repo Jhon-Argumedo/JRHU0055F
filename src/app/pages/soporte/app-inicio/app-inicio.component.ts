@@ -10,23 +10,23 @@ import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 })
 export class AppInicioComponent {
 
-    usuarioSesion:UsuarioSesion = new UsuarioSesion();
+    usuarioSesion: UsuarioSesion = new UsuarioSesion();
     azCodigo: number;
     deaCodigo: number;
     tipoDoc: string;
-    numeroDoc: string;
+    numeroDoc: number;
     nombreUsuario: string;
     tipoDocEmp: string;
-    numeroDocEmp: string;
+    numeroDocEmp: number;
 
     constructor(private route: ActivatedRoute,
-        private router:Router,
-        private localStorage:LocalStorageService) { }
+        private router: Router,
+        private localStorage: LocalStorageService) { }
 
     ngOnInit(): void {
         this.cleanLocalStorage();
         this.getParameters();
-        this.go();
+        this.go('dashboard');
     }
 
     getParameters() {
@@ -37,6 +37,15 @@ export class AppInicioComponent {
         this.nombreUsuario = this.route.snapshot.params['nombre-usuario'];
         this.tipoDocEmp = this.route.snapshot.params['tipo-doc-emp'];
         this.numeroDocEmp = this.route.snapshot.params['numero-doc-emp'];
+
+        if (this.azCodigo == null || this.azCodigo == undefined ||
+            this.deaCodigo == null || this.deaCodigo == undefined ||
+            this.numeroDoc == null || this.numeroDoc == undefined ||
+            this.nombreUsuario == null || this.nombreUsuario === '' ||
+            this.tipoDocEmp == null || this.tipoDocEmp === '' || 
+            this.numeroDocEmp == null || this.numeroDocEmp == undefined) {
+                this.go('incapacidades/error');
+        }
 
         this.usuarioSesion.azCodigo = this.azCodigo;
         this.usuarioSesion.deaCodigo = this.deaCodigo;
@@ -49,12 +58,13 @@ export class AppInicioComponent {
         this.localStorage.store('usuarioSesion', this.usuarioSesion);
     }
 
-    go() {
-        this.router.navigate(['dashboard']);
+    go(ruta: string) {
+        this.router.navigate([ruta]);
         window.scroll(0, 0);
     }
 
     cleanLocalStorage() {
+        this.localStorage.clear("incapacidad");
         this.localStorage.clear("usuarioSesion");
         this.localStorage.clear("tipoInc");
     }

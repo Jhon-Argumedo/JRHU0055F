@@ -19,12 +19,17 @@
                 <strong>Por favor verifica que los campos esten diligenciados correctamente.</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                *ngIf="showAlertValidationContrato">
+                <strong>Por favor selecciona un contrato.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <div class="p-sm-4 mb-4 bg-light rounded-5 border">
                 <div class="container-fluid p-4">
                     <h1 class="fw-bold text-center">Radicar Incapacidad</h1>
                     <h3 class="fw-light text-center text-muted">{{ tipoInc.nombreTipoIncapacidad }}</h3>
                     <form class="row g-4 needs-validation" [formGroup]="form" (ngSubmit)="onSubmit()">
-                        
+
                         <div class="col-12">
                             <label for="contrato" class="form-label">
                                 Contrato<span class="fw-bold text-danger me-1">*</span>
@@ -32,106 +37,166 @@
                                     data-bs-placement="top"
                                     data-bs-title="Seleccione el contrato correspondiente a la incapacidad a radicar."></i>
                             </label>
-                            <select class="form-select" id="contrato" [(ngModel)]="incapacidad.empNd"
-                                formControlName="contrato" [ngClass]="{'is-invalid': f['contrato'].errors && submitted}">
-                                <option value="">Choose...</option>
-                                <option>...</option>
+                            <select id="contrato" name="contrato" formControlName="contrato" 
+                                class="form-select" required 
+                                [(ngModel)]="contrato"
+                                (change)="onChangeContrato(contrato)" #contratoSelect
+                                [ngClass]="{'is-invalid': f['contrato'].errors && submitted}">
+                                <option [selected]="true">Selecciona un contrato...</option>
+                                <option *ngFor="let c of contratos" [ngValue]="c" class="text-uppercase">
+                                    {{ c.numeroContrato }} - {{c.nombreEmpresaFilial}} - Finalizó el {{c.fechaFinalizacionContrato | date:'dd-MMM-yyyy'}}
+                                </option>
                             </select>
 
                             <div *ngIf="f['contrato'].errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f['contrato'].errors['required']">Este campo es requerido</div>
+                                <div *ngIf="f['contrato'].errors['required']">Este campo es requerido.</div>
                             </div>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="empresaPrincipal" class="form-label">Empresa principal</label>
-                            <input [value]="incapacidad.tdcTdEpl" type="text" class="form-control"
-                            id="empresaPrincipal" disabled/>
+                            <input id="empresaPrincipal" name="empresaPrincipal" type="text" class="form-control" disabled 
+                                [value]="empresaPrincipal" />
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="empresaUsuaria" class="form-label">Empresa usuaria</label>
-                            <input [value]="incapacidad.tdcTdEpl" type="text" class="form-control" 
-                            id="empresaUsuaria" disabled />
+                            <input id="empresaUsuaria" name="empresaUsuaria" type="text" class="form-control" disabled
+                                [value]="empresaUsuaria" />
                         </div>
 
                         <div class="col-12 col-md-8">
-                            <label for="subtipoIncapacidad" class="form-label">
+                            <label for="subtipo" class="form-label">
                                 Subtipo incapacidad
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
-                            <select class="form-select" id="subtipoIncapacidad" [(ngModel)]="incapacidad.empNd"
-                            formControlName="subtipoIncapacidad" [ngClass]="{'is-invalid': f['subtipo'].errors && submitted}">
-                                <option value="">Choose...</option>
-                                <option>...</option>
+                            <select id="subtipo" name="subtipo" formControlName="subtipo" 
+                                class="form-select" required
+                                [(ngModel)]="subtipoIncapacidad"
+                                [ngClass]="{'is-invalid': f['subtipo'].errors && submitted}">
+                                <option [selected]="true">Seleccione subtipo de incapacidad...</option>
+                                <option *ngFor="let si of subtiposIncapacidad" [ngValue]="si.codigoSubTipoIncapacidad">
+                                    {{si.nombreSubTipoIncapacidad}}</option>
                             </select>
                             <div *ngIf="f['subtipo'].errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f['subtipo'].errors['required']">Este campo es requerido</div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-5 col-lg-4">
+                        <div class="col-12 col-md-4">
                             <label for="numeroIncapacidad" class="form-label">
-                                Numero incapacidad
+                                No° incapacidad
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
                                     data-bs-placement="top"
                                     data-bs-title="Digite el número único de su incapacidad."></i>
                             </label>
-                            <input type="text" class="form-control" id="numeroIncapacidad" />
-                            <div class="invalid-feedback">
-                                Please provide a valid zip.
+                            <input id="numeroIncapacidad" name="numeroIncapacidad" formControlName="numeroIncapacidad"
+                                [(ngModel)]="numeroIncapacidad"
+                                [ngClass]="{'is-invalid': f['numeroIncapacidad'].errors && submitted}" 
+                                type="number" class="form-control"/>
+                            
+                            <div *ngIf="f['numeroIncapacidad'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['numeroIncapacidad'].errors['minLength']">2 caracter minimo.</div>
+                                <div *ngIf="f['numeroIncapacidad'].errors['maxlength']">5 caracteres maximo.</div>
+                                <div *ngIf="f['numeroIncapacidad'].errors['pattern']">Solo se permiten numeros.</div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-5">
-                            <label for="codDiag" class="form-label">
-                                Codigo diagnostico
-                                <span class="fw-bold text-danger me-1">*</span>
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="Seleccione el código de su diagnóstico EJ:J029, B342. "></i>
-                            </label>
-                            <input type="text" class="form-control" id="codDiag" [(ngModel)]="incapacidad.empNd"
-                            formControlName="codDiag" [ngClass]="{'is-invalid': f['codDiag'].errors && submitted}"/>
-                            <div *ngIf="f['codDiag'].errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f['codDiag'].errors['required']">Este campo es requerido</div>
-                            </div>
+                        <div class="col-12">
+                            <p-dropdown [options]="enfermedades" [(ngModel)]="diagnostico" optionLabel="nombreEnfermedad" 
+                                [filter]="true" filterBy="nombreEnfermedad" [showClear]="true" placeholder="Seleccione una enfermedad">
+                                <ng-template pTemplate="diagnostico">
+                                    <div class="flex align-items-center gap-2" *ngIf="diagnostico">
+                                        <div>{{ diagnostico }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-e pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ e.nombreEnfermedad }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+
+                            <p-dropdown [options]="enfermedades" [(ngModel)]="diagnostico" optionLabel="name"></p-dropdown>
                         </div>
 
-                        <div class="col-12 col-md-7">
-                            <label for="descripcionDiagnostico" class="form-label">Descripción diagnostico</label>
-                            <input type="text" class="form-control" id="descripcionDiagnostico" disabled />
-                            <div class="invalid-feedback">
-                                Please provide a valid zip.
-                            </div>
-                        </div>
 
-                        <div class="col-12 col-md-4 col-lg-5">
+
+                        <div class="col-12 col-md-4">
                             <label for="fInicio" class="form-label">
                                 Fecha inicio
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
-                            <input type="date" class="form-control" id="fInicio" [(ngModel)]="incapacidad.empNd"
-                            formControlName="fInicio" [ngClass]="{'is-invalid': f['fInicio'].errors && submitted}"/>
-                            <div *ngIf="f['fInicio'].errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f['fInicio'].errors['required']">Este campo es requerido</div>
+                            <input id="fechaInicio" name="fechaInicio" formControlName="fechaInicio"
+                                type="date" class="form-control" required
+                                [(ngModel)]="fechaInicio"
+                                [ngClass]="{'is-invalid': f['fechaInicio'].errors && submitted}" />
+                            <div *ngIf="f['fechaInicio'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['fechaInicio'].errors['required']">Este campo es requerido</div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-3 col-lg-3">
-                            <label for="noDias" class="form-label">
-                                N° Dias
+                        <div class="col-12 col-md-3">
+                            <label for="numeroDias" class="form-label">
+                                No° Dias
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
-                            <input type="text" class="form-control" id="noDias" [(ngModel)]="incapacidad.empNd"
-                            formControlName="noDias" [ngClass]="{'is-invalid': f['noDias'].errors && submitted}"/>
-                            <div *ngIf="f['noDias'].errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f['noDias'].errors['required']">Este campo es requerido</div>
+                            <input id="numeroDias" name="numeroDias" formControlName="numeroDias"
+                                type="number" class="form-control" required
+                                [(ngModel)]="numeroDias"
+                                [ngClass]="{'is-invalid': f['numeroDias'].errors && submitted}" />
+                            <div *ngIf="f['numeroDias'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['numeroDias'].errors['required']">Este campo es requerido</div>
+                                <div *ngIf="f['numeroDias'].errors['minLength']">1 caracter minimo.</div>
+                                <div *ngIf="f['numeroDias'].errors['maxlength'] 
+                                    && (tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' 
+                                    || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'
+                                    || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL')">2 caracteres maximo.</div>
+                                <div *ngIf="f['numeroDias'].errors['maxlength'] && tipoInc.nombreTipoIncapacidad === 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">3 caracteres maximo.</div>
+                                <div *ngIf="f['numeroDias'].errors['min']">Valor minimo (1) dias.</div>
+                                <div *ngIf="f['numeroDias'].errors['max'] 
+                                    && (tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' 
+                                    || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'
+                                    || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL')">Valor maximo (30) dias..</div>
+
+                                    <div *ngIf="f['numeroDias'].errors['max'] && tipoInc.nombreTipoIncapacidad === 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">Valor maximo (300) dias.</div>
+                                <div *ngIf="f['numeroDias'].errors['pattern']">Solo se permiten numeros.</div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-3">
-                            <label for="noDias" class="form-label">
+                        <div class="col-12 col-md-5"
+                            *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
+                            <label for="fechaAccidente" class="form-label">
+                                Fecha accidente
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
+                            </label>
+                            <input id="fechaAccidente" name="fechaAccidente" formControlName="fechaAccidente" 
+                                type="date" class="form-control" required
+                                [(ngModel)]="fechaAccidente"
+                                [ngClass]="{'is-invalid': f['fechaAccidente'].errors && submitted}"/>
+                            <div *ngIf="f['fechaAccidente'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['fechaAccidente'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5"
+                            *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
+                            <label for="fechaFueroMaterno" class="form-label">
+                                Fecha fuero Materno
+                            </label>
+                            <input id="fechaFueroMaterno" name="fechaFueroMaterno" formControlName="fechaFueroMaterno"
+                                type="date" class="form-control" required
+                                [(ngModel)]="fechaFueroMaterno"
+                                [ngClass]="{'is-invalid': f['fechaFueroMaterno'].errors && submitted}"/>
+                            <div *ngIf="f['fechaFueroMaterno'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['fechaFueroMaterno'].errors['required']">Este campo es requerido</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <label for="prorroga" class="form-label">
                                 ¿Prorroga?
                                 <span class="fw-bold text-danger me-1">*</span>
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
@@ -141,43 +206,21 @@
                                     (CIE), y siempre y cuando entre una y otra no haya una interrupción mayor a treinta (30) 
                                     días calendario."></i>
                             </label>
-                            <div class="d-block">
+                            <div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="prorrogaS" [(ngModel)]="incapacidad.empNd"
-                                    formControlName="prorroga" [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}"/>
-                                    <label class="form-check-label" for="prorrogaS">Si</label>
+                                    <input id="prorrogaSI" name="prorroga" formControlName="prorroga"
+                                        class="form-check-input" type="radio"
+                                        [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}">
+                                    <label class="form-check-label" for="prorrogaSI"><strong>SI</strong> aplica
+                                        prorroga.</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="prorrogaN" [(ngModel)]="incapacidad.empNd"
-                                    formControlName="prorroga" [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}"/>
-                                    <label class="form-check-label" for="prorrogaN">No</label>
-                                </div>
-                                <div *ngIf="f['prorroga'].errors && submitted" class="invalid-feedback">
-                                    <div *ngIf="f['prorroga'].errors['required']">Este campo es requerido</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-5" *ngIf="tipoInc.nombreTipoIncapacidad == 'ACCIDENTE LABORAL' || 'ENFERMEDAD LABORAL'">
-                            <label for="fechaAccidente" class="form-label">
-                                Fecha accidente
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
-                            </label>
-                            <input type="date" class="form-control" id="fechaAccidente" />
-                            <div class="invalid-feedback">
-                                Please provide a valid zip.
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-5" *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
-                            <label for="fechaAccidente" class="form-label">
-                                Fecha fuero Materno
-                            </label>
-                            <input type="date" class="form-control" id="fechaAccidente" />
-                            <div class="invalid-feedback">
-                                Please provide a valid zip.
+                                    <input id="prorrogaNO" name="prorroga" formControlName="prorroga"
+                                        class="form-check-input" type="radio"
+                                        [ngClass]="{'is-invalid': f['prorroga'].errors && submitted}">
+                                    <label class="form-check-label" for="prorrogaNO"><strong>NO</strong> aplica
+                                        prorroga.</label>
+                                    </div>
                             </div>
                         </div>
 

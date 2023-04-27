@@ -4,7 +4,7 @@
             <p class="mt-4">Seleccione el tipo de Incapacidad:</p>
             <div class="row align-items-md-stretch">
                 <div class="col-12 col-sm-6 col-lg-3 mb-3" *ngFor="let ti of tiposIncList">
-                    <a (click)="go('/incapacidades/radicacion/radicar-incapacidad', ti)" class="nav-item-link">
+                    <a (click)="go(ti)" class="nav-item-link">
                         <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
                             <i class="fa-sharp fa-solid fa-viruses d-block fs-2 text-danger me-2"></i>
                             <strong class="option-tipo">{{ti.nombreTipoIncapacidad}}</strong>

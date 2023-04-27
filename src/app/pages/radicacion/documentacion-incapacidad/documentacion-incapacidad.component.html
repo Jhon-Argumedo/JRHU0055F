@@ -88,8 +88,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Certificado incapacidad</td>
+                                        <tr *ngFor="let doc of documentos">
+                                            <td>{{doc.descripcionDelDocumento}}</td>
                                             <td>certificado_incapacidad</td>
                                             <td>512Kb | PDF</td>
                                             <td>
@@ -106,30 +106,24 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>Resumen de la Atención o Epicrisis</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
-                                                <span class="badge rounded-pill text-bg-secondary">
-                                                    Pendiente
-                                                    <i class="fa-solid fa-circle-minus"></i>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-outline-dark rounded-pill btn-sm"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    data-bs-title="Cargar documento">
-                                                    <i class="fa-solid fa-upload"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
     
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <div class="container">
+                        <div class="row mt-5">
+                          <div class="col-md-4">
+                            <form>
+                                <div class="form-group">
+                                  <input type="file" class="form-control-file" (change)="onFileSelected($event)">
+                                </div>
+                                <button type="button" class="btn btn-primary" (click)="onUpload()">Upload</button>
+                              </form>
+                          </div>
+                        </div>
+                       </div>
                     <hr />
                     <div class="row">
                         <div class="col d-flex justify-content-center me-2">

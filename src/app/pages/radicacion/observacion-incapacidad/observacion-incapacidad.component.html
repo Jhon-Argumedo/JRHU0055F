@@ -94,25 +94,29 @@
                                 </ul>
                             </span>
                             <hr />
-                            <form>
+                            <form class="needs-validation" (ngSubmit)="onSubmit()" [formGroup]="form">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" id="terminos" [(ngModel)]="accepted"
+                                    formControlName="terminos" [ngClass]="{'is-invalid': f['terminos'].errors && submitted}" required/>
+                                    <label class="form-check-label" for="terminos">
                                         Acepto haber leído los requisitos generales.
                                     </label>
+                                    <div *ngIf="f['terminos'].errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f['terminos'].errors['required']">Este campo es requerido.</div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="d-flex justify-content-center me-2">
+                                    <a href="radIncaEnfermedadGeneral.xhtml" class="btn btn-lg rounded-pill btn-warning">
+                                        <i class="fa-solid fa-arrow-left me-2"></i>
+                                        Regresar
+                                    </a>
+                                    <button type="submit" class="btn btn-lg rounded-pill btn-warning ms-2">
+                                        Siguiente
+                                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </button>
                                 </div>
                             </form>
-                            <hr />
-                            <div class="d-flex justify-content-center me-2">
-                                <a href="radIncaEnfermedadGeneral.xhtml" class="btn btn-lg rounded-pill btn-warning" type="submit">
-                                    <i class="fa-solid fa-arrow-left me-2"></i>
-                                    Regresar
-                                </a>
-                                <a routerLink="/incapacidades/radicacion/documentacion-incapacidad" class="btn btn-lg rounded-pill btn-warning ms-2">
-                                    Siguiente
-                                    <i class="fa-solid fa-arrow-right ms-2"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
 

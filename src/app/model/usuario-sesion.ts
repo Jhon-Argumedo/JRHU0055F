@@ -2,8 +2,8 @@ export class UsuarioSesion {
     azCodigo: number;
     deaCodigo: number;
     tipoDoc: string;
-    numeroDoc: string;
+    numeroDoc: number;
     nombreUsuario: string;
     tipoDocEmp: string;
-    numeroDocEmp: string;
+    numeroDocEmp: number;
 }

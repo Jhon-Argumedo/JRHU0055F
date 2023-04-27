@@ -15,7 +15,7 @@ import { ErrorComponent } from './shared/error/error.component';
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'app-inicio/:az-codigo/:dea-codigo/:tipo-doc/:numero-doc/:nombre-usuario/:tipo-doc-emp/:numero-doc-emp', component: AppInicioComponent },
-  { path: 'incapacidades/radicacion/radicar-incapacidad/:tipo-inc', component: RadicarIncapacidadComponent },
+  { path: 'incapacidades/radicacion/radicar-incapacidad', component: RadicarIncapacidadComponent },
   { path: 'incapacidades/radicacion/tipo-incapacidad', component: TipoIncapacidadComponent },
   { path: 'incapacidades/radicacion/observaciones-incapacidad', component: ObservacionIncapacidadComponent },
   { path: 'incapacidades/radicacion/documentacion-incapacidad', component: DocumentacionIncapacidadComponent },
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'incapacidades/devolucion/documentos-devolucion', component: DocumentosDevolucionComponent },
   { path: 'incapacidades/error', component: ErrorComponent },
   { path: 'incapacidades/error/not-page-found', component: NotFoundPageComponent },
-  { path: '**', pathMatch: 'full', redirectTo: 'incapacidades/error/not-page-found' }
+  { path: '**', pathMatch: 'full', redirectTo: 'dashboard' }
 ];
 
 @NgModule({

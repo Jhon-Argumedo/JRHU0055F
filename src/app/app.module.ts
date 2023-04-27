@@ -22,6 +22,7 @@ import { ErrorComponent } from './shared/error/error.component';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import { NotFoundPageComponent } from './pages/soporte/not-found-page/not-found-page.component';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.compon
     ToastrModule.forRoot(),
     ReactiveFormsModule,
     NgxWebstorageModule.forRoot(),
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]

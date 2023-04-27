@@ -25,10 +25,9 @@ export class TipoIncapacidadComponent {
         this.findAllTipoIncapacidad();
     }
 
-    go(ruta: string, tipoInc: TipoIncapacidad) {
+    go(tipoInc: TipoIncapacidad) {
         this.storage.store('tipoInc', tipoInc);
-        console.log(tipoInc);
-        this.router.navigate([ruta + '/' + tipoInc.nombreTipoIncapacidad.replace(' ', '_')]);
+        this.router.navigate(['/incapacidades/radicacion/radicar-incapacidad']);
 
         window.scroll(0, 0);
     }
@@ -39,7 +38,7 @@ export class TipoIncapacidadComponent {
             this.tiposIncList = data;
         }, error => {
             console.log(error);
-            this.toast.error(error.error);
+            this.toast.error(error.message);
             this.router.navigate(['incapacidades/error']);
             window.scroll(0,0);
         });
