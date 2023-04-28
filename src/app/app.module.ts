@@ -19,10 +19,12 @@ import { GenerarGersComponent } from './pages/soporte/generar-gers/generar-gers.
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { ErrorComponent } from './shared/error/error.component';
-import {NgxWebstorageModule} from 'ngx-webstorage';
+import { NgxWebstorageModule } from 'ngx-webstorage';
 import { NotFoundPageComponent } from './pages/soporte/not-found-page/not-found-page.component';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import { DropdownModule } from 'primeng/dropdown';
     ToastrModule.forRoot(),
     ReactiveFormsModule,
     NgxWebstorageModule.forRoot(),
-    DropdownModule
+    DropdownModule,
+    ButtonModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

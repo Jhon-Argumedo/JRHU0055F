@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tooltip } from 'bootstrap';
-import { EmitType } from '@syncfusion/ej2-base';
-import { Query } from '@syncfusion/ej2-data';
 
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Incapacidad } from 'src/app/model/incapacidad';
@@ -16,7 +14,6 @@ import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { RadicarIncapacidadService } from './radicar-incapacidad.service';
 import { Enfermedad } from 'src/app/model/enfermedad';
 import { SubtipoEnfermedad } from 'src/app/model/subtipo-enfermedad';
-import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns/src';
 
 @Component({
     selector: 'app-radicar-incapacidad',
@@ -185,8 +182,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             subtipo: ['', Validators.required],
             numeroIncapacidad: ['', [
                 Validators.minLength(1),
-                Validators.maxLength(20),
-                Validators.pattern('[0-9]{1-20}')
+                Validators.maxLength(20)
             ]],
             diagnostico: ['', Validators.required],
             fechaInicio: ['', Validators.required],
@@ -195,8 +191,7 @@ export class RadicarIncapacidadComponent implements OnInit {
                 Validators.minLength(1),
                 Validators.maxLength(2),
                 Validators.min(1),
-                Validators.max(30),
-                Validators.pattern('[0-9]{1-2}')
+                Validators.max(30)
             ]],
             prorroga: ['', Validators.required]
         });
@@ -208,8 +203,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             subtipo: ['', Validators.required],
             numeroIncapacidad: ['', [
                 Validators.minLength(1),
-                Validators.maxLength(20),
-                Validators.pattern('[0-9]{1-20}')
+                Validators.maxLength(20)
             ]],
             diagnostico: ['', Validators.required],
             fechaInicio: ['', Validators.required],
@@ -218,8 +212,7 @@ export class RadicarIncapacidadComponent implements OnInit {
                 Validators.minLength(1),
                 Validators.maxLength(2),
                 Validators.min(1),
-                Validators.max(30),
-                Validators.pattern('[0-9]{1-2}')
+                Validators.max(30)
             ]],
             fechaAccidente: ['', Validators.required],
             prorroga: ['', Validators.required]
@@ -232,8 +225,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             subtipo: ['', Validators.required],
             numeroIncapacidad: ['', [
                 Validators.minLength(1),
-                Validators.maxLength(20),
-                Validators.pattern('[0-9]{1-20}')
+                Validators.maxLength(20)
             ]],
             diagnostico: ['', Validators.required],
             fechaInicio: ['', Validators.required],
@@ -243,7 +235,6 @@ export class RadicarIncapacidadComponent implements OnInit {
                 Validators.maxLength(3),
                 Validators.min(1),
                 Validators.max(300),
-                Validators.pattern('[0-9]{1-3}')
             ]],
             fechaFueroMaterno: ['', Validators.required],
             prorroga: ['', Validators.required]

@@ -28,10 +28,16 @@ export class DashboardComponent {
 
         this.usuarioSesion = this.storage.retrieve('usuarioSesion');
         this.nombreUsuario = this.usuarioSesion.nombreUsuario.split(' ', 1)[0];
+        this.nombreUsuario = this.capitalizeFirstLetter(this.nombreUsuario);
     }
 
     go(route: string) {
         this.router.navigate([route]);
         window.scroll(0, 0);
+    }
+
+    capitalizeFirstLetter(str:string) {
+        str = str.toLowerCase();
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 }
