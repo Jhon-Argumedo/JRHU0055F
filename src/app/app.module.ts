@@ -20,11 +20,13 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { ErrorComponent } from './shared/error/error.component';
 import { NgxWebstorageModule } from 'ngx-webstorage';
-import { NotFoundPageComponent } from './pages/soporte/not-found-page/not-found-page.component';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Error404Component } from './pages/error/error404/error404.component';
+import { Error500Component } from './pages/error/error500/error500.component';
+import { PageNotFoundComponent } from './pages/error/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -41,8 +43,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FooterComponent,
     HeaderComponent,
     ErrorComponent,
-    NotFoundPageComponent,
-    AppInicioComponent
+    AppInicioComponent,
+    Error404Component,
+    Error500Component,
+    PageNotFoundComponent
   ],
   imports: [
     FormsModule,

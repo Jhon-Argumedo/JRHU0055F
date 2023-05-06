@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Contrato } from 'src/app/model/contrato';
 import { Enfermedad } from 'src/app/model/enfermedad';
 import { RequestContratosList } from 'src/app/model/request-contratos-list';
-import { SubtipoEnfermedad } from 'src/app/model/subtipo-enfermedad';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { environment } from 'src/environments/environment.development';
 

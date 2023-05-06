@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
+import { AppService } from 'src/app/app.service';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 
 @Component({
@@ -19,11 +20,11 @@ export class DashboardComponent {
 
     constructor(private router: Router,
         private storage: LocalStorageService,
-        ) { }
+        private appService:AppService) { }
 
     ngOnInit(): void {
-        if(!this.valid) {
-            this.router.navigate(['error']);
+        if(!this.validIsUserLogged()) {
+            window.location.href = 'https://apps.genialw.com/SitioTrabajador/inicio.xhtml';
         }
 
         this.usuarioSesion = this.storage.retrieve('usuarioSesion');
@@ -39,5 +40,9 @@ export class DashboardComponent {
     capitalizeFirstLetter(str:string) {
         str = str.toLowerCase();
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    validIsUserLogged() {
+        return this.appService.isUserLogged();
     }
 }

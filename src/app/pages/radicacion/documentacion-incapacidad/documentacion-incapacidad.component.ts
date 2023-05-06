@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Tooltip } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +8,8 @@ import { DocumentoUpload } from 'src/app/model/documento-upload';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestDocumento } from 'src/app/model/request-documento';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
+import { ResponseRadicarIncapacidad } from 'src/app/model/response-radicar-incapacidad';
+import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { DocumentacionIncapacidadService } from './documentacion-incapacidad.service';
 
@@ -17,42 +20,57 @@ import { DocumentacionIncapacidadService } from './documentacion-incapacidad.ser
 })
 export class DocumentacionIncapacidadComponent implements OnInit {
 
-    requestIncapacidad:RequestIncapacidad = new RequestIncapacidad();
-    incapacidad:Incapacidad = new Incapacidad();
-    tipoInc: TipoIncapacidad = new TipoIncapacidad();
+    tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
+    subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
+    incapacidad: Incapacidad = new Incapacidad();
     documentos: DocumentoUpload[] = [];
-    modalRadicacion:NgbModalRef;
-    numeroRadicado:string = '';
+    modalRadicacion: NgbModalRef;
+    errorMessage: string = '';
+    numeroRadicado:number;
+    responseRadicarIncapacidad:ResponseRadicarIncapacidad = new ResponseRadicarIncapacidad();
 
     constructor(private storage: LocalStorageService,
         private documentosService: DocumentacionIncapacidadService,
         private toastr: ToastrService,
-        private modalService:NgbModal,
-        private docService:DocumentacionIncapacidadService) { }
+        private modalService: NgbModal,
+        private docService: DocumentacionIncapacidadService,
+        private router: Router) { }
 
     ngOnInit() {
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
-        this.getTipoIncLocalStorage();
+
+        this.getDataLocalStorage();
         this.findAllDocsBySubtipoInc();
     }
 
-    getTipoIncLocalStorage() {
-        this.tipoInc = this.storage.retrieve('tipoInc');
+    getDataLocalStorage() {
+        this.tipoIncapacidad = this.storage.retrieve('tipoInc');
+        this.subtipoIncapacidad = this.storage.retrieve('subtipoInc');
     }
 
-    radicar(content:any) {
-        let reqDocumentos:RequestDocumento[] = [];
-        console.log(this.documentos);
-        console.log(content);
+    radicar(content: any) {
+        let reqDocumentos: RequestDocumento[] = [];
 
-        if(!this.validarDocumentosCargados(this.documentos)) {
+        if (!this.validarDocumentosCargados(this.documentos)) {
+            this.toastr.error('No se puede realizar la radicación, faltan documentos por cargar.');
+            this.errorMessage = '<strong>Para radicar la incapacidad debe cargar estos documentos: </strong><br><br>' 
+            + this.convertToHtmlList(this.getDocumentosFaltantes(this.documentos));
+            window.scroll(0,0);
             return;
         }
-        reqDocumentos = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
-        this.requestIncapacidad = this.buildRequestIncapacidadObject(this.incapacidad, reqDocumentos);
 
-        this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe(data => {
+        let requestIncapacidad:RequestIncapacidad = this.storage .retrieve('requestIncapacidad');
+        
+        reqDocumentos = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
+
+        requestIncapacidad.documentosACargar = reqDocumentos;
+        console.log(requestIncapacidad);
+
+        this.docService.radicarIncapacidad(requestIncapacidad).subscribe(data => {
             this.openModal(content);
+            console.log(data);
+            this.responseRadicarIncapacidad = data;
+            this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
         }, error => {
             console.log(error);
             this.toastr.error(error.message);
@@ -61,23 +79,24 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     findAllDocsBySubtipoInc() {
-        this.documentosService.findAllDocsBySubtipoInc(this.tipoInc.codigoTipoIncapacidad).subscribe(data => {
+        this.documentosService.findAllDocsBySubtipoInc(this.tipoIncapacidad.codigoTipoIncapacidad).subscribe(data => {
             data.forEach(d => {
                 let documento: DocumentoUpload = new DocumentoUpload();
                 documento.idDocumento = d.idDocumento;
                 documento.descripcionDelDocumento = d.descripcionDelDocumento;
                 documento.requerido = d.requerido;
+                documento.cargaDocumento = '';
+                documento.base64 = '';
 
                 this.documentos.push(documento);
             });
-            console.log(data);
         }, error => {
             console.log(error);
             this.toastr.error(error.message);
         });
     }
 
-    quitarDocumento(documento:DocumentoUpload) {
+    quitarDocumento(documento: DocumentoUpload) {
         documento.cargaDocumento = '';
         documento.pesoCarga = Number();
         documento.base64 = '';
@@ -91,7 +110,8 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
         this.fileToBase64(file)
             .then((base64String) => {
-                documento.base64 = base64String;
+                documento.base64 = base64String.split(',')[1].toString();
+                console.log(documento.base64);
             })
             .catch((error) => {
                 console.error(error);
@@ -120,12 +140,12 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         return +megabytes.toFixed(2);
     }
 
-    capitalizeFirstLetter(str:string) {
+    capitalizeFirstLetter(str: string) {
         str = str.toLowerCase();
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    openModal(modal:any) {
+    openModal(modal: any) {
         this.modalRadicacion = this.modalService.open(modal);
     }
 
@@ -133,10 +153,11 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         this.modalRadicacion.close();
     }
 
-    validarDocumentosCargados(docs:DocumentoUpload[]) {
-        let flag:boolean = true;
+    validarDocumentosCargados(docs: DocumentoUpload[]) {
+        let flag: boolean = true;
+
         docs.forEach(doc => {
-            if(doc.requerido && (doc.cargaDocumento === '' || doc.base64 === '')) {
+            if (doc.requerido && (doc.cargaDocumento.length === 0 || doc.base64.length === 0)) {
                 flag = false;
             }
         });
@@ -144,27 +165,51 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         return flag;
     }
 
-    getRequestDocumentoFromDocumentosUpload(docs:DocumentoUpload[]) {
-        let reqDocumentos:RequestDocumento[] = [];
+    getDocumentosFaltantes(docs: DocumentoUpload[]) {
+        let documentosFaltantes: string[] = [];
 
         docs.forEach(doc => {
-            let reqDocumento:RequestDocumento = new RequestDocumento();
+            if (doc.requerido && (doc.cargaDocumento.length === 0 || doc.base64.length === 0)) {
+                documentosFaltantes.push(doc.descripcionDelDocumento);
+            }
+        });
+
+        return documentosFaltantes.toString();
+    }
+
+    getRequestDocumentoFromDocumentosUpload(docs: DocumentoUpload[]):RequestDocumento[] {
+        let reqDocumentos: RequestDocumento[] = [];
+
+        docs.forEach(doc => {
+            let reqDocumento: RequestDocumento = new RequestDocumento();
 
             reqDocumento.idDocumento = doc.idDocumento;
+            reqDocumento.nombreDocumento = doc.descripcionDelDocumento;
             reqDocumento.base64 = doc.base64;
-    
+
             reqDocumentos.push(reqDocumento);
         });
 
         return reqDocumentos;
     }
 
-    buildRequestIncapacidadObject(incapacidad:Incapacidad, documentos:RequestDocumento[]) {
-        let reqIncapacidad:RequestIncapacidad = new RequestIncapacidad();
+    goPage(ruta: string) {
+        window.scroll(0, 0);
+        this.router.navigate([ruta]);
+    }
 
-        reqIncapacidad.documentos = documentos;
+    convertToHtmlList(str: string): string {
+        let items = str.split(',');
+        let listItems = items.map(item => `<li>${item.trim()}</li>`);
+        return `<ul>${listItems.join('')}</ul>`;
+    }
 
-        return reqIncapacidad;
+    capitalizeWords(str: string): string {
+        const words = str.split(/\s+/);
+        const capitalizedWords = words.map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+        return capitalizedWords.join(' ');
     }
 
 }

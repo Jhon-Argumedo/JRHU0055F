@@ -1,6 +1,6 @@
 export class Enfermedad {
     codigoEnfermedad:string;
-    codigoGrupoEnfermedad1:string;
+    codigoGrupoEnfermedad:string;
     codigoSubtipoEnfermedad:string;
     nombreEnfermedad:string;
 }

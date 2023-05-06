@@ -1,9 +1,9 @@
 export class UsuarioSesion {
-    azCodigo: number;
-    deaCodigo: number;
+    azCodigo: string;
+    deaCodigo: string;
     tipoDoc: string;
-    numeroDoc: number;
+    numeroDoc: string;
     nombreUsuario: string;
     tipoDocEmp: string;
-    numeroDocEmp: number;
+    numeroDocEmp: string;
 }

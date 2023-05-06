@@ -5,22 +5,29 @@
                 style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
                 aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="bootstrap.xhtml" class="text-decoration-none">Inicio</a>
+                    <li class="breadcrumb-item" routerLinkActive="fw-bold">
+                        <a routerLink="/dashboard" class="text-decoration-none">Inicio</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="tipoIncapacidad.xhtml" class="text-decoration-none">Radicar incapacidad</a>
+                    <li class="breadcrumb-item" routerLinkActive="fw-bold">
+                        <a routerLink="/incapacidades/radicacion/tipo-incapacidad" class="text-decoration-none">Radicar
+                            incapacidad</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Enfermedad general</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ capitalizeWords(tipoIncapacidad.nombreTipoIncapacidad) }}</li>
                 </ol>
             </nav>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="errorMessage">
+                <div [innerHTML]="errorMessage"></div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <div class="p-sm-4 mb-4 bg-light rounded-5 border">
                 <div class="container-fluid p-4">
                     <div class="row">
                         <div class="col">
                             <h1 class="fw-bold text-center">Radicar Incapacidad</h1>
-                            <h3 class="fw-light text-center text-muted">Enfermedad general</h3>
-                            <hr />
+                            <h3 class="fw-light text-center text-muted">{{ tipoIncapacidad.nombreTipoIncapacidad }}</h3>
+                            <hr>
+                            <h6 class="fw-light text-center text-muted">{{ subtipoIncapacidad.nombreSubTipoIncapacidad }}</h6>
+                            <hr>
                             <p>
                                 <strong>Concepto:</strong>
                                 Afectación de la salud de una persona, que compromete su bienestar físico o mental,
@@ -81,30 +88,35 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">Documento</th>
+                                            <th scope="col"></th>
                                             <th scope="col">Carga</th>
                                             <th scope="col">Tamaño</th>
-                                            <th scope="col">Estado</th>
+                                            <th scope="col"></th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let d of documentos">
                                             <td>{{ capitalizeFirstLetter(d.descripcionDelDocumento) }}</td>
+                                            <td>
+                                                <span *ngIf="d.requerido" class="badge rounded-pill text-bg-danger">Requerido</span>
+                                                <span *ngIf="!d.requerido" class="badge rounded-pill text-bg-info">Opcional</span>
+                                            </td>
                                             <td *ngIf="d.cargaDocumento">{{ d.cargaDocumento }}</td>
                                             <td *ngIf="!d.cargaDocumento"></td>
-                                            <td *ngIf="d.cargaDocumento">{{ bytesToMB(d.pesoCarga) }} MB
+                                            <td *ngIf="d.cargaDocumento">{{ d.pesoCarga }} MB
                                             </td>
                                             <td *ngIf="!d.cargaDocumento"></td>
                                             <td>
                                                 <span *ngIf="d.cargaDocumento"
                                                     class="badge rounded-pill text-bg-success">
                                                     Cargado
-                                                    <i class="fa-regular fa-circle-check"></i>
+                                                    <i class="fa-solid fa-file-circle-check"></i>
                                                 </span>
                                                 <span *ngIf="!d.cargaDocumento"
                                                     class="badge rounded-pill text-bg-warning">
                                                     Pendiente
-                                                    <i class="fa-regular fa-circle-check"></i>
+                                                    <i class="fa-solid fa-file-circle-minus"></i>
                                                 </span>
                                             </td>
                                             <td>
@@ -120,8 +132,8 @@
 
                                                 <button (click)="quitarDocumento(d)" *ngIf="d.cargaDocumento"
                                                     class="btn btn-outline-danger rounded-pill btn-sm"
-                                                    data-bs-toggle="tooltip" type="button"
-                                                    data-bs-placement="top" data-bs-title="Quitar documento">
+                                                    data-bs-toggle="tooltip" type="button" data-bs-placement="top"
+                                                    data-bs-title="Quitar documento">
                                                     <i class="fa-solid fa-xmark mx-1"></i>
                                                 </button>
                                             </td>
@@ -135,11 +147,10 @@
                     <hr />
                     <div class="row">
                         <div class="col d-flex justify-content-center me-2">
-                            <a href="radIncaEnfermedadGeneral.xhtml" class="btn btn-lg rounded-pill btn-warning"
-                                type="submit">
+                            <button (click)="goPage('incapacidades/radicacion/observaciones-incapacidad')" type="button" class="btn btn-lg rounded-pill btn-warning">
                                 <i class="fa-solid fa-arrow-left me-2"></i>
                                 Regresar
-                            </a>
+                            </button>
                             <button (click)="radicar(content)" class="btn btn-success btn-lg rounded-pill ms-2">
                                 Terminar radicacion
                                 <i class="fa-solid fa-check ms-2"></i>
@@ -161,7 +172,8 @@
         <div class="modal-body py-0 text-center">
             <i class="fa-regular fa-circle-check text-success fs-1"></i>
             <p class="fs-4 mb-0">Caso radicado</p>
-            <p class="fs-2 fw-bold">No. 0965</p>
+            <p class="fs-2 fw-bold">No. {{ responseRadicarIncapacidad.mensaje }}</p>
+            <small>{{ responseRadicarIncapacidad.resultadoSubidaDocumentos }}</small>
             <p class="text-muted">
                 Este trámite pasa a un proceso de revisión documental , cuya respuesta y definición la podrá
                 visualizar a través de la opción seguimiento de incapacidades / consultar.
