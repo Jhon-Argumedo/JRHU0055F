@@ -35,14 +35,6 @@ export class AppInicioComponent {
     ngOnInit(): void {
         this.cleanLocalStorage();
         this.getUrlParameters();
-        this.loadData();
-    }
-
-    loadData() {
-        this.getTiposIncapacidad();
-        this.getContratosUsuario();
-        this.getEnfermedades();
-        this.getTerminoCondicionesHTML();
     }
 
     getUrlParameters() {
@@ -68,42 +60,5 @@ export class AppInicioComponent {
         this.localStorage.clear("incapacidad");
         this.localStorage.clear("usuarioSesion");
         this.localStorage.clear("tipoInc");
-    }
-
-    getTiposIncapacidad() {
-        this.tipoIncService.findAll().subscribe(data => {
-            this.localStorage.store('subtiposIncapacidad', data);
-        }, error => {
-            console.log(error);
-            this.appService.manageError(error);
-        });
-    }
-
-    getContratosUsuario() {
-        this.radicarService.findAllContratos(new RequestContratosList(this.usuarioSesion.tipoDoc, parseInt(this.usuarioSesion.numeroDoc),
-            this.usuarioSesion.tipoDocEmp, parseInt(this.usuarioSesion.numeroDocEmp))).subscribe(data => {
-            this.localStorage.store('contratosUsuario', data);
-        }, error => {
-            console.log(error);
-            this.appService.manageError(error);
-        });
-    }
-
-    getEnfermedades() {
-        this.radicarService.findAllEnfermedades().subscribe(data => {
-            this.localStorage.store('enfermedades', data);
-        }, error => {
-            console.log(error);
-            this.appService.manageError(error);
-        });
-    }
-
-    getTerminoCondicionesHTML() {
-        this.observacionService.getObservacionText().subscribe(data => {
-            this.localStorage.store('terminosCondiciones', data);
-        }, error => {
-            console.log(error);
-            this.appService.manageError(error);
-        });
     }
 }

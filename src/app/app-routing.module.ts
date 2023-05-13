@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DocumentosDevolucionComponent } from './pages/devolucion/documentos-devolucion/documentos-devolucion.component';
 import { IncapacidadesDevueltasComponent } from './pages/devolucion/incapacidades-devueltas/incapacidades-devueltas.component';
+import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
 import { Error404Component } from './pages/error/error404/error404.component';
 import { Error500Component } from './pages/error/error500/error500.component';
-import { PageNotFoundComponent } from './pages/error/page-not-found/page-not-found.component';
+import { UnknownErrorComponent } from './pages/error/unknown-error/unknown-error.component';
+import { UserNotLoggedComponent } from './pages/error/user-not-logged/user-not-logged.component';
 import { DocumentacionIncapacidadComponent } from './pages/radicacion/documentacion-incapacidad/documentacion-incapacidad.component';
 import { ObservacionIncapacidadComponent } from './pages/radicacion/observacion-incapacidad/observacion-incapacidad.component';
 import { RadicarIncapacidadComponent } from './pages/radicacion/radicar-incapacidad/radicar-incapacidad.component';
@@ -25,8 +27,11 @@ const routes: Routes = [
   { path: 'incapacidades/seguimiento/historial-incapacidad', component: HistorialIncapacidadesComponent },
   { path: 'incapacidades/devolucion/incapacidades-devueltas', component: IncapacidadesDevueltasComponent },
   { path: 'incapacidades/devolucion/documentos-devolucion', component: DocumentosDevolucionComponent },
+  { path: 'error-az', component: ErrorAzComponent },
   { path: 'error-404', component: Error404Component },
   { path: 'error-500', component: Error500Component },
+  { path: 'unknown-error', component: UnknownErrorComponent },
+  { path: 'user-not-logged', component: UserNotLoggedComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'error-404' }
 ];
 

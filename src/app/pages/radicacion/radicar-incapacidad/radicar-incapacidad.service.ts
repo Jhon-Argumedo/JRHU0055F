@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Contrato } from 'src/app/model/contrato';
 import { Enfermedad } from 'src/app/model/enfermedad';
 import { RequestContratosList } from 'src/app/model/request-contratos-list';
+import { RequestValidarIncapacidad } from 'src/app/model/request-validar-incapacidad';
+import { ResponseValidacionIncapacidad } from 'src/app/model/response-validacion-incapacidad';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { environment } from 'src/environments/environment.development';
 
@@ -25,6 +27,10 @@ export class RadicarIncapacidadService {
 
     findAllEnfermedades() {
         return this.http.get<Enfermedad[]>(`${this.baseUrl}/incapacidades/enfermedades`);
+    }
+
+    validIncapacidad(request:RequestValidarIncapacidad) {
+        return this.http.post<ResponseValidacionIncapacidad>(`${this.baseUrl}/incapacidades/validaciones`, request);
     }
 
 }

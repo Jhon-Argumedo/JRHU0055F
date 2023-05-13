@@ -1,6 +1,6 @@
 export class Contrato {
     estadoDelContrato:string;
-    fechaFinalizacionContrato:Date;
+    fechaRetiro:Date;
     nombreEmpresaFilial:string;
     nombreEmpresaPrincipal:string;
     numeroContrato:number;

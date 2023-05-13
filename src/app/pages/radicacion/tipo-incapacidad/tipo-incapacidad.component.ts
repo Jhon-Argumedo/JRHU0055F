@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
-import { RequestDocumento } from 'src/app/model/request-documento';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { TipoIncapacidadService } from './tipo-incapacidad.service';
@@ -18,17 +19,23 @@ export class TipoIncapacidadComponent {
     tiposIncList: TipoIncapacidad[] = [];
     usuarioSesion:UsuarioSesion = new UsuarioSesion();
 
+    isLoading:boolean = false;
+
     constructor(private router: Router, private route: ActivatedRoute,
         private tipoIncService: TipoIncapacidadService,
         private appService:AppService,
-        private storage: LocalStorageService) {
+        private storage: LocalStorageService,
+        private toast:ToastrService) {
 
     }
 
     ngOnInit(): void {
-        if(!this.storage.retrieve('tiposIncapacidad')) {
-            this.findAllTipoIncapacidad();
+        if(!this.appService.isUserLogged()) {
+            this.toast.info("No se ha detectado una sesion de usuario activa.");
+            window.location.href = SitioTrabajador.URL;
         }
+
+        this.findAllTipoIncapacidad();
     }
 
     go(tipoInc: TipoIncapacidad) {
@@ -64,11 +71,19 @@ export class TipoIncapacidadComponent {
     }
 
     findAllTipoIncapacidad() {
-        this.tipoIncService.findAll().subscribe(data => {
-            this.tiposIncList = data;
-        }, error => {
-            console.log(error);
-            this.appService.manageError(error);
-        });
+        this.isLoading = true;
+        this.tipoIncService.findAll().subscribe({
+            next: (data) => {
+                this.tiposIncList = data;
+            }, 
+            error: (error) => {
+                console.log(error);
+                this.toast.error(error.message);
+                this.appService.manageHttpError(error);
+            },
+            complete: () => {
+                this.isLoading = false;
+            }
+    });
     }
 }

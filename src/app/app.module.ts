@@ -18,7 +18,6 @@ import { HistorialIncapacidadesComponent } from './pages/seguimiento/historial-i
 import { GenerarGersComponent } from './pages/soporte/generar-gers/generar-gers.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
-import { ErrorComponent } from './shared/error/error.component';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
 import { DropdownModule } from 'primeng/dropdown';
@@ -26,7 +25,12 @@ import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Error404Component } from './pages/error/error404/error404.component';
 import { Error500Component } from './pages/error/error500/error500.component';
-import { PageNotFoundComponent } from './pages/error/page-not-found/page-not-found.component';
+import { UnknownErrorComponent } from './pages/error/unknown-error/unknown-error.component';
+import { Location } from '@angular/common';
+import { UserNotLoggedComponent } from './pages/error/user-not-logged/user-not-logged.component';
+import { TableModule } from 'primeng/table';
+import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
+
 
 @NgModule({
   declarations: [
@@ -42,11 +46,12 @@ import { PageNotFoundComponent } from './pages/error/page-not-found/page-not-fou
     GenerarGersComponent,
     FooterComponent,
     HeaderComponent,
-    ErrorComponent,
     AppInicioComponent,
     Error404Component,
     Error500Component,
-    PageNotFoundComponent
+    UnknownErrorComponent,
+    UserNotLoggedComponent,
+    ErrorAzComponent
   ],
   imports: [
     FormsModule,
@@ -59,9 +64,10 @@ import { PageNotFoundComponent } from './pages/error/page-not-found/page-not-fou
     NgxWebstorageModule.forRoot(),
     DropdownModule,
     ButtonModule,
-    NgbModule
+    NgbModule,
+    TableModule
   ],
-  providers: [],
+  providers: [Location],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

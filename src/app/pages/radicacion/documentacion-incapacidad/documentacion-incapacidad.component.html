@@ -19,7 +19,16 @@
                 <div [innerHTML]="errorMessage"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="p-sm-4 mb-4 bg-light rounded-5 border">
+
+            <div class="row align-items-md-stretch" *ngIf="isLoading">
+                <div class="col-12">
+                    <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                        <strong class="option-tipo">Los documentos para radicar una incapacidad estan cargando....</strong>
+                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-sm-4 mb-4 bg-light rounded-5 border" *ngIf="!isLoading">
                 <div class="container-fluid p-4">
                     <div class="row">
                         <div class="col">
@@ -151,9 +160,12 @@
                                 <i class="fa-solid fa-arrow-left me-2"></i>
                                 Regresar
                             </button>
-                            <button (click)="radicar(content)" class="btn btn-success btn-lg rounded-pill ms-2">
-                                Terminar radicacion
-                                <i class="fa-solid fa-check ms-2"></i>
+                            <button (click)="radicar(modalRadicacionOk, modalRadicacionLoading, modalRadicacionError)" [disabled]="isLoadingRequest" class="btn btn-success btn-lg rounded-pill ms-2">
+                                <span *ngIf="!isLoadingRequest">Terminar radicacion</span>
+                                <span *ngIf="isLoadingRequest">Radicando incapacidad...</span>
+
+                                <i *ngIf="!isLoadingRequest" class="fa-solid fa-check ms-2"></i>
+                                <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" *ngIf="isLoadingRequest"></span>
                             </button>
                         </div>
                     </div>
@@ -163,11 +175,11 @@
     </div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #modalRadicacionOk let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
         <div class="modal-header border-bottom-0">
             <h1 class="modal-title fs-5"></h1>
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
         </div>
         <div class="modal-body py-0 text-center">
             <i class="fa-regular fa-circle-check text-success fs-1"></i>
@@ -178,6 +190,35 @@
                 Este trámite pasa a un proceso de revisión documental , cuya respuesta y definición la podrá
                 visualizar a través de la opción seguimiento de incapacidades / consultar.
             </p>
+        </div>
+        <div class="modal-footer flex-column border-top-0">
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')" class="btn btn-lg btn-secondary w-100 mx-0">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #modalRadicacionLoading let-c="close" let-d="dismiss" draggable="false">
+    <div class="modal-content shadow">
+        <div class="modal-body text-center py-4">
+            <p class="fs-4 mb-0 mt-2">Radicando incapacidad...</p>
+            <img src="assets/gif/loading.gif" alt="loading gif" class="img-fluid">
+            <div>
+                <span class="fw-light">Este proceso puede demorar varios minutos, por favor espera...</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #modalRadicacionError let-c="close" let-d="dismiss">
+    <div class="modal-content shadow">
+        <div class="modal-header border-bottom-0">
+            <h1 class="modal-title fs-5"></h1>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeModalError()"></button>
+        </div>
+        <div class="modal-body py-0 text-center">
+            <i class="fa-regular fa-circle-xmark text-danger fs-1"></i>
+            <p class="fs-4 mb-0">ERROR.</p>
+            <p class="mb-0">Ha ocurrido un error al radicar la incapacidad.</p>
         </div>
         <div class="modal-footer flex-column border-top-0">
             <button type="button" class="btn btn-lg btn-secondary w-100 mx-0" data-bs-dismiss="modal">Aceptar</button>

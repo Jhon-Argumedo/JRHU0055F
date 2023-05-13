@@ -12,6 +12,7 @@ export class RequestIncapacidad {
     idContigenciaIncapacidad: number;
     idSubTipoContigencia: number;
     fechaIncidente: string;
+    fechaFueroMaterno:string;
     fechaInicioIncapacidad: string;
     numeroDeDias: number;
     prorroga: string;

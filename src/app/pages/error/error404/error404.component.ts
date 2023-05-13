@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from 'src/app/app.service';
 
 @Component({
-  selector: 'app-error404',
-  templateUrl: './error404.component.html',
-  styleUrls: ['./error404.component.scss']
+    selector: 'app-error404',
+    templateUrl: './error404.component.html',
+    styleUrls: ['./error404.component.scss']
 })
-export class Error404Component {
-
+export class Error404Component  {
+    
 }

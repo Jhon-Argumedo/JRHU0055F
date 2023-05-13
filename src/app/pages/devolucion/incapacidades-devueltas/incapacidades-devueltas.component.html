@@ -18,8 +18,8 @@
         </div>
         <div class="col-12">
             <div class="table-responsive">
-                <table class="table">
-                    <caption>Incapacidades devueltas.</caption>
+                <table class="table text-center">
+                    <caption>Historial de incapacidades.</caption>
                     <thead>
                         <tr>
                             <th scope="col">N° radicado</th>
@@ -28,34 +28,27 @@
                             <th scope="col">Subtipo incapacidad</th>
                             <th scope="col">Fecha inicio</th>
                             <th scope="col">Fecha fin</th>
-                            <th scope="col">Fecha radicado</th>
-                            <th scope="col" class="text-center">Motivo</th>
-                            <th scope="col" class="text-center">Solucionar</th>
+                            <th scope="col">Fecha radicación</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col" class="text-center">Observación</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let i of incapacidades">
-                            <th scope="row">{{i.incRadicacion}}</th>
-                            <td>{{i.eplNd}}</td>
-                            <td>{{i.incTipo}}</td>
-                            <td>@mdo</td>
-                            <td>{{i.incFecIni}}</td>
-                            <td>{{i.incFecFin}}</td>
-                            <td>{{i.incFecFin}}</td>
+                            <th scope="row">{{i.numeroRadicado}}</th>
+                            <td>{{i.nombreEmpresa}}</td>
+                            <td>{{i.tipoIncapacidad}}</td>
+                            <td>{{i.subTipoIncapacidad}}</td>
+                            <td>{{i.fechaInicial}}</td>
+                            <td>{{i.fechaFinal}}</td>
+                            <td>{{i.fechaDeRadicacion}}</td>
+                            <td>{{i.estado}}</td>
                             <td class="text-center">
-                                <a routerLink="/incapacidades/devolucion/documentos-devolucion"
-                                    class="btn btn-primary rounded-pill btn-sm" data-bs-toggle="tooltip"
+                                <button class="btn btn-dark rounded-pill btn-sm" data-bs-toggle="tooltip"
                                     data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                    data-bs-title="Ver motivo devolución.">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <a routerLink="/incapacidades/devolucion/documentos-devolucion" class="btn btn-dark rounded-pill btn-sm" data-bs-toggle="tooltip"
-                                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                    data-bs-title="Cargar documentos.">
-                                    <i class="fa-solid fa-paperclip"></i>
-                                </a>
+                                    data-bs-title="Ver observaciones." data-bs-toggle="modal" data-bs-target="#modalSheet">
+                                    <i class="fa-sharp fa-solid fa-note-sticky"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>

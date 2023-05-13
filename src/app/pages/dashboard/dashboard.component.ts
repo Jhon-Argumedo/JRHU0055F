@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 
 @Component({
@@ -20,11 +22,13 @@ export class DashboardComponent {
 
     constructor(private router: Router,
         private storage: LocalStorageService,
-        private appService:AppService) { }
+        private appService:AppService,
+        private toast:ToastrService) { }
 
     ngOnInit(): void {
-        if(!this.validIsUserLogged()) {
-            window.location.href = 'https://apps.genialw.com/SitioTrabajador/inicio.xhtml';
+        if(!this.appService.isUserLogged()) {
+            this.toast.info("No se ha detectado una sesion de usuario activa.");
+            window.location.href = SitioTrabajador.URL;
         }
 
         this.usuarioSesion = this.storage.retrieve('usuarioSesion');
@@ -41,8 +45,5 @@ export class DashboardComponent {
         str = str.toLowerCase();
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-
-    validIsUserLogged() {
-        return this.appService.isUserLogged();
-    }
+    
 }

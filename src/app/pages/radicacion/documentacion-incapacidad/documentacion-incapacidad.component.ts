@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tooltip } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
+import { AppService } from 'src/app/app.service';
 import { DocumentoUpload } from 'src/app/model/documento-upload';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestDocumento } from 'src/app/model/request-documento';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
 import { ResponseRadicarIncapacidad } from 'src/app/model/response-radicar-incapacidad';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { DocumentacionIncapacidadService } from './documentacion-incapacidad.service';
@@ -22,21 +24,33 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
+    requestIncapacidad:RequestIncapacidad = new RequestIncapacidad();
     incapacidad: Incapacidad = new Incapacidad();
     documentos: DocumentoUpload[] = [];
-    modalRadicacion: NgbModalRef;
     errorMessage: string = '';
     numeroRadicado:number;
     responseRadicarIncapacidad:ResponseRadicarIncapacidad = new ResponseRadicarIncapacidad();
+    isLoading:boolean = false;
+    isLoadingRequest:boolean = false;
+
+    modalRadicacionOk:any;
+    modalRadicacionError:any;
+    modalRadicacionLoading:any;
 
     constructor(private storage: LocalStorageService,
         private documentosService: DocumentacionIncapacidadService,
         private toastr: ToastrService,
         private modalService: NgbModal,
         private docService: DocumentacionIncapacidadService,
-        private router: Router) { }
+        private router: Router,
+        private appService:AppService) { }
 
     ngOnInit() {
+        if(!this.appService.isUserLogged()) {
+            this.toastr.info("No se ha detectado una sesion de usuario activa.");
+            window.location.href = SitioTrabajador.URL;
+        }
+
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
         this.getDataLocalStorage();
@@ -46,53 +60,57 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     getDataLocalStorage() {
         this.tipoIncapacidad = this.storage.retrieve('tipoInc');
         this.subtipoIncapacidad = this.storage.retrieve('subtipoInc');
+        this.requestIncapacidad = this.storage .retrieve('requestIncapacidad');
     }
 
-    radicar(content: any) {
-        let reqDocumentos: RequestDocumento[] = [];
-
+    radicar(modalOk:any, modalLoading:any, modalError:any) {
         if (!this.validarDocumentosCargados(this.documentos)) {
-            this.toastr.error('No se puede realizar la radicación, faltan documentos por cargar.');
             this.errorMessage = '<strong>Para radicar la incapacidad debe cargar estos documentos: </strong><br><br>' 
             + this.convertToHtmlList(this.getDocumentosFaltantes(this.documentos));
             window.scroll(0,0);
             return;
         }
 
-        let requestIncapacidad:RequestIncapacidad = this.storage .retrieve('requestIncapacidad');
+        this.modalRadicacionOk = modalOk;
+        this.modalRadicacionError = modalError;
+        this.modalRadicacionLoading = modalLoading;
         
+        let reqDocumentos: RequestDocumento[] = [];
+
         reqDocumentos = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
+        this.requestIncapacidad.documentosACargar = reqDocumentos;
 
-        requestIncapacidad.documentosACargar = reqDocumentos;
-        console.log(requestIncapacidad);
+        console.log(this.requestIncapacidad);
 
-        this.docService.radicarIncapacidad(requestIncapacidad).subscribe(data => {
-            this.openModal(content);
-            console.log(data);
-            this.responseRadicarIncapacidad = data;
-            this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
-        }, error => {
-            console.log(error);
-            this.toastr.error(error.message);
-        });
-
+        this.isLoadingRequest = true;
+        this.openModalLoading(this.modalRadicacionLoading);
+        this.radicarIncapacidad();
+        this.storage.clear('requestIncapacidad');
     }
 
     findAllDocsBySubtipoInc() {
-        this.documentosService.findAllDocsBySubtipoInc(this.tipoIncapacidad.codigoTipoIncapacidad).subscribe(data => {
-            data.forEach(d => {
-                let documento: DocumentoUpload = new DocumentoUpload();
-                documento.idDocumento = d.idDocumento;
-                documento.descripcionDelDocumento = d.descripcionDelDocumento;
-                documento.requerido = d.requerido;
-                documento.cargaDocumento = '';
-                documento.base64 = '';
+        this.isLoading = false;
+        this.documentosService.findAllDocsBySubtipoInc(this.tipoIncapacidad.codigoTipoIncapacidad).subscribe({
+            next: (data) => {
+                data.forEach(d => {
+                    let documento: DocumentoUpload = new DocumentoUpload();
+                    documento.idDocumento = d.idDocumento;
+                    documento.descripcionDelDocumento = d.descripcionDelDocumento;
+                    documento.requerido = d.requerido;
+                    documento.cargaDocumento = '';
+                    documento.base64 = '';
 
-                this.documentos.push(documento);
-            });
-        }, error => {
-            console.log(error);
-            this.toastr.error(error.message);
+                    this.documentos.push(documento);
+                });
+            },
+            error: (error) => {
+                console.log(error);
+                this.toastr.error(error.message);
+                this.appService.manageHttpError(error);
+            }, 
+            complete: () => {
+                this.isLoading = false;
+            }
         });
     }
 
@@ -108,6 +126,12 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         documento.cargaDocumento = file.name;
         documento.pesoCarga = this.bytesToMB(file.size);
 
+        if(!this.appService.isFileValid(file)) {
+            this.errorMessage = '<strong>Extensión de documento no permitida, solo archivos PDF. </strong>';
+            window.scroll(0,0);
+            return;
+        }
+
         this.fileToBase64(file)
             .then((base64String) => {
                 documento.base64 = base64String.split(',')[1].toString();
@@ -117,7 +141,6 @@ export class DocumentacionIncapacidadComponent implements OnInit {
                 console.error(error);
             });
     }
-
 
     fileToBase64(file: File): Promise<string> {
         return new Promise<string>((resolve, reject) => {
@@ -145,12 +168,28 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    openModal(modal: any) {
-        this.modalRadicacion = this.modalService.open(modal);
+    openModalOk(modal: any) {
+        this.modalRadicacionOk = this.modalService.open(modal);
     }
 
-    closeModal() {
-        this.modalRadicacion.close();
+    openModalLoading(modal: any) {
+        this.modalRadicacionLoading = this.modalService.open(modal, {backdrop: 'static'});
+    }
+
+    openModalError(modal: any) {
+        this.modalRadicacionError = this.modalService.open(modal);
+    }
+
+    closeModalOk() {
+        this.modalRadicacionOk.close();
+    }
+
+    closeModalError() {
+        this.modalRadicacionError.close();
+    }
+
+    closeModalLoading() {
+        this.modalRadicacionLoading.close();
     }
 
     validarDocumentosCargados(docs: DocumentoUpload[]) {
@@ -210,6 +249,27 @@ export class DocumentacionIncapacidadComponent implements OnInit {
             return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
         });
         return capitalizedWords.join(' ');
+    }
+
+    radicarIncapacidad() {
+        this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe({
+            next: (data) => {
+                console.log(data);
+                this.responseRadicarIncapacidad = data;
+            },
+            error: (error) => {
+                console.log(error);
+                this.openModalError(this.modalRadicacionError);
+                this.toastr.error(error.message);
+                this.appService.manageHttpError(error);
+            },
+            complete: () => {
+                this.isLoadingRequest = false;
+                this.closeModalLoading();
+                this.openModalOk(this.modalRadicacionOk);
+                this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
+            }
+    });
     }
 
 }

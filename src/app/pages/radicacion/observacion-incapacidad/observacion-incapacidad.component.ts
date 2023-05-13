@@ -3,6 +3,8 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
+import { AppService } from 'src/app/app.service';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { ObservacionIncapacidadService } from './observacion-incapacidad.service';
@@ -15,12 +17,15 @@ import { ObservacionIncapacidadService } from './observacion-incapacidad.service
 export class ObservacionIncapacidadComponent implements OnInit {
 
     htmlContent:string = '';
+    isLoading:boolean = false;
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
 
     accepted: boolean = false;
     submitted: boolean = false;
+
+    errorMessageWarning:string = '';
 
     form: FormGroup = new FormGroup({
         terminos: new FormControl(''),
@@ -31,9 +36,15 @@ export class ObservacionIncapacidadComponent implements OnInit {
         private router: Router,
         private storage: LocalStorageService,
         private observacionService: ObservacionIncapacidadService,
-        private toastr:ToastrService) { }
+        private toastr:ToastrService,
+        private appService:AppService) { }
 
     ngOnInit(): void {
+        if(!this.appService.isUserLogged()) {
+            this.toastr.info("No se ha detectado una sesion de usuario activa.");
+            window.location.href = SitioTrabajador.URL;
+        }
+
         this.buildForm();
 
         this.tipoIncapacidad = this.storage.retrieve('tipoInc');
@@ -42,10 +53,17 @@ export class ObservacionIncapacidadComponent implements OnInit {
         this.getObservacionText();
 
     }
+    
     onSubmit() {
         this.submitted = true;
+        this.errorMessageWarning = '';
 
         if (this.form.invalid) {
+            return;
+        }
+
+        if(this.isLoading) {
+            this.errorMessageWarning = 'Permite que carguen las observaciones generales.';
             return;
         }
 
@@ -65,12 +83,20 @@ export class ObservacionIncapacidadComponent implements OnInit {
     }
 
     getObservacionText() {
-        this.observacionService.getObservacionText().subscribe(data => {
-            this.htmlContent = data.descripcion;
-        }, error => {
-            console.log(error);
-            this.toastr.error(error.message);
-        });
+        this.isLoading = true;
+        this.observacionService.getObservacionText().subscribe({
+            next: (data) => {
+                this.htmlContent = data.descripcion;
+            }, 
+            error: (error) => {
+                console.log(error);
+                this.toastr.error(error.message);
+                this.appService.manageHttpError(error);
+            },
+            complete: () => {
+                this.isLoading = false;
+            }
+    });
     }
 
     capitalizeWords(str: string): string {

@@ -2,7 +2,15 @@
     <div class="row">
         <div class="col">
             <p class="mt-4">Seleccione el tipo de Incapacidad:</p>
-            <div class="row align-items-md-stretch">
+            <div class="row align-items-md-stretch" *ngIf="isLoading">
+                <div class="col-12">
+                    <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                        <strong class="option-tipo">Los tipos de incapacidad estan cargando....</strong>
+                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-md-stretch" *ngIf="!isLoading">
                 <div class="col-12 col-sm-6 col-lg-3 mb-3" *ngFor="let ti of tiposIncList">
                     <a (click)="go(ti)" class="nav-item-link">
                         <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">

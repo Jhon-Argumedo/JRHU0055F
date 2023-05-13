@@ -19,7 +19,15 @@
                 <strong>{{ errorMessageWarning }}</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="p-sm-4 mb-4 bg-light rounded-5 border">
+            <div class="row align-items-md-stretch" *ngIf="isLoading">
+                <div class="col-12">
+                    <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                        <strong class="option-tipo">Los datos para radicar una incapacidad estan cargando....</strong>
+                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-sm-4 mb-4 bg-light rounded-5 border" *ngIf="!isLoading">
                 <div class="container-fluid p-4">
                     <h1 class="fw-bold text-center">Radicar Incapacidad</h1>
                     <h3 class="fw-light text-center text-muted">{{ tipoInc.nombreTipoIncapacidad }} </h3>
@@ -37,7 +45,7 @@
                                 [(ngModel)]="contrato"
                                 (change)="onChangeContrato(contrato)" #contratoSelect>
                                 <option *ngFor="let c of contratos" [ngValue]="c" class="text-uppercase">
-                                    {{ c.numeroContrato }} - {{c.nombreEmpresaFilial}} - Finalizó el {{c.fechaFinalizacionContrato | date:'dd-MMM-yyyy'}}
+                                    {{ c.numeroContrato }} - {{c.nombreEmpresaFilial}}
                                 </option>
                             </select>
 
@@ -230,9 +238,11 @@
                                 <i class="fa-solid fa-arrow-left me-sm-2"></i>
                                 Regresar
                             </button>
-                            <button type="submit" class="btn btn-lg btn-warning rounded-pill ms-2">
-                                Siguiente
-                                <i class="fa-solid fa-arrow-right ms-sm-2"></i>
+                            <button type="submit" class="btn btn-lg btn-warning rounded-pill ms-2" [disabled]="isLoadingValidacion">
+                                <span *ngIf="!isLoadingValidacion">Siguiente</span> 
+                                <span *ngIf="isLoadingValidacion">Validando...</span> 
+                                <i class="fa-solid fa-arrow-right ms-sm-2" *ngIf="!isLoadingValidacion"></i>
+                                <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" *ngIf="isLoadingValidacion"></span>
                             </button>
                         </div>
                     </form>
