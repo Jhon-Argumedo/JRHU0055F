@@ -1,7 +1,11 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
+import { SesionDataEnum } from './model/enums';
+import { RequestIncapacidad } from './model/request-incapacidad';
+import { TipoIncapacidad } from './model/tipo-incapacidad';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +16,8 @@ export class AppService {
 
     constructor(private router: Router,
         private localStorage: LocalStorageService,
-        private http:HttpClient) { }
+        private http:HttpClient,
+        private toast:ToastrService) { }
 
     manageHttpError(error: HttpErrorResponse) {
         if (error.status === 404) {
@@ -43,6 +48,36 @@ export class AppService {
 
     isFileValid(file: File): boolean {
         return this.PDF_EXTENSION_REGEX.test(file.name);
+    }
+
+    convertStringFirstCapitalLetter(str: string): string {
+        let lowercaseStr = str.toLowerCase(); 
+        let capitalizedStr = lowercaseStr.charAt(0).toUpperCase() + lowercaseStr.slice(1); // capitalize first letter
+        return capitalizedStr;
+    }
+
+    capitalizeWords(str: string): string {
+        const words = str.split(/\s+/);
+        const capitalizedWords = words.map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+        return capitalizedWords.join(' ');
+    }
+
+    validFlujoRadicarIncapacidad() {
+        let tipoIncapacidad:TipoIncapacidad = this.localStorage.retrieve(SesionDataEnum.tipoIncapacidad);
+        let requestIncapacidad:RequestIncapacidad = this.localStorage.retrieve(SesionDataEnum.requestIncapacidad);
+        let checkObservacion:boolean = this.localStorage.retrieve(SesionDataEnum.checkObservacion);
+
+        if(tipoIncapacidad == null && requestIncapacidad.contrato == 0 && !checkObservacion) {
+            this.router.navigate(['/incapacidades/radicacion/tipo-incapacidad']);
+        } else if(tipoIncapacidad != null && requestIncapacidad.contrato == 0 && !checkObservacion) {
+            this.router.navigate(['/incapacidades/radicacion/radicar-incapacidad']);
+        } else if(tipoIncapacidad != null && requestIncapacidad.contrato > 0 && !checkObservacion) {
+            this.router.navigate(['/incapacidades/radicacion/observaciones-incapacidad']);
+        } else if(tipoIncapacidad != null && requestIncapacidad.contrato > 0 && checkObservacion) {
+            this.router.navigate(['/incapacidades/radicacion/documentacion-incapacidad']);
+        }
     }
       
 }

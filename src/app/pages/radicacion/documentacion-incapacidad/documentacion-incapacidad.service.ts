@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DocumentoRadicacion } from 'src/app/model/documento-radicacion';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
-import { ResponseRadicarIncapacidad } from 'src/app/model/response-radicar-incapacidad';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'
@@ -19,6 +18,6 @@ export class DocumentacionIncapacidadService {
     }
 
     radicarIncapacidad(reqIncapacidad:RequestIncapacidad) {
-        return this.http.post<ResponseRadicarIncapacidad>(`${this.baseUrl}/incapacidades/radicado/`, reqIncapacidad);
+        return this.http.post<any>(`${this.baseUrl}/incapacidades/radicado/`, reqIncapacidad, { observe: 'response' });
     }
 }

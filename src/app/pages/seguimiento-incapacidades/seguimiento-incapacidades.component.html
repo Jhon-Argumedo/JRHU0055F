@@ -6,22 +6,23 @@
                 aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="bootstrap.xhtml" class="text-decoration-none">Inicio</a>
+                        <a routerLink="/dashboard" class="text-decoration-none">Inicio</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Seguimiento de incapacidades</li>
+                    <li class="breadcrumb-item active" aria-current="page">Incapacidades radicadas</li>
                 </ol>
             </nav>
-            <p class="fs-1 text-center mt-5 mb-3 fw-light">Seguimiento de Incapacidades</p>
-            <p class="text-muted">Aqui podras gestionar todas las incapacidades radicadas, viendo toda la información
-                necesaria.</p>
+        </div>
+        <div class="bg-white sticky-top py-2">
+            <p class="fs-1 text-center fw-light">Incapacidades radicadas</p>
             <hr>
         </div>
-        <div class="row align-items-md-stretch" *ngIf="isLoading">
-            <div class="col-12">
-                <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
-                    <strong class="option-tipo">El historial de incapacidades estan cargando....</strong>
-                    <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
-                </div>
+        <small class="text-muted mb-2">Aqui podras gestionar todas las incapacidades radicadas, viendo toda la información
+            necesaria.
+        </small>
+        <div class="col-12" *ngIf="isLoading">
+            <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                <strong class="option-tipo">El historial de incapacidades estan cargando....</strong>
+                <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
             </div>
         </div>
         <div class="col-12" *ngIf="!isLoading">
@@ -29,7 +30,7 @@
                 dataKey="id"
                 [value]="incapacidades" 
                 [paginator]="true"
-                [rows]="10" 
+                [rows]="10"
                 [showCurrentPageReport]="true"
                 [tableStyle]="{ 'min-width': '50rem' }"
                 currentPageReportTemplate="Pagina {first} - {last} de {totalRecords} registros"
@@ -51,7 +52,8 @@
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th scope="col" pSortableColumn="numeroRadicado" style="width: 15%;">N° radicado</th>
+                        <th scope="col" pSortableColumn="numeroRadicado" style="width: 12%;">N° radicado</th>
+                        <th scope="col" pSortableColumn="estado" style="width: 8%;">Estado</th>
                         <th scope="col" pSortableColumn="nombreEmpresa" style="width: 17%;">Empresa</th>
                         <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 25%;">Tipo incapacidad</th>
                         <th scope="col" pSortableColumn="fechaInicial" style="width: 15%;">Fecha inicio</th>
@@ -63,6 +65,11 @@
                 <ng-template pTemplate="body" let-i>
                     <tr>
                         <td>{{i.numeroRadicado}}</td>
+                        <td>
+                            <span class="badge rounded-pill" [ngClass]="{'text-bg-danger' : i.estado === 'DEV', 'text-bg-warning' : i.estado === 'PEN', 'text-bg-info' : i.estado === 'CPT', 'text-bg-success' : i.estado === 'APR'}">
+                                {{ i.estado }}
+                            </span>
+                        </td>
                         <td>{{i.nombreEmpresa}}</td>
                         <td>{{i.tipoIncapacidad}}</td>
                         <td>{{ i.fechaInicial | date: 'dd/MM/yyyy'}}</td>
@@ -90,47 +97,54 @@
 
 <ng-template #modal let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
-        <div class="modal-header border-bottom-0">
-            <h1 class="modal-title fs-5"></h1>
+        <div class="modal-header">
+            <p class="fs-2 mb-0 mt-2 text-center">
+                <i class="fa-solid fa-magnifying-glass text-info fs-2 me-3"></i>
+                <span class="fw-light">Radicación #</span>
+                <strong>{{incapacidadSelected.numeroRadicado}}</strong>
+            </p>
             <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
         </div>
-        <div class="modal-body py-0">
-            <div class="text-center">
-                <i class="fa-solid fa-magnifying-glass text-info fs-1"></i>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col">
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Empresa: </span>
+                        <span class="text-muted">{{ incapacidadSelected.nombreEmpresa }}</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Numero contrato: </span>
+                        <span class="text-muted">{{ incapacidadSelected.numeroContrato }}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Fecha de radicacion: </span>
+                        <span class="text-muted">{{ incapacidadSelected.fechaDeRadicacion | date: 'dd/MM/yyyy'}}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Estado: </span>
+                        <span class="text-muted">{{ incapacidadSelected.estado }}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Seguro: </span>
+                        <span class="text-muted">{{ incapacidadSelected.sigla }}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Periodo de incapacidad: </span>
+                        <span class="text-muted">{{ incapacidadSelected.fechaInicial | date: 'dd/MM/yyyy'}} - {{ incapacidadSelected.fechaFinal | date: 'dd/MM/yyyy'}}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Tipo de incapacidad: </span>
+                        <span class="text-muted">{{ incapacidadSelected.tipoIncapacidad }}.</span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        <span class="text-dark">Subtipo de incapacidad: </span> 
+                        <span class="text-muted">{{ incapacidadSelected.subTipoIncapacidad }}.</span>
+                    </p>
+                </div>
             </div>
-            <p class="fs-2 mb-0 mt-2 text-center">Radicación #<strong>{{incapacidadSelected.numeroRadicado}}</strong></p>
-            <hr>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Nombre de empresa: </span>
-                <span class="fw-light">{{ incapacidadSelected.nombreEmpresa }}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Numero contrato: </span>
-                <span class="fw-light">{{ incapacidadSelected.numeroContrato }}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Fecha de radicacion: </span>
-                <span class="fw-light">{{ incapacidadSelected.fechaDeRadicacion | date: 'dd/MM/yyyy'}}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Otros datos: </span>
-                <span class="fw-light">{{ incapacidadSelected.estado }} - {{ incapacidadSelected.sigla }}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Periodo de incapacidad: </span>
-                <span class="fw-light">{{ incapacidadSelected.fechaInicial | date: 'dd/MM/yyyy'}} - {{ incapacidadSelected.fechaFinal | date: 'dd/MM/yyyy'}}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Tipo de incapacidad: </span>
-                <span class="fw-light">{{ incapacidadSelected.tipoIncapacidad }}.</span>
-            </p>
-            <p class="mb-0">
-                <span class="fw-bold text-muted">Subtipo de incapacidad: </span> 
-                <span class="fw-light">{{ incapacidadSelected.subTipoIncapacidad }}.</span>
-            </p>
         </div>
-        <div class="modal-footer flex-column border-top-0">
-            <button type="button" class="btn btn-lg btn-secondary w-100 mx-0" aria-label="Close" (click)="d('Cross click')">Aceptar</button>
+        <div class="modal-footer">
+            
         </div>
     </div>
 </ng-template>

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseObservaciones } from 'src/app/model/response-observaciones';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'

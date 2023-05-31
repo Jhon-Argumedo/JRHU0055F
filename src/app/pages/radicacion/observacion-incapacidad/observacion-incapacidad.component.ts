@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
@@ -45,10 +46,12 @@ export class ObservacionIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
+        this.appService.validFlujoRadicarIncapacidad();
+
         this.buildForm();
 
-        this.tipoIncapacidad = this.storage.retrieve('tipoInc');
-        this.subtipoIncapacidad = this.storage.retrieve('subtipoInc');
+        this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
+        this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
 
         this.getObservacionText();
 
@@ -67,7 +70,7 @@ export class ObservacionIncapacidadComponent implements OnInit {
             return;
         }
 
-        //SET CHECK VALUE TO TABLE FIELD INCAPACIDAD
+        this.storage.store(SesionDataEnum.checkObservacion, true);
         this.router.navigate(['incapacidades/radicacion/documentacion-incapacidad']);
         window.scroll(0, 0);
     }

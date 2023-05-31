@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { SesionDataEnum } from 'src/app/model/enums';
 import { RequestContratosList } from 'src/app/model/request-contratos-list';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { ObservacionIncapacidadService } from '../../radicacion/observacion-incapacidad/observacion-incapacidad.service';
@@ -26,11 +27,7 @@ export class AppInicioComponent {
 
     constructor(private route: ActivatedRoute,
         private router: Router,
-        private localStorage: LocalStorageService,
-        private tipoIncService:TipoIncapacidadService,
-        private appService:AppService,
-        private radicarService:RadicarIncapacidadService,
-        private observacionService:ObservacionIncapacidadService) { }
+        private localStorage: LocalStorageService) { }
 
     ngOnInit(): void {
         this.cleanLocalStorage();
@@ -46,7 +43,7 @@ export class AppInicioComponent {
         this.usuarioSesion.tipoDocEmp = this.route.snapshot.params['tipo-doc-emp'];
         this.usuarioSesion.numeroDocEmp = this.route.snapshot.params['numero-doc-emp'];
 
-        this.localStorage.store('usuarioSesion', this.usuarioSesion);
+        this.localStorage.store(SesionDataEnum.usuarioSesion, this.usuarioSesion);
         this.go('dashboard');
     }
 
@@ -56,9 +53,8 @@ export class AppInicioComponent {
     }
 
     cleanLocalStorage() {
-        this.localStorage.clear('displayError');
-        this.localStorage.clear("incapacidad");
-        this.localStorage.clear("usuarioSesion");
-        this.localStorage.clear("tipoInc");
+        this.localStorage.clear(SesionDataEnum.requestIncapacidad);
+        this.localStorage.clear(SesionDataEnum.usuarioSesion);
+        this.localStorage.clear(SesionDataEnum.tipoIncapacidad);
     }
 }

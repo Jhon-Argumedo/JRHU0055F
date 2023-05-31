@@ -6,7 +6,7 @@ import { RequestContratosList } from 'src/app/model/request-contratos-list';
 import { RequestValidarIncapacidad } from 'src/app/model/request-validar-incapacidad';
 import { ResponseValidacionIncapacidad } from 'src/app/model/response-validacion-incapacidad';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'

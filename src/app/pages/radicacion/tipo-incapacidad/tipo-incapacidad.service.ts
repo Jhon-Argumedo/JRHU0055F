@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, timeout } from 'rxjs';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +13,6 @@ export class TipoIncapacidadService {
     constructor(private http: HttpClient) { }
 
     findAll() {
-        return this.http.get<TipoIncapacidad[]>(`${this.baseUrl}`).pipe(timeout(5000));
+        return this.http.get<TipoIncapacidad[]>(`${this.baseUrl}`);
     }
 }

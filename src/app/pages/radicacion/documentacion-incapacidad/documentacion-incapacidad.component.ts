@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tooltip } from 'bootstrap';
@@ -6,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
 import { DocumentoUpload } from 'src/app/model/documento-upload';
+import { SesionDataEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestDocumento } from 'src/app/model/request-documento';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
@@ -24,18 +26,18 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
-    requestIncapacidad:RequestIncapacidad = new RequestIncapacidad();
+    requestIncapacidad: RequestIncapacidad = new RequestIncapacidad();
     incapacidad: Incapacidad = new Incapacidad();
     documentos: DocumentoUpload[] = [];
     errorMessage: string = '';
-    numeroRadicado:number;
-    responseRadicarIncapacidad:ResponseRadicarIncapacidad = new ResponseRadicarIncapacidad();
-    isLoading:boolean = false;
-    isLoadingRequest:boolean = false;
+    numeroRadicado: number;
+    responseRadicarIncapacidad: ResponseRadicarIncapacidad = new ResponseRadicarIncapacidad();
+    isLoading: boolean = false;
+    isLoadingRequest: boolean = false;
 
-    modalRadicacionOk:any;
-    modalRadicacionError:any;
-    modalRadicacionLoading:any;
+    modalRadicacionOk: any;
+    modalRadicacionError: any;
+    modalRadicacionLoading: any;
 
     constructor(private storage: LocalStorageService,
         private documentosService: DocumentacionIncapacidadService,
@@ -43,13 +45,15 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         private modalService: NgbModal,
         private docService: DocumentacionIncapacidadService,
         private router: Router,
-        private appService:AppService) { }
+        private appService: AppService) { }
 
     ngOnInit() {
-        if(!this.appService.isUserLogged()) {
+        if (!this.appService.isUserLogged()) {
             this.toastr.info("No se ha detectado una sesion de usuario activa.");
             window.location.href = SitioTrabajador.URL;
         }
+
+        this.appService.validFlujoRadicarIncapacidad();
 
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
@@ -58,23 +62,23 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     getDataLocalStorage() {
-        this.tipoIncapacidad = this.storage.retrieve('tipoInc');
-        this.subtipoIncapacidad = this.storage.retrieve('subtipoInc');
-        this.requestIncapacidad = this.storage .retrieve('requestIncapacidad');
+        this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
+        this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
+        this.requestIncapacidad = this.storage.retrieve(SesionDataEnum.requestIncapacidad);
     }
 
-    radicar(modalOk:any, modalLoading:any, modalError:any) {
+    radicar(modalOk: any, modalLoading: any, modalError: any) {
         if (!this.validarDocumentosCargados(this.documentos)) {
-            this.errorMessage = '<strong>Para radicar la incapacidad debe cargar estos documentos: </strong><br><br>' 
-            + this.convertToHtmlList(this.getDocumentosFaltantes(this.documentos));
-            window.scroll(0,0);
+            this.errorMessage = '<strong>Para radicar la incapacidad debe cargar estos documentos: </strong><br><br>'
+                + this.convertToHtmlList(this.getDocumentosFaltantes(this.documentos));
+            window.scroll(0, 0);
             return;
         }
 
         this.modalRadicacionOk = modalOk;
         this.modalRadicacionError = modalError;
         this.modalRadicacionLoading = modalLoading;
-        
+
         let reqDocumentos: RequestDocumento[] = [];
 
         reqDocumentos = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
@@ -82,14 +86,12 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
         console.log(this.requestIncapacidad);
 
-        this.isLoadingRequest = true;
         this.openModalLoading(this.modalRadicacionLoading);
         this.radicarIncapacidad();
-        this.storage.clear('requestIncapacidad');
     }
 
     findAllDocsBySubtipoInc() {
-        this.isLoading = false;
+        this.isLoading = true;
         this.documentosService.findAllDocsBySubtipoInc(this.tipoIncapacidad.codigoTipoIncapacidad).subscribe({
             next: (data) => {
                 data.forEach(d => {
@@ -107,7 +109,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
                 console.log(error);
                 this.toastr.error(error.message);
                 this.appService.manageHttpError(error);
-            }, 
+            },
             complete: () => {
                 this.isLoading = false;
             }
@@ -126,9 +128,9 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         documento.cargaDocumento = file.name;
         documento.pesoCarga = this.bytesToMB(file.size);
 
-        if(!this.appService.isFileValid(file)) {
+        if (!this.appService.isFileValid(file)) {
             this.errorMessage = '<strong>Extensión de documento no permitida, solo archivos PDF. </strong>';
-            window.scroll(0,0);
+            window.scroll(0, 0);
             return;
         }
 
@@ -169,15 +171,15 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     openModalOk(modal: any) {
-        this.modalRadicacionOk = this.modalService.open(modal);
+        this.modalRadicacionOk = this.modalService.open(modal, {centered: true});
     }
 
     openModalLoading(modal: any) {
-        this.modalRadicacionLoading = this.modalService.open(modal, {backdrop: 'static'});
+        this.modalRadicacionLoading = this.modalService.open(modal, { backdrop: 'static', centered: true });
     }
 
     openModalError(modal: any) {
-        this.modalRadicacionError = this.modalService.open(modal);
+        this.modalRadicacionError = this.modalService.open(modal, {centered: true});
     }
 
     closeModalOk() {
@@ -216,7 +218,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         return documentosFaltantes.toString();
     }
 
-    getRequestDocumentoFromDocumentosUpload(docs: DocumentoUpload[]):RequestDocumento[] {
+    getRequestDocumentoFromDocumentosUpload(docs: DocumentoUpload[]): RequestDocumento[] {
         let reqDocumentos: RequestDocumento[] = [];
 
         docs.forEach(doc => {
@@ -252,13 +254,18 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     radicarIncapacidad() {
+        this.isLoadingRequest = true;
+        let httpResponse:HttpResponse<any>;
         this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe({
-            next: (data) => {
-                console.log(data);
-                this.responseRadicarIncapacidad = data;
+            next: (response) => {
+                console.log(response);
+                httpResponse = response;
+                this.responseRadicarIncapacidad = response.body;
+                console.log(this.responseRadicarIncapacidad);
             },
             error: (error) => {
                 console.log(error);
+                this.closeModalLoading();
                 this.openModalError(this.modalRadicacionError);
                 this.toastr.error(error.message);
                 this.appService.manageHttpError(error);
@@ -266,10 +273,22 @@ export class DocumentacionIncapacidadComponent implements OnInit {
             complete: () => {
                 this.isLoadingRequest = false;
                 this.closeModalLoading();
-                this.openModalOk(this.modalRadicacionOk);
-                this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
+                if(httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
+                    this.openModalOk(this.modalRadicacionOk);
+                    this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
+                    this.clearDataLocalStorage();
+                } else if(httpResponse.statusText != 'OK') {
+                    this.openModalError(this.modalRadicacionError);
+                }
             }
     });
+    }
+
+    clearDataLocalStorage() {
+        this.storage.clear(SesionDataEnum.requestIncapacidad);
+        this.storage.clear(SesionDataEnum.subtipoIncapacidad);
+        this.storage.clear(SesionDataEnum.tipoIncapacidad);
+        this.storage.clear(SesionDataEnum.checkObservacion);
     }
 
 }

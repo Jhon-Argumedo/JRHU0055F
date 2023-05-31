@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 
@@ -31,7 +32,7 @@ export class DashboardComponent {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.usuarioSesion = this.storage.retrieve('usuarioSesion');
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         this.nombreUsuario = this.usuarioSesion.nombreUsuario.split(' ', 1)[0];
         this.nombreUsuario = this.capitalizeFirstLetter(this.nombreUsuario);
     }

@@ -192,7 +192,7 @@
             </p>
         </div>
         <div class="modal-footer flex-column border-top-0">
-            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')" class="btn btn-lg btn-secondary w-100 mx-0">Aceptar</button>
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')" class="btn btn-lg btn-dark w-100 mx-0">Aceptar</button>
         </div>
     </div>
 </ng-template>
@@ -215,13 +215,13 @@
             <h1 class="modal-title fs-5"></h1>
             <button type="button" class="btn-close" aria-label="Close" (click)="closeModalError()"></button>
         </div>
-        <div class="modal-body py-0 text-center">
-            <i class="fa-regular fa-circle-xmark text-danger fs-1"></i>
-            <p class="fs-4 mb-0">ERROR.</p>
-            <p class="mb-0">Ha ocurrido un error al radicar la incapacidad.</p>
+        <div class="modal-body text-center">
+            <i class="fa-regular fa-circle-xmark text-danger fs-1 my-3"></i>
+            <p class="fs-2 mb-0">Oooops, Error.</p>
+            <p class="fs-4 mb-1">Ha ocurrido un error al radicar la incapacidad.</p>
         </div>
         <div class="modal-footer flex-column border-top-0">
-            <button type="button" class="btn btn-lg btn-secondary w-100 mx-0" data-bs-dismiss="modal">Aceptar</button>
+            <button type="button" class="btn btn-lg btn-danger w-100 mx-0" (click)="closeModalError()">Aceptar</button>
         </div>
     </div>
 </ng-template>

@@ -14,7 +14,6 @@ import { DocumentacionIncapacidadComponent } from './pages/radicacion/documentac
 import { ObservacionIncapacidadComponent } from './pages/radicacion/observacion-incapacidad/observacion-incapacidad.component';
 import { RadicarIncapacidadComponent } from './pages/radicacion/radicar-incapacidad/radicar-incapacidad.component';
 import { TipoIncapacidadComponent } from './pages/radicacion/tipo-incapacidad/tipo-incapacidad.component';
-import { HistorialIncapacidadesComponent } from './pages/seguimiento/historial-incapacidades/historial-incapacidades.component';
 import { GenerarGersComponent } from './pages/soporte/generar-gers/generar-gers.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -30,6 +29,7 @@ import { Location } from '@angular/common';
 import { UserNotLoggedComponent } from './pages/error/user-not-logged/user-not-logged.component';
 import { TableModule } from 'primeng/table';
 import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
+import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacidades/seguimiento-incapacidades.component';
 
 
 @NgModule({
@@ -42,7 +42,6 @@ import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
     ObservacionIncapacidadComponent,
     RadicarIncapacidadComponent,
     TipoIncapacidadComponent,
-    HistorialIncapacidadesComponent,
     GenerarGersComponent,
     FooterComponent,
     HeaderComponent,
@@ -51,7 +50,8 @@ import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
     Error500Component,
     UnknownErrorComponent,
     UserNotLoggedComponent,
-    ErrorAzComponent
+    ErrorAzComponent,
+    SeguimientoIncapacidadesComponent
   ],
   imports: [
     FormsModule,

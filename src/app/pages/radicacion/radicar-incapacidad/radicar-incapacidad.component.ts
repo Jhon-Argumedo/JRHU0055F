@@ -19,6 +19,7 @@ import { RequestValidarIncapacidad } from 'src/app/model/request-validar-incapac
 import { ResponseValidacionIncapacidad } from 'src/app/model/response-validacion-incapacidad';
 import { ContratoDTO } from 'src/app/model/contrato-dto';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
+import { SesionDataEnum, TipoIncapacidadEnum } from 'src/app/model/enums';
 
 @Component({
     selector: 'app-radicar-incapacidad',
@@ -101,23 +102,25 @@ export class RadicarIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
+        this.appService.validFlujoRadicarIncapacidad();
+
         this.invalidClass = 'col-12 custom-select';
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
-        this.usuarioSesion = this.storage.retrieve('usuarioSesion');
-        this.tipoInc = this.storage.retrieve('tipoInc');
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.tipoInc = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
 
         switch (this.tipoInc.nombreTipoIncapacidad) {
-            case 'ACCIDENTE LABORAL':
+            case TipoIncapacidadEnum.ACCIDENTE_LABORAL:
                 this.buildFormForEnfermedadLaboral();
                 break;
-            case 'ENFERMEDAD LABORAL':
+            case TipoIncapacidadEnum.ENFERMEDAD_LABORAL:
                 this.buildFormForEnfermedadLaboral();
                 break;
-            case 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD':
+            case TipoIncapacidadEnum.LICENCIA_MATERNIDAD_PATERNIDAD:
                 this.buildFormForLicenciaMaternidad();
                 break;
-            case 'ENFERMEDAD GENERAL':
+            case TipoIncapacidadEnum.ENFERMEDAD_GENERAL:
                 this.buildFormForEnfermedadGeneral();
                 break;
             default:
@@ -149,7 +152,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             return;
         }
 
-        let requestIncapacidad: RequestIncapacidad = this.storage.retrieve('requestIncapacidad');
+        let requestIncapacidad: RequestIncapacidad = this.storage.retrieve(SesionDataEnum.requestIncapacidad);
         let enfermedad: Enfermedad = JSON.parse(JSON.stringify(this.diagnostico));
 
         requestIncapacidad.contrato = this.contrato.numeroContrato;
@@ -165,8 +168,8 @@ export class RadicarIncapacidadComponent implements OnInit {
         });
         requestIncapacidad.fechaInicioIncapacidad = this.castStringDate(this.fechaInicio);
 
-        if (this.tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL' || this.tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL') {
-            this.castStringDate(this.fechaAccidente);
+        if (this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ENFERMEDAD_LABORAL || this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ACCIDENTE_LABORAL) {
+            requestIncapacidad.fechaIncidente = this.castStringDate(this.fechaAccidente);
 
             if (!this.validateFechaAccidente(this.fechaAccidente)) {
                 window.scroll(0,0);
@@ -178,7 +181,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             requestIncapacidad.fechaIncidente = '';
         }
 
-        if (this.tipoInc.nombreTipoIncapacidad === 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD') {
+        if (this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.LICENCIA_MATERNIDAD_PATERNIDAD) {
             requestIncapacidad.fechaFueroMaterno = this.castStringDate(this.fechaFueroMaterno);
 
         } else {
@@ -189,9 +192,9 @@ export class RadicarIncapacidadComponent implements OnInit {
         let requestValidar: RequestValidarIncapacidad = new RequestValidarIncapacidad(requestIncapacidad.numeroDeDias,
             requestIncapacidad.contrato, contratoDTO, requestIncapacidad.fechaInicioIncapacidad);
 
-        
         console.log(requestIncapacidad);
         console.log(requestValidar);
+
         this.isLoadingValidacion = true;
         this.radicarService.validIncapacidad(requestValidar).subscribe({
             next: (data) => {
@@ -204,8 +207,8 @@ export class RadicarIncapacidadComponent implements OnInit {
                     return;
                 }
 
-                this.storage.store('requestIncapacidad', requestIncapacidad);
-                this.storage.store('subtipoInc', this.subtipoIncapacidad);
+                this.storage.store(SesionDataEnum.requestIncapacidad, requestIncapacidad);
+                this.storage.store(SesionDataEnum.subtipoIncapacidad, this.subtipoIncapacidad);
                 this.router.navigate(['incapacidades/radicacion/observaciones-incapacidad']);
                 window.scroll(0, 0);
             },
@@ -215,7 +218,6 @@ export class RadicarIncapacidadComponent implements OnInit {
             },
             complete: () => {
                 this.isLoadingValidacion = false;
-                
             }
         });
     }
@@ -345,11 +347,7 @@ export class RadicarIncapacidadComponent implements OnInit {
     }
 
     capitalizeWords(str: string): string {
-        const words = str.split(/\s+/);
-        const capitalizedWords = words.map(word => {
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        });
-        return capitalizedWords.join(' ');
+        return this.appService.capitalizeWords(str);
     }
 
     onChangeContrato(value: Contrato) {
@@ -374,7 +372,6 @@ export class RadicarIncapacidadComponent implements OnInit {
         console.log(currentDate.getTime());
         
         if(inputDate.getTime() <= currentDate.getTime()) {
-            console.log('MENORR');
             return true;
         }
 
@@ -398,9 +395,7 @@ export class RadicarIncapacidadComponent implements OnInit {
     }
 
     convertStringFirstCapitalLetter(str: string): string {
-        let lowercaseStr = str.toLowerCase(); 
-        let capitalizedStr = lowercaseStr.charAt(0).toUpperCase() + lowercaseStr.slice(1); // capitalize first letter
-        return capitalizedStr;
+        return this.appService.convertStringFirstCapitalLetter(str);
     }
       
 

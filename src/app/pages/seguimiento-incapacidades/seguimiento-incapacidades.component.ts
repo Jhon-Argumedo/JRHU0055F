@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { Tooltip } from 'bootstrap';
-import { Incapacidad } from 'src/app/model/incapacidad';
-import { HistorialIncapacidadesService } from './historial-incapacidades.service';
-import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
-import { LocalStorageService } from 'ngx-webstorage';
-import { UsuarioSesion } from 'src/app/model/usuario-sesion';
-import { AppService } from 'src/app/app.service';
-import { Table } from 'primeng/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { LocalStorageService } from 'ngx-webstorage';
+import { Table } from 'primeng/table';
+import { AppService } from 'src/app/app.service';
+import { EstadosRadicadoEnum } from 'src/app/model/enums';
+import { Incapacidad } from 'src/app/model/incapacidad';
+import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
+import { UsuarioSesion } from 'src/app/model/usuario-sesion';
+import { SeguimientoIncapacidadesService } from './seguimiento-incapacidades.service';
+import { SesionDataEnum } from 'src/app/model/enums';
 
 @Component({
-    selector: 'app-historial-incapacidades',
-    templateUrl: './historial-incapacidades.component.html',
-    styleUrls: ['./historial-incapacidades.component.scss']
+    selector: 'app-seguimiento-incapacidades',
+    templateUrl: './seguimiento-incapacidades.component.html',
+    styleUrls: ['./seguimiento-incapacidades.component.scss']
 })
-export class HistorialIncapacidadesComponent {
-
+export class SeguimientoIncapacidadesComponent {
     incapacidadSelected:Incapacidad;
     incapacidades:Incapacidad[] = [];
 
     isLoading:boolean = false;
 
-    constructor(private hIncapacidadService:HistorialIncapacidadesService,
+    constructor(private seguimientoService:SeguimientoIncapacidadesService,
         private toast:ToastrService,
         private storage:LocalStorageService,
         private appService:AppService,
@@ -35,18 +35,17 @@ export class HistorialIncapacidadesComponent {
             window.location.href = SitioTrabajador.URL;
         }
 
-        Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]'))
-            .forEach(tooltipNode => new Tooltip(tooltipNode));
-
-        this.findAllInc();
+        this.findAllIncapacidadesCPT();
     }
 
-    findAllInc() {
+    findAllIncapacidadesCPT() {
         this.isLoading = true;
         let request = this.buildRequestIncapacidadesUsuario();
-        this.hIncapacidadService.findAllInc(request).subscribe({
+        this.seguimientoService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
+                this.incapacidades = this.incapacidades.filter(i => i.estado.includes(EstadosRadicadoEnum.CPT));
+                console.log(data);
             },
             error: (error) => {
                 console.log(error);
@@ -60,13 +59,13 @@ export class HistorialIncapacidadesComponent {
     }
 
     buildRequestIncapacidadesUsuario():RequestIncapacidadesUsuario {
-        let usuarioSesion:UsuarioSesion = this.storage.retrieve('usuarioSesion');
+        let usuarioSesion:UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         let request:RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
         return request;
     }
 
     getGlobalFilterFields() {
-        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion', 'tipoIncapacidad', 'nombreEmpresa'];
+        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion', 'tipoIncapacidad', 'nombreEmpresa', 'estado'];
     }
 
     clearTable(table: Table) {
@@ -78,7 +77,7 @@ export class HistorialIncapacidadesComponent {
     }
 
     viewDetailsIncapacidad(incapacidad:Incapacidad, modal:any) {
-        this.modalService.open(modal);
+        this.modalService.open(modal, { centered: true });
         this.incapacidadSelected = incapacidad;
     }
 }

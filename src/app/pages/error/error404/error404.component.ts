@@ -8,4 +8,7 @@ import { AppService } from 'src/app/app.service';
 })
 export class Error404Component  {
     
+    goBack(): void {
+        window.history.back();
+    }
 }

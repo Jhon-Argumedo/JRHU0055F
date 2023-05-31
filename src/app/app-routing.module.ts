@@ -12,7 +12,7 @@ import { DocumentacionIncapacidadComponent } from './pages/radicacion/documentac
 import { ObservacionIncapacidadComponent } from './pages/radicacion/observacion-incapacidad/observacion-incapacidad.component';
 import { RadicarIncapacidadComponent } from './pages/radicacion/radicar-incapacidad/radicar-incapacidad.component';
 import { TipoIncapacidadComponent } from './pages/radicacion/tipo-incapacidad/tipo-incapacidad.component';
-import { HistorialIncapacidadesComponent } from './pages/seguimiento/historial-incapacidades/historial-incapacidades.component';
+import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacidades/seguimiento-incapacidades.component';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
 
 
@@ -24,9 +24,9 @@ const routes: Routes = [
   { path: 'incapacidades/radicacion/radicar-incapacidad', component: RadicarIncapacidadComponent },
   { path: 'incapacidades/radicacion/observaciones-incapacidad', component: ObservacionIncapacidadComponent },
   { path: 'incapacidades/radicacion/documentacion-incapacidad', component: DocumentacionIncapacidadComponent },
-  { path: 'incapacidades/seguimiento/historial-incapacidad', component: HistorialIncapacidadesComponent },
+  { path: 'incapacidades/seguimiento/historial-incapacidad', component: SeguimientoIncapacidadesComponent },
   { path: 'incapacidades/devolucion/incapacidades-devueltas', component: IncapacidadesDevueltasComponent },
-  { path: 'incapacidades/devolucion/documentos-devolucion', component: DocumentosDevolucionComponent },
+  { path: 'incapacidades/devolucion/documentos-devolucion/:numeroRadicado', component: DocumentosDevolucionComponent },
   { path: 'error-az', component: ErrorAzComponent },
   { path: 'error-404', component: Error404Component },
   { path: 'error-500', component: Error500Component },
