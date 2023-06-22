@@ -53,7 +53,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.appService.validFlujoRadicarIncapacidad();
+        //this.appService.validFlujoRadicarIncapacidad();
 
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 

@@ -20,6 +20,7 @@ import { ResponseValidacionIncapacidad } from 'src/app/model/response-validacion
 import { ContratoDTO } from 'src/app/model/contrato-dto';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SesionDataEnum, TipoIncapacidadEnum } from 'src/app/model/enums';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-radicar-incapacidad',
@@ -61,12 +62,14 @@ export class RadicarIncapacidadComponent implements OnInit {
     empresaUsuaria: string = '';
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
     numeroIncapacidad: string = '';
-    diagnostico: string = '';
+    diagnostico: Enfermedad;
+    codigoDiagnostico: string = '001';
     fechaInicio: string = '';
     numeroDias: number;
     prorroga: string = '';
     fechaFueroMaterno: string = '';
     fechaAccidente: string = '';
+    fechaFin: string | null = '';
 
     selectedOption: any;
     searchTerm = '';
@@ -92,7 +95,8 @@ export class RadicarIncapacidadComponent implements OnInit {
         private toastr: ToastrService,
         private storage: LocalStorageService,
         private radicarService: RadicarIncapacidadService,
-        private appService: AppService) {
+        private appService: AppService,
+        private datePipe: DatePipe) {
 
     }
 
@@ -102,7 +106,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.appService.validFlujoRadicarIncapacidad();
+        //this.appService.validFlujoRadicarIncapacidad();
 
         this.invalidClass = 'col-12 custom-select';
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
@@ -265,6 +269,7 @@ export class RadicarIncapacidadComponent implements OnInit {
         this.radicarService.findAllEnfermedades().subscribe({
             next: (data) => {
                 this.enfermedades = data;
+                console.log(this.enfermedades);
             },
             error: (error) => {
                 console.log(error);
@@ -355,6 +360,16 @@ export class RadicarIncapacidadComponent implements OnInit {
         this.empresaUsuaria = value.nombreEmpresaFilial;
     }
 
+    onChangeFechaInicio() {
+        this.fechaFin = this.getFechaFin();
+        this.fechaFin = this.convertirFecha(this.fechaFin);
+    }
+
+    onChangeCodigoEnfermedad(enfermedad:Enfermedad) {
+        console.log(enfermedad);
+        this.codigoDiagnostico = enfermedad.codigoEnfermedad;
+    }
+
     goPage(ruta: string) {
         window.scroll(0, 0);
         this.router.navigate([ruta]);
@@ -396,6 +411,34 @@ export class RadicarIncapacidadComponent implements OnInit {
 
     convertStringFirstCapitalLetter(str: string): string {
         return this.appService.convertStringFirstCapitalLetter(str);
+    }
+      
+    getFechaFin() {
+        let fechaFStr: string = ' ';
+        let fechaInicio:Date = new Date(this.fechaInicio);
+        let fechaFin:Date = new Date(fechaInicio.getTime() + this.diasAMilisegundos(this.numeroDias));
+        fechaFStr = fechaFin.toString();
+        return fechaFStr;
+    }
+
+    diasAMilisegundos(dias: number): number {
+        const milisegundosPorDia: number = 24 * 60 * 60 * 1000;  // 24 horas * 60 minutos * 60 segundos * 1000 milisegundos
+        const milisegundos: number = dias * milisegundosPorDia;
+        return milisegundos;
+    }
+
+    convertirFecha(fechaString: string): string | null {
+        let fecha: Date = new Date(fechaString);
+        let fechaFormateada:string | null = this.datePipe.transform(fecha, 'dd-MM-yyyy');
+        return fechaFormateada;
+    }
+
+    mostrarEstadoContrato(contrato:Contrato) {
+        if(contrato.estadoDelContrato === 'ACTIVO') {
+            return 'VIGENTE';
+        } else {
+            return contrato.fechaRetiro;
+        }
     }
       
 

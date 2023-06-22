@@ -46,7 +46,7 @@ export class ObservacionIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.appService.validFlujoRadicarIncapacidad();
+        //this.appService.validFlujoRadicarIncapacidad();
 
         this.buildForm();
 

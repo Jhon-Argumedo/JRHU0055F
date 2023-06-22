@@ -5,7 +5,7 @@ import { Incapacidad } from 'src/app/model/incapacidad';
 import { IncapacidadesDevueltasService } from './incapacidades-devueltas.service';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
-import { EstadosRadicadoEnum, SesionDataEnum } from 'src/app/model/enums';
+import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum, SesionDataEnum } from 'src/app/model/enums';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
 import { Table } from 'primeng/table';
@@ -43,6 +43,7 @@ export class IncapacidadesDevueltasComponent {
         this.incDevService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
+                //this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.toUpperCase().includes(EstadosPortalTrabajadorEnum.DEVOLUCION));
                 this.incapacidades = this.incapacidades.filter(i => i.estado.includes(EstadosRadicadoEnum.PEN));
                 console.log(data);
             },

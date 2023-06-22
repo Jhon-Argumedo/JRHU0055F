@@ -45,7 +45,7 @@
                                 [(ngModel)]="contrato"
                                 (change)="onChangeContrato(contrato)" #contratoSelect>
                                 <option *ngFor="let c of contratos" [ngValue]="c" class="text-uppercase">
-                                    {{ c.numeroContrato }} - {{c.nombreEmpresaFilial}}
+                                    {{ c.numeroContrato }} - {{ c.nombreEmpresaFilial }} - {{ mostrarEstadoContrato(c) }}
                                 </option>
                             </select>
 
@@ -53,20 +53,20 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label for="empresaPrincipal" class="form-label">Empresa principal</label>
+                            <label for="empresaPrincipal" class="form-label">Empresa Principal</label>
                             <input id="empresaPrincipal" name="empresaPrincipal" type="text" class="form-control form-control-lg" disabled 
                                 [value]="empresaPrincipal" />
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label for="empresaUsuaria" class="form-label">Empresa usuaria</label>
+                            <label for="empresaUsuaria" class="form-label">Empresa Usuaria</label>
                             <input id="empresaUsuaria" name="empresaUsuaria" type="text" class="form-control form-control-lg" disabled
                                 [value]="empresaUsuaria" />
                         </div>
 
                         <div class="col-12 col-md-8">
                             <label for="subtipo" class="form-label">
-                                Subtipo incapacidad
+                                Subtipo Incapacidad
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <select id="subtipo" name="subtipo" formControlName="subtipo" 
@@ -81,7 +81,7 @@
 
                         <div class="col-12 col-md-4">
                             <label for="numeroIncapacidad" class="form-label">
-                                N° incapacidad
+                                N° Incapacidad
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
                                     data-bs-placement="top"
                                     data-bs-title="Digite el número único de su incapacidad."></i>
@@ -106,6 +106,7 @@
                                 [ngClass]="{'is-invalid ng-invalid ng-dirty': f['diagnostico'].errors && submitted}" 
                                 [styleClass]="'col-12 custom-select'" 
                                 [options]="enfermedades" 
+                                (change)="onChangeCodigoEnfermedad(f['diagnostico'].value)"
                                 [(ngModel)]="diagnostico" optionLabel="nombreEnfermedad" 
                                 [filter]="true" 
                                 filterBy="codigoEnfermedad,nombreEnfermedad" 
@@ -113,7 +114,7 @@
                                 [placeholder]="'Seleccione una enfermedad'">
                                 <ng-template pTemplate="diagnostico">
                                     <div class="flex align-items-center gap-2 text-dark" *ngIf="diagnostico">
-                                        <div>{{ diagnostico }}</div>
+                                        <div>{{ codigoDiagnostico }} - {{ diagnostico }}</div>
                                     </div>
                                 </ng-template>
                                 <ng-template let-e pTemplate="item">
@@ -127,11 +128,9 @@
                             </div>
                         </div>
 
-
-
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-lg-3">
                             <label for="fInicio" class="form-label">
-                                Fecha inicio
+                                Fecha Inicio
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <input id="fechaInicio" name="fechaInicio" formControlName="fechaInicio"
@@ -143,14 +142,14 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-3 col-lg-2">
+                        <div class="col-12 col-lg-2">
                             <label for="numeroDias" class="form-label">
                                 N° Dias
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <input id="numeroDias" name="numeroDias" formControlName="numeroDias"
                                 type="number" class="form-control form-control-lg" required
-                                [(ngModel)]="numeroDias"
+                                [(ngModel)]="numeroDias" (change)="onChangeFechaInicio()"
                                 [ngClass]="{'is-invalid': f['numeroDias'].errors && submitted}" />
                             <div *ngIf="f['numeroDias'].errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f['numeroDias'].errors['required']">Este campo es requerido</div>
@@ -170,6 +169,18 @@
                             </div>
                         </div>
 
+                        <div class="col-12 col-lg-3">
+                            <label for="fechaFin" class="form-label">
+                                Fecha Fin
+                                <span class="fw-bold text-danger me-1"></span>
+                            </label>
+                            <input id="fechaFin" 
+                                [value]="fechaFin"
+                                name="fechaFin" 
+                                class="form-control form-control-lg" 
+                                [disabled]="true"/>
+                        </div>
+
                         <div class="col-12 col-md-6"
                             *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
@@ -187,7 +198,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-6"
+                        <div class="col-12 col-lg-4"
                             *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
                             <label for="fechaFueroMaterno" class="form-label">
                                 Fecha fuero Materno
@@ -201,7 +212,7 @@
                             </div>
                         </div>
 
-                        <div class="text-center" [ngClass]="{'col-12 col-md-6': tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL','col-12' : tipoInc.nombreTipoIncapacidad !== 'ACCIDENTE LABORAL'}">
+                        <div class="text-center" [ngClass]="{'col-12 col-md-4': tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL','col-12' : tipoInc.nombreTipoIncapacidad !== 'ACCIDENTE LABORAL'}">
                             <label for="prorroga" class="form-label">
                                 ¿Prorroga?
                                 <span class="fw-bold text-danger me-1">*</span>
@@ -234,7 +245,8 @@
 
                         <hr />
                         <div class="col-12 d-flex justify-content-center me-2">
-                            <button (click)="goPage('/incapacidades/radicacion/tipo-incapacidad')" type="button" class="btn rounded-pill btn-lg btn-dark">
+                            <button (click)="goPage('/incapacidades/radicacion/tipo-incapacidad')" type="button" 
+                                class="btn rounded-pill btn-lg btn-dark" [disabled]="isLoadingValidacion">
                                 <i class="fa-solid fa-arrow-left me-sm-2"></i>
                                 Regresar
                             </button>

@@ -8,12 +8,12 @@
                     <li class="breadcrumb-item">
                         <a routerLink="/dashboard" class="text-decoration-none">Inicio</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Incapacidades radicadas</li>
+                    <li class="breadcrumb-item active" aria-current="page">Incapacidades Radicadas</li>
                 </ol>
             </nav>
         </div>
         <div class="bg-white sticky-top py-2">
-            <p class="fs-1 text-center fw-light">Incapacidades radicadas</p>
+            <p class="fs-1 text-center fw-light">Incapacidades Radicadas</p>
             <hr>
         </div>
         <small class="text-muted mb-2">Aqui podras gestionar todas las incapacidades radicadas, viendo toda la información
@@ -55,26 +55,24 @@
                         <th scope="col" pSortableColumn="numeroRadicado" style="width: 12%;">N° radicado</th>
                         <th scope="col" pSortableColumn="estado" style="width: 8%;">Estado</th>
                         <th scope="col" pSortableColumn="nombreEmpresa" style="width: 17%;">Empresa</th>
-                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 25%;">Tipo incapacidad</th>
-                        <th scope="col" pSortableColumn="fechaInicial" style="width: 15%;">Fecha inicio</th>
-                        <th scope="col" pSortableColumn="fechaFinal" style="width: 10%;">Fecha fin</th>
-                        <th scope="col" pSortableColumn="fechaDeRadicacion" style="width: 20%;">Fecha radicacion</th>
+                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 25%;">Tipo Incapacidad</th>
+                        <th scope="col" pSortableColumn="fechaInicial" style="width: 15%;">Fecha Inicio</th>
+                        <th scope="col" pSortableColumn="fechaFinal" style="width: 10%;">Fecha Fin</th>
+                        <th scope="col" pSortableColumn="fechaDeRadicacion" style="width: 20%;">Fecha Radicacion</th>
                         <th scope="col" style="width: 5%;">Detalles</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-i>
                     <tr>
-                        <td>{{i.numeroRadicado}}</td>
+                        <td>{{ i.numeroRadicado }}</td>
                         <td>
-                            <span class="badge rounded-pill" [ngClass]="{'text-bg-danger' : i.estado === 'DEV', 'text-bg-warning' : i.estado === 'PEN', 'text-bg-info' : i.estado === 'CPT', 'text-bg-success' : i.estado === 'APR'}">
-                                {{ i.estado }}
-                            </span>
+                            {{ i.estadoObservacionTrabajador.toUpperCase() }}
                         </td>
-                        <td>{{i.nombreEmpresa}}</td>
-                        <td>{{i.tipoIncapacidad}}</td>
+                        <td>{{ i.nombreEmpresa }}</td>
+                        <td>{{ i.tipoIncapacidad }}</td>
                         <td>{{ i.fechaInicial | date: 'dd/MM/yyyy'}}</td>
                         <td>{{ i.fechaFinal | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{ i.fechaDeRadicacion | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{ i.fechaRadicacion | date: 'dd/MM/yyyy'}}</td>
                         <td class="text-center">
                             <button (click)="viewDetailsIncapacidad(i, modal)"
                             type="button"
@@ -118,15 +116,15 @@
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Fecha de radicacion: </span>
-                        <span class="text-muted">{{ incapacidadSelected.fechaDeRadicacion | date: 'dd/MM/yyyy'}}.</span>
+                        <span class="text-muted">{{ incapacidadSelected.fechaRadicacion | date: 'dd/MM/yyyy'}}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Estado: </span>
-                        <span class="text-muted">{{ incapacidadSelected.estado }}.</span>
+                        <span class="text-muted">{{ incapacidadSelected.estadoObservacionTrabajador.toUpperCase() }}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Seguro: </span>
-                        <span class="text-muted">{{ incapacidadSelected.sigla }}.</span>
+                        <span class="text-muted">{{ incapacidadSelected.nombreEps }}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Periodo de incapacidad: </span>

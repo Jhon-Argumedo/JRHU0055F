@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
@@ -28,7 +28,7 @@ export class DocumentosDevolucionComponent {
     isLoadingDocumentos: boolean = false;
     isLoadingRequest: boolean = false;
 
-    errorMessage: string = '';
+    errorMessage: string = ''; 
 
     modalRadicacionOk:any;
     modalRadicacionError:any;
@@ -106,7 +106,7 @@ export class DocumentosDevolucionComponent {
         this.documentosRequest.documentosACargar = reqDocumentos;
         
         console.log(this.documentosRequest);
-        this.openModalLoading(this.modalRadicacionLoading);
+        this.openModalLoading(modalLoading);
         this.devolverDocumentos();
     }
 
@@ -114,10 +114,10 @@ export class DocumentosDevolucionComponent {
         this.isLoadingRequest = true;
         this.openModalLoading(this.modalRadicacionLoading);
         this.documentoService.cargarDocumentosDevolucion(this.documentosRequest).subscribe({
-            next: (response: any) => {
+            next: (response) => {
                 console.log(response);
             }, 
-            error: (error: any) => {
+            error: (error) => {
                 console.log(error);
                 this.toast.error(error.message);
                 this.appService.manageHttpError(error);
@@ -127,6 +127,8 @@ export class DocumentosDevolucionComponent {
             complete: () => {
                 this.isLoadingRequest = false;
                 this.closeModalLoading();
+                this.toast.success('Radicación Gestionada correctamente!');
+                this.router.navigate(['/incapacidades/devolucion/incapacidades-devueltas']);
             }
         });
     }
@@ -204,7 +206,7 @@ export class DocumentosDevolucionComponent {
     }
 
     openModalLoading(modal: any) {
-        this.modalRadicacionLoading = this.modalService.open(modal, {backdrop: 'static'});
+        this.modalService.open(modal, { backdrop: 'static', centered: true});
     }
 
     openModalError(modal: any) {
@@ -220,7 +222,7 @@ export class DocumentosDevolucionComponent {
     }
 
     closeModalLoading() {
-        this.modalRadicacionLoading.close();
+        this.modalService.dismissAll();
     }
 
     getEstadoDocumentoCargado(documento: ResponseDocumentosRadicado): string {

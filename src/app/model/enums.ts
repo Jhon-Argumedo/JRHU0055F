@@ -40,3 +40,9 @@ export enum EstadosRadicadoEnum {
     RIN = 'RIN',
     RRI = 'RRI'
 }
+
+export enum EstadosPortalTrabajadorEnum {
+    RADICADA = 'RADICADA',
+    EN_TRANSCRIPCION = 'EN_TRANSCRIPCION',
+    DEVOLUCION = 'DEVOLUCION'
+}

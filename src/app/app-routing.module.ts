@@ -14,6 +14,7 @@ import { RadicarIncapacidadComponent } from './pages/radicacion/radicar-incapaci
 import { TipoIncapacidadComponent } from './pages/radicacion/tipo-incapacidad/tipo-incapacidad.component';
 import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacidades/seguimiento-incapacidades.component';
 import { AppInicioComponent } from './pages/soporte/app-inicio/app-inicio.component';
+import { AyudaComponent } from './pages/soporte/ayuda/ayuda.component';
 
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'incapacidades/radicacion/documentacion-incapacidad', component: DocumentacionIncapacidadComponent },
   { path: 'incapacidades/seguimiento/historial-incapacidad', component: SeguimientoIncapacidadesComponent },
   { path: 'incapacidades/devolucion/incapacidades-devueltas', component: IncapacidadesDevueltasComponent },
+  { path: 'ayuda', component: AyudaComponent },
   { path: 'incapacidades/devolucion/documentos-devolucion/:numeroRadicado', component: DocumentosDevolucionComponent },
   { path: 'error-az', component: ErrorAzComponent },
   { path: 'error-404', component: Error404Component },

@@ -166,11 +166,11 @@
                     <hr />
                     <div class="row">
                         <div class="col d-flex justify-content-center me-2">
-                            <button (click)="goPage('/incapacidades/devolucion/incapacidades-devueltas')" type="button" class="btn btn-lg rounded-pill btn-warning">
+                            <button (click)="goPage('/incapacidades/devolucion/incapacidades-devueltas')" type="button" class="btn btn-lg rounded-pill btn-dark">
                                 <i class="fa-solid fa-arrow-left me-2"></i>
                                 Regresar
                             </button>
-                            <button [disabled]="isLoadingRequest" class="btn btn-success btn-lg rounded-pill ms-2" (click)="terminarDevolucion(modalRadicacionOk, modalRadicacionLoading, modalRadicacionError)">
+                            <button [disabled]="isLoadingRequest" class="btn btn-success btn-lg rounded-pill ms-2" (click)="terminarDevolucion(modalOk, modalLoading, modalError)">
                                 <span *ngIf="!isLoadingRequest">Terminar devolución</span>
                                 <span *ngIf="isLoadingRequest">Radicando devolución...</span>
 
@@ -185,7 +185,7 @@
     </div>
 </div>
 
-<ng-template #modalRadicacionOk let-c="close" let-d="dismiss">
+<ng-template #modalOk let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
         <div class="modal-header border-bottom-0">
             <h1 class="modal-title fs-5"></h1>
@@ -207,7 +207,7 @@
     </div>
 </ng-template>
 
-<ng-template #modalRadicacionLoading let-c="close" let-d="dismiss" draggable="false">
+<ng-template #modalLoading let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
         <div class="modal-body text-center py-4">
             <p class="fs-4 mb-0 mt-2">Radicando incapacidad...</p>
@@ -219,7 +219,7 @@
     </div>
 </ng-template>
 
-<ng-template #modalRadicacionError let-c="close" let-d="dismiss">
+<ng-template #modalError let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
         <div class="modal-header border-bottom-0">
             <h1 class="modal-title fs-5"></h1>

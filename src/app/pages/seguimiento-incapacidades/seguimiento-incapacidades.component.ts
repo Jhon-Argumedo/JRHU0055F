@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Table } from 'primeng/table';
 import { AppService } from 'src/app/app.service';
-import { EstadosRadicadoEnum } from 'src/app/model/enums';
+import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
@@ -44,6 +44,7 @@ export class SeguimientoIncapacidadesComponent {
         this.seguimientoService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
+                //this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.toUpperCase().includes(EstadosPortalTrabajadorEnum.RADICADA && EstadosPortalTrabajadorEnum.EN_TRANSCRIPCION));
                 this.incapacidades = this.incapacidades.filter(i => i.estado.includes(EstadosRadicadoEnum.CPT));
                 console.log(data);
             },
@@ -65,7 +66,7 @@ export class SeguimientoIncapacidadesComponent {
     }
 
     getGlobalFilterFields() {
-        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion', 'tipoIncapacidad', 'nombreEmpresa', 'estado'];
+        return ['numeroRadicado', 'estadoObservacionTrabajador', 'nombreEmpresa', 'tipoIncapacidad', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion'];
     }
 
     clearTable(table: Table) {

@@ -9,10 +9,10 @@
             <a routerLink="dashboard" class="nav-link text-muted">Inicio</a>
         </li>
         <li class="nav-item" routerLinkActive="fw-bold">
-            <a routerLink="/incapacidades/radicacion/radicar-incapacidad" class="nav-link text-muted">Portal del trabajador</a>
+            <a (click)="goSitioTrabajador()" class="nav-link text-muted">Portal del trabajador</a>
         </li>
         <li class="nav-item" routerLinkActive="fw-bold">
-            <a href="#" class="nav-link text-muted">
+            <a routerLink="/ayuda" class="nav-link text-muted">
                 Ayuda
                 <i class="fa-solid fa-question"></i>
             </a>

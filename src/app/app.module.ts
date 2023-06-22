@@ -25,11 +25,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Error404Component } from './pages/error/error404/error404.component';
 import { Error500Component } from './pages/error/error500/error500.component';
 import { UnknownErrorComponent } from './pages/error/unknown-error/unknown-error.component';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { UserNotLoggedComponent } from './pages/error/user-not-logged/user-not-logged.component';
 import { TableModule } from 'primeng/table';
 import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
 import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacidades/seguimiento-incapacidades.component';
+import { AyudaComponent } from './pages/soporte/ayuda/ayuda.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacid
     UnknownErrorComponent,
     UserNotLoggedComponent,
     ErrorAzComponent,
-    SeguimientoIncapacidadesComponent
+    SeguimientoIncapacidadesComponent,
+    AyudaComponent
   ],
   imports: [
     FormsModule,
@@ -67,7 +69,7 @@ import { SeguimientoIncapacidadesComponent } from './pages/seguimiento-incapacid
     NgbModule,
     TableModule
   ],
-  providers: [Location],
+  providers: [Location, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
