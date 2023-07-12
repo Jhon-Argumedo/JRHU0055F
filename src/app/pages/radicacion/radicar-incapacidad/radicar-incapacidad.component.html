@@ -105,8 +105,7 @@
                             <p-dropdown  id="diagnostico" name="diagnostico" formControlName="diagnostico"
                                 [ngClass]="{'is-invalid ng-invalid ng-dirty': f['diagnostico'].errors && submitted}" 
                                 [styleClass]="'col-12 custom-select'" 
-                                [options]="enfermedades" 
-                                (change)="onChangeCodigoEnfermedad(f['diagnostico'].value)"
+                                [options]="enfermedades"
                                 [(ngModel)]="diagnostico" optionLabel="nombreEnfermedad" 
                                 [filter]="true" 
                                 filterBy="codigoEnfermedad,nombreEnfermedad" 
@@ -114,12 +113,11 @@
                                 [placeholder]="'Seleccione una enfermedad'">
                                 <ng-template pTemplate="diagnostico">
                                     <div class="flex align-items-center gap-2 text-dark" *ngIf="diagnostico">
-                                        <div>{{ codigoDiagnostico }} - {{ diagnostico }}</div>
                                     </div>
                                 </ng-template>
                                 <ng-template let-e pTemplate="item">
                                     <div class="flex align-items-center gap-2 ">
-                                        <div>{{ e.codigoEnfermedad }} - {{ e.nombreEnfermedad }}</div>
+                                        <div>{{ e.nombreEnfermedad }}</div>
                                     </div>
                                 </ng-template>
                             </p-dropdown> 
@@ -181,8 +179,7 @@
                                 [disabled]="true"/>
                         </div>
 
-                        <div class="col-12 col-md-6"
-                            *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
+                        <div class="col-12 col-md-4" *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
                                 Fecha accidente
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"

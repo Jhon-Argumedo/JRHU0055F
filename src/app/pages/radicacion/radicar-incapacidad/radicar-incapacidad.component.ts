@@ -174,12 +174,6 @@ export class RadicarIncapacidadComponent implements OnInit {
 
         if (this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ENFERMEDAD_LABORAL || this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ACCIDENTE_LABORAL) {
             requestIncapacidad.fechaIncidente = this.castStringDate(this.fechaAccidente);
-
-            if (!this.validateFechaAccidente(this.fechaAccidente)) {
-                window.scroll(0,0);
-                this.errorMessageWarning = 'La fecha de accidente debe ser inferior o igual a la fecha de actual.';
-                return;
-            }
             
         } else {
             requestIncapacidad.fechaIncidente = '';
@@ -269,6 +263,9 @@ export class RadicarIncapacidadComponent implements OnInit {
         this.radicarService.findAllEnfermedades().subscribe({
             next: (data) => {
                 this.enfermedades = data;
+                this.enfermedades.forEach(e => {
+                    e.nombreEnfermedad = e.codigoEnfermedad + ' - ' + e.nombreEnfermedad;
+                });
                 console.log(this.enfermedades);
             },
             error: (error) => {
@@ -365,32 +362,9 @@ export class RadicarIncapacidadComponent implements OnInit {
         this.fechaFin = this.convertirFecha(this.fechaFin);
     }
 
-    onChangeCodigoEnfermedad(enfermedad:Enfermedad) {
-        console.log(enfermedad);
-        this.codigoDiagnostico = enfermedad.codigoEnfermedad;
-    }
-
     goPage(ruta: string) {
         window.scroll(0, 0);
         this.router.navigate([ruta]);
-    }
-
-    validateFechaAccidente(fechaInicio: string): boolean {
-        let inputDate = new Date(fechaInicio);
-        let currentDate = new Date();
-
-        inputDate.setDate(inputDate.getDate() + 1);
-        inputDate.setHours(0, 0, 0, 0);
-        currentDate.setHours(0, 0, 0, 0);
-
-        console.log(inputDate.getTime());
-        console.log(currentDate.getTime());
-        
-        if(inputDate.getTime() <= currentDate.getTime()) {
-            return true;
-        }
-
-        return false;
     }
 
     castStringDate(str:string):string {
