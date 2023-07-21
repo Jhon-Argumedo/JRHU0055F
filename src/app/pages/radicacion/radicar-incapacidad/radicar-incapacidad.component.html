@@ -181,7 +181,7 @@
 
                         <div class="col-12 col-md-4" *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
-                                Fecha accidente
+                                Fecha calificación Enfermedad Laboral
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
                                     data-bs-placement="top"
                                     data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
@@ -247,7 +247,7 @@
                                 <i class="fa-solid fa-arrow-left me-sm-2"></i>
                                 Regresar
                             </button>
-                            <button type="submit" class="btn btn-lg btn-warning rounded-pill ms-2" [disabled]="isLoadingValidacion">
+                            <button type="submit" class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-danger' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" [disabled]="isLoadingValidacion">
                                 <span *ngIf="!isLoadingValidacion">Siguiente</span> 
                                 <span *ngIf="isLoadingValidacion">Validando...</span> 
                                 <i class="fa-solid fa-arrow-right ms-sm-2" *ngIf="!isLoadingValidacion"></i>

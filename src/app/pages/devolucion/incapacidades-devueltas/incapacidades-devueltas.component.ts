@@ -19,6 +19,8 @@ import { Router } from '@angular/router';
 })
 export class IncapacidadesDevueltasComponent {
 
+    usuarioSesion:UsuarioSesion = new UsuarioSesion();
+
     incapacidades: Incapacidad[] = [];
     incapacidadSelected: Incapacidad;
     isLoading:boolean = false;
@@ -34,6 +36,8 @@ export class IncapacidadesDevueltasComponent {
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"], a[data-bs-toggle="tooltip"]'))
             .forEach(tooltipNode => new Tooltip(tooltipNode))
 
+        
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         this.findAllIncapacidadesPEN();
     }
 

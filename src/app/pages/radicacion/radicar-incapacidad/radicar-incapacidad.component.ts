@@ -402,7 +402,7 @@ export class RadicarIncapacidadComponent implements OnInit {
 
     convertirFecha(fechaString: string): string | null {
         let fecha: Date = new Date(fechaString);
-        let fechaFormateada:string | null = this.datePipe.transform(fecha, 'dd-MM-yyyy');
+        let fechaFormateada:string | null = this.datePipe.transform(fecha, 'dd/MM/yyyy');
         return fechaFormateada;
     }
 

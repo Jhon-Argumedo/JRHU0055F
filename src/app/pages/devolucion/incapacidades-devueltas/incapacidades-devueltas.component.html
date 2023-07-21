@@ -40,7 +40,7 @@
 
                 <ng-template pTemplate="caption">
                     <div class="justify-content-between d-flex">
-                        <button (click)="clearTable(dtIncapacidades)" class="btn btn-warning btn-sm">
+                        <button (click)="clearTable(dtIncapacidades)" class="btn btn-sm" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-danger' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}">
                             <i class="fa-solid fa-filter-circle-xmark"></i>
                         </button>
                         <span class="p-input-icon-left ml-auto">

@@ -15,6 +15,7 @@ import { ResponseRadicarIncapacidad } from 'src/app/model/response-radicar-incap
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
+import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { DocumentacionIncapacidadService } from './documentacion-incapacidad.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
+    usuarioSesion:UsuarioSesion = new UsuarioSesion();
     requestIncapacidad: RequestIncapacidad = new RequestIncapacidad();
     incapacidad: Incapacidad = new Incapacidad();
     documentos: DocumentoUpload[] = [];
@@ -65,6 +67,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
         this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
         this.requestIncapacidad = this.storage.retrieve(SesionDataEnum.requestIncapacidad);
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
     }
 
     radicar(modalOk: any, modalLoading: any, modalError: any) {

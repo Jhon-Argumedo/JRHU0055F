@@ -8,6 +8,7 @@ import { SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
+import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { ObservacionIncapacidadService } from './observacion-incapacidad.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class ObservacionIncapacidadComponent implements OnInit {
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
+    usuarioSesion:UsuarioSesion = new UsuarioSesion();
 
     accepted: boolean = false;
     submitted: boolean = false;
@@ -52,6 +54,7 @@ export class ObservacionIncapacidadComponent implements OnInit {
 
         this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
         this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
 
         this.getObservacionText();
 

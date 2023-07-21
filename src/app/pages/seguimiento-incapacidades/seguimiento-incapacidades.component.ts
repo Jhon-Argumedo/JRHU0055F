@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Table } from 'primeng/table';
 import { AppService } from 'src/app/app.service';
-import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum } from 'src/app/model/enums';
+import { EstadosRadicadoEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
@@ -18,6 +18,8 @@ import { SesionDataEnum } from 'src/app/model/enums';
     styleUrls: ['./seguimiento-incapacidades.component.scss']
 })
 export class SeguimientoIncapacidadesComponent {
+
+    usuarioSesion:UsuarioSesion = new UsuarioSesion();
     incapacidadSelected:Incapacidad;
     incapacidades:Incapacidad[] = [];
 
@@ -34,6 +36,8 @@ export class SeguimientoIncapacidadesComponent {
             this.toast.info("No se ha detectado una sesion de usuario activa.");
             window.location.href = SitioTrabajador.URL;
         }
+
+        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
 
         this.findAllIncapacidadesCPT();
     }
