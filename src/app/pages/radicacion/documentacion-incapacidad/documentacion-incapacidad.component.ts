@@ -92,7 +92,8 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
     findAllDocsBySubtipoInc() {
         this.isLoading = true;
-        this.documentosService.findAllDocsBySubtipoInc(this.tipoIncapacidad.codigoTipoIncapacidad).subscribe({
+        this.documentos = [];
+        this.documentosService.findAllDocsBySubtipoInc(this.subtipoIncapacidad.codigoSubTipoIncapacidad).subscribe({
             next: (data) => {
                 data.forEach(d => {
                     let documento: DocumentoUpload = new DocumentoUpload();

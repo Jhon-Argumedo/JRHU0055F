@@ -174,7 +174,6 @@ export class RadicarIncapacidadComponent implements OnInit {
 
         if (this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ENFERMEDAD_LABORAL || this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.ACCIDENTE_LABORAL) {
             requestIncapacidad.fechaIncidente = this.castStringDate(this.fechaAccidente);
-            
         } else {
             requestIncapacidad.fechaIncidente = '';
         }
@@ -188,7 +187,7 @@ export class RadicarIncapacidadComponent implements OnInit {
 
         let contratoDTO: ContratoDTO = new ContratoDTO(this.usuarioSesion.tipoDoc, parseInt(this.usuarioSesion.numeroDoc), this.usuarioSesion.tipoDocEmp, parseInt(this.usuarioSesion.numeroDocEmp));
         let requestValidar: RequestValidarIncapacidad = new RequestValidarIncapacidad(requestIncapacidad.numeroDeDias,
-            requestIncapacidad.contrato, contratoDTO, requestIncapacidad.fechaInicioIncapacidad);
+            requestIncapacidad.contrato, requestIncapacidad.fechaIncidente, this.tipoInc.codigoTipoIncapacidad, contratoDTO, requestIncapacidad.fechaInicioIncapacidad);
 
         console.log(requestIncapacidad);
         console.log(requestValidar);
