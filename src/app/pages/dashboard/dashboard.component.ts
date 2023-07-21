@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
-import { SesionDataEnum } from 'src/app/model/enums';
+import { EmpresasPrincipalesEnum, SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 
@@ -16,6 +16,9 @@ export class DashboardComponent {
 
     usuarioSesion:UsuarioSesion = new UsuarioSesion();
     nombreUsuario:string;
+    activosEmp:boolean = false;
+    serviolaEmp:boolean = false;
+    atecnoEmp:boolean = false;
     valid:boolean = true;
     azCodigo:number;
     deaCodigo:number;
@@ -35,6 +38,18 @@ export class DashboardComponent {
         this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         this.nombreUsuario = this.usuarioSesion.nombreUsuario.split(' ', 1)[0];
         this.nombreUsuario = this.capitalizeFirstLetter(this.nombreUsuario);
+
+        if(this.usuarioSesion.nombreEmp === EmpresasPrincipalesEnum.ACTIVOS) {
+            this.activosEmp = true;
+        } else if(this.usuarioSesion.nombreEmp === EmpresasPrincipalesEnum.ATECNO) {
+            this.atecnoEmp = true;
+        } else if(this.usuarioSesion.nombreEmp === EmpresasPrincipalesEnum.SERVIOLA) {
+            this.serviolaEmp = true;
+        }
+
+        console.log(this.activosEmp);
+        console.log(this.serviolaEmp);
+        console.log(this.atecnoEmp);
     }
 
     go(route: string) {

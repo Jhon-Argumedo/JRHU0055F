@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { PrincipalesConst } from 'src/app/model/constantes';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { RequestContratosList } from 'src/app/model/request-contratos-list';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
@@ -42,6 +43,12 @@ export class AppInicioComponent {
         this.usuarioSesion.nombreUsuario = this.route.snapshot.params['nombre-usuario'];
         this.usuarioSesion.tipoDocEmp = this.route.snapshot.params['tipo-doc-emp'];
         this.usuarioSesion.numeroDocEmp = this.route.snapshot.params['numero-doc-emp'];
+
+        PrincipalesConst.forEach(pc => {
+            if(this.usuarioSesion.numeroDocEmp.match(pc.nit)) {
+                this.usuarioSesion.nombreEmp = pc.nombre;
+            }
+        });
 
         this.localStorage.store(SesionDataEnum.usuarioSesion, this.usuarioSesion);
         this.go('dashboard');

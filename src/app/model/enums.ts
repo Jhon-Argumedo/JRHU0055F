@@ -15,8 +15,14 @@ export enum TipoIncapacidadEnum {
 }
 
 export enum EstadosDocumentoCargadoEnum {
-    no_cargado = "No cargado",
-    Cargado = "Cargado"
+    no_cargado = 'No cargado',
+    Cargado = 'Cargado'
+}
+
+export enum EmpresasPrincipalesEnum {
+    ACTIVOS = 'ACTIVOS',
+    SERVIOLA = 'SERVIOLA',
+    ATECNO = 'ATECNO'
 }
 
 export enum EstadosDocumentoEnum {

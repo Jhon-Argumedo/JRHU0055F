@@ -6,4 +6,5 @@ export class UsuarioSesion {
     nombreUsuario: string;
     tipoDocEmp: string;
     numeroDocEmp: string;
+    nombreEmp: string;
 }
