@@ -5,14 +5,16 @@ export class Incapacidad {
     fechaInicial:string;
     fechaFinal:string;
     fechaRadicacion:string;
-    nombreEps:number;
+    incapacidadDescripcion:string;
     nombreDelEmpleado:string;
-    numeroDocumentoEmpleado:number;
     nombreEmpresa:string;
-    numeroDeDias:string;
+    nombreEps:number;
     numeroContrato:number;
+    numeroDeDias:string;
+    numeroDocumentoEmpleado:number;
     numeroRadicado:number;
-    sigla:string;
     subTipoIncapacidad:string;
+    subTipoIncapacidadCodigo:number;
+    tipoDocumentoEmpleado:string;
     tipoIncapacidad:string;
 }

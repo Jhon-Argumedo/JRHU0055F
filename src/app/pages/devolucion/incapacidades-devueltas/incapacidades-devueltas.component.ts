@@ -11,6 +11,8 @@ import { AppService } from 'src/app/app.service';
 import { Table } from 'primeng/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { Observacion } from 'src/app/model/observacion';
+import { SeguimientoIncapacidadesService } from '../../seguimiento-incapacidades/seguimiento-incapacidades.service';
 
 @Component({
     selector: 'app-incapacidades-devueltas',
@@ -25,12 +27,18 @@ export class IncapacidadesDevueltasComponent {
     incapacidadSelected: Incapacidad;
     isLoading:boolean = false;
 
+    numeroRadicadoSeleccionado:number;
+    isLoadingObservaciones:boolean = false;
+
+    observacionesConsulta:Observacion[] = [];
+
     constructor(private incDevService: IncapacidadesDevueltasService,
         private toast: ToastrService,
         private storage:LocalStorageService,
         private appService:AppService,
         private modalService:NgbModal,
-        private router:Router) { }
+        private router:Router,
+        private seguimientoService:SeguimientoIncapacidadesService) { }
 
     ngOnInit(): void {
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"], a[data-bs-toggle="tooltip"]'))
@@ -47,9 +55,8 @@ export class IncapacidadesDevueltasComponent {
         this.incDevService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
-                //this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.toUpperCase().includes(EstadosPortalTrabajadorEnum.DEVOLUCION));
-                this.incapacidades = this.incapacidades.filter(i => i.estado.includes(EstadosRadicadoEnum.PEN));
-                console.log(data);
+                this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.includes(EstadosPortalTrabajadorEnum.Devolución));
+                console.log(this.incapacidades);
             },
             error: (error) => {
                 console.log(error);
@@ -69,7 +76,7 @@ export class IncapacidadesDevueltasComponent {
     }
 
     getGlobalFilterFields() {
-        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion', 'tipoIncapacidad', 'nombreEmpresa'];
+        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaRadicacion', 'tipoIncapacidad', 'subTipoIncapacidad', 'nombreEmpresa'];
     }
 
     clearTable(table: Table) {
@@ -92,5 +99,32 @@ export class IncapacidadesDevueltasComponent {
     goCargarDocumentos(incapacidad:Incapacidad) {
         this.storage.store(SesionDataEnum.incapacidadDevuelta, incapacidad);
         this.router.navigate(['/incapacidades/devolucion/documentos-devolucion/' + incapacidad.numeroRadicado]);
+    }
+
+    viewObservacionesIncapacidad(incapacidad:Incapacidad, modal:any) {
+        this.observacionesConsulta = [];
+        this.modalService.open(modal, { centered: true });
+        this.findObservacionesByNumeroRadicado(incapacidad.numeroRadicado);
+    }
+
+    findObservacionesByNumeroRadicado(radicado:number) {
+        console.log(radicado);
+        this.numeroRadicadoSeleccionado = radicado;
+        this.isLoadingObservaciones = true;
+        this.observacionesConsulta = [];
+        this.seguimientoService.findObservacionesByNumeroRadicado(radicado).subscribe({
+            next: (data) => {
+                console.log(data);
+                this.observacionesConsulta = data;
+            },
+            error: (error) => {
+                console.log(error);
+                this.toast.error(error.message);
+                this.appService.manageHttpError(error);
+            }, 
+            complete: () => {
+                this.isLoadingObservaciones = false;
+            }
+        });
     }
 }

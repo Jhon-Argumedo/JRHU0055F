@@ -4,13 +4,14 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Table } from 'primeng/table';
 import { AppService } from 'src/app/app.service';
-import { EstadosRadicadoEnum } from 'src/app/model/enums';
+import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { SeguimientoIncapacidadesService } from './seguimiento-incapacidades.service';
 import { SesionDataEnum } from 'src/app/model/enums';
+import { Observacion } from 'src/app/model/observacion';
 
 @Component({
     selector: 'app-seguimiento-incapacidades',
@@ -23,7 +24,11 @@ export class SeguimientoIncapacidadesComponent {
     incapacidadSelected:Incapacidad;
     incapacidades:Incapacidad[] = [];
 
+    numeroRadicadoSeleccionado:number;
+    isLoadingObservaciones:boolean = false;
+
     isLoading:boolean = false;
+    observacionesConsulta:Observacion[] = [];
 
     constructor(private seguimientoService:SeguimientoIncapacidadesService,
         private toast:ToastrService,
@@ -48,9 +53,7 @@ export class SeguimientoIncapacidadesComponent {
         this.seguimientoService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
-                //this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.toUpperCase().includes(EstadosPortalTrabajadorEnum.RADICADA && EstadosPortalTrabajadorEnum.EN_TRANSCRIPCION));
-                this.incapacidades = this.incapacidades.filter(i => i.estado.includes(EstadosRadicadoEnum.CPT));
-                console.log(data);
+                console.log(this.incapacidades);
             },
             error: (error) => {
                 console.log(error);
@@ -70,7 +73,7 @@ export class SeguimientoIncapacidadesComponent {
     }
 
     getGlobalFilterFields() {
-        return ['numeroRadicado', 'estadoObservacionTrabajador', 'nombreEmpresa', 'tipoIncapacidad', 'fechaInicial', 'fechaFinal', 'fechaDeRadicacion'];
+        return ['numeroRadicado', 'estadoObservacionTrabajador', 'nombreEmpresa', 'tipoIncapacidad', 'subTipoIncapacidad', 'fechaInicial', 'fechaFinal', 'fechaRadicacion'];
     }
 
     clearTable(table: Table) {
@@ -84,5 +87,32 @@ export class SeguimientoIncapacidadesComponent {
     viewDetailsIncapacidad(incapacidad:Incapacidad, modal:any) {
         this.modalService.open(modal, { centered: true });
         this.incapacidadSelected = incapacidad;
+    }
+
+    viewObservacionesIncapacidad(incapacidad:Incapacidad, modal:any) {
+        this.observacionesConsulta = [];
+        this.modalService.open(modal, { centered: true });
+        this.findObservacionesByNumeroRadicado(incapacidad.numeroRadicado);
+    }
+
+    findObservacionesByNumeroRadicado(radicado:number) {
+        console.log(radicado);
+        this.numeroRadicadoSeleccionado = radicado;
+        this.isLoadingObservaciones = true;
+        this.observacionesConsulta = [];
+        this.seguimientoService.findObservacionesByNumeroRadicado(radicado).subscribe({
+            next: (data) => {
+                console.log(data);
+                this.observacionesConsulta = data;
+            },
+            error: (error) => {
+                console.log(error);
+                this.toast.error(error.message);
+                this.appService.manageHttpError(error);
+            }, 
+            complete: () => {
+                this.isLoadingObservaciones = false;
+            }
+        });
     }
 }

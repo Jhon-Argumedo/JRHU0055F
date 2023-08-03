@@ -48,7 +48,10 @@ export enum EstadosRadicadoEnum {
 }
 
 export enum EstadosPortalTrabajadorEnum {
-    RADICADA = 'RADICADA',
-    EN_TRANSCRIPCION = 'EN_TRANSCRIPCION',
-    DEVOLUCION = 'DEVOLUCION'
+    Radicada = 'Radicada',
+    En_transcripcion = 'En transcripcion',
+    Auditoria_interna_o_externa = 'Auditoria interna o externa',
+    Devolución = 'Devolucion',
+    En_estudio = 'En estudio',
+    Proceso_declinado = 'Proceso declinado'
 }

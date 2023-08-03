@@ -106,8 +106,6 @@ export class RadicarIncapacidadComponent implements OnInit {
             window.location.href = SitioTrabajador.URL;
         }
 
-        //this.appService.validFlujoRadicarIncapacidad();
-
         this.invalidClass = 'col-12 custom-select';
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
@@ -190,8 +188,6 @@ export class RadicarIncapacidadComponent implements OnInit {
             requestIncapacidad.contrato, requestIncapacidad.fechaIncidente, this.tipoInc.codigoTipoIncapacidad, contratoDTO, requestIncapacidad.fechaInicioIncapacidad);
 
         console.log(requestIncapacidad);
-        console.log(requestValidar);
-
         this.isLoadingValidacion = true;
         this.radicarService.validIncapacidad(requestValidar).subscribe({
             next: (data) => {

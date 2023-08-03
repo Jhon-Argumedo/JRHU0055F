@@ -5,4 +5,5 @@ export class DocumentoUpload {
     pesoCarga:number;
     base64:string;
     requerido:boolean;
+    observaciones:string;
 }

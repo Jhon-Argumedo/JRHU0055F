@@ -5,5 +5,6 @@ export class ResponseDocumentosRadicado {
     documento:ResponseDocumento;
     documentoRequerido:string;
     estadoDelDocumento:string;
+    observaciones:string;
     ruta:string;
 }

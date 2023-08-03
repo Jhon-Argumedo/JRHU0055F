@@ -181,7 +181,9 @@
 
                         <div class="col-12 col-md-4" *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
-                                Fecha calificación Enfermedad Laboral
+                                <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL'">Fecha calificación Accidente Laboral</span>
+                                <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">Fecha calificación Enfermedad Laboral</span>
+                                
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
                                     data-bs-placement="top"
                                     data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
@@ -198,7 +200,7 @@
                         <div class="col-12 col-lg-4"
                             *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
                             <label for="fechaFueroMaterno" class="form-label">
-                                Fecha fuero Materno
+                                Fecha Nacimiento en Registro Civil
                             </label>
                             <input id="fechaFueroMaterno" name="fechaFueroMaterno" formControlName="fechaFueroMaterno"
                                 type="date" class="form-control form-control-lg" required

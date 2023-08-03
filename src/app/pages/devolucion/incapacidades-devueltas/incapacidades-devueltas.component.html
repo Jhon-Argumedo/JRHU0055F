@@ -54,22 +54,27 @@
                     <tr>
                         <th scope="col" pSortableColumn="numeroRadicado" style="width: 12%;">N° Radicado</th>
                         <th scope="col" pSortableColumn="nombreEmpresa" style="width: 17%;">Empresa</th>
-                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 25%;">Tipo Incapacidad</th>
-                        <th scope="col" pSortableColumn="fechaInicial" style="width: 15%;">Fecha Inicio</th>
+                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 30%;">Tipo Incapacidad</th>
+                        <th scope="col" pSortableColumn="subTipoIncapacidad" style="width: 30%;">Subtipo Incapacidad</th>
+                        <th scope="col" pSortableColumn="fechaInicial" style="width: 10%;">Fecha Inicio</th>
                         <th scope="col" pSortableColumn="fechaFinal" style="width: 10%;">Fecha Fin</th>
-                        <th scope="col" pSortableColumn="fechaDeRadicacion" style="width: 20%;">Fecha Radicacion</th>
+                        <th scope="col" pSortableColumn="fechaRadicacion" style="width: 10%;">Fecha Radicación</th>
+                        <th scope="col" pSortableColumn="estado" style="width: 20%;">Estado</th>
+                        <th scope="col" style="width: 5%;"></th>
                         <th scope="col" style="width: 5%;"></th>
                         <th scope="col" style="width: 5%;"></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-i>
                     <tr>
-                        <td>{{i.numeroRadicado}}</td>
-                        <td>{{i.nombreEmpresa}}</td>
-                        <td>{{i.tipoIncapacidad}}</td>
+                        <td>{{ i.numeroRadicado }}</td>
+                        <td>{{ i.nombreEmpresa }}</td>
+                        <td>{{ i.tipoIncapacidad }}</td>
+                        <td>{{ i.subTipoIncapacidad }}</td>
                         <td>{{ i.fechaInicial | date: 'dd/MM/yyyy'}}</td>
                         <td>{{ i.fechaFinal | date: 'dd/MM/yyyy'}}</td>
                         <td>{{ i.fechaRadicacion | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{ i.estadoObservacionTrabajador }}</td>
                         <td class="text-center">
                             <button (click)="viewDetailsIncapacidad(i, modal)"
                             type="button"
@@ -82,6 +87,13 @@
                             type="button"
                             class="btn btn-warning rounded-pill btn-sm">
                                 <i class="fa-regular fa-folder-open"></i>
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <button (click)="viewObservacionesIncapacidad(i, modalObservaciones)"
+                            type="button"
+                            class="btn btn-dark rounded-pill btn-sm">
+                                <i class="fa-solid fa-file-circle-question"></i>
                             </button>
                         </td>
                     </tr>
@@ -147,6 +159,37 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-dark rounded-pill" aria-label="Close" (click)="d('Cross click')">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #modalObservaciones let-c="close" let-d="dismiss">
+    <div class="modal-content shadow">
+        <div class="modal-header border-bottom-0">
+            <h1 class="modal-title fs-5">Observaciones Radicado: {{ numeroRadicadoSeleccionado }}</h1>
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row pe-2">
+                <div class="col">
+                    <div *ngFor="let obs of observacionesConsulta" class="alert alert-secondary" role="alert">
+                        <div class="d-flex justify-content-between">
+                            <div class="fs-6">
+                                Estado
+                                <span class="fw-bold">{{ obs.estado }}</span>
+                            </div>
+                            <div class="fs-6">
+                                Fecha
+                                <span class="fw-bold">{{ obs.fecha | date: 'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-dark" aria-label="Close"
+                (click)="d('Cross click')">Aceptar</button>
         </div>
     </div>
 </ng-template>

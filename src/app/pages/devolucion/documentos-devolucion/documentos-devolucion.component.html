@@ -99,10 +99,11 @@
                             <hr />
                             <div class="table-responsive">
                                 <table class="table text-center table-hover">
-                                    <caption>Documentos requeridos para la radicacion.</caption>
+                                    <caption></caption>
                                     <thead>
                                         <tr>
                                             <th scope="col">Documento</th>
+                                            <th scope="col">Observación</th>
                                             <th scope="col"></th>
                                             <th scope="col">Carga</th>
                                             <th scope="col">Tamaño</th>
@@ -113,6 +114,7 @@
                                     <tbody>
                                         <tr *ngFor="let d of documentos">
                                             <td>{{ capitalizeFirstLetter(d.descripcionDelDocumento) }}</td>
+                                            <td>{{ capitalizeFirstLetter(d.observaciones) }}</td>
                                             <td>
                                                 <span *ngIf="d.requerido" class="badge rounded-pill text-bg-danger">Requerido</span>
                                                 <span *ngIf="!d.requerido" class="badge rounded-pill text-bg-info">Opcional</span>

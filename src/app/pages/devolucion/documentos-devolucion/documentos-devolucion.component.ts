@@ -56,18 +56,19 @@ export class DocumentosDevolucionComponent {
                 next: (data: ResponseDocumentosRadicado[]) => {
                     console.log(data);
                     data.forEach(dr => {
-                        if(this.getEstadoDocumentoCargado(dr) === EstadosDocumentoCargadoEnum.no_cargado || dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO && dr.documentoRequerido === 'S') {
+                        if(dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO || dr.documentoRequerido === 'N') {
                             let documentoUpload: DocumentoUpload = new DocumentoUpload();
                             documentoUpload.idDocumento = parseInt(dr.documento.idDocumento);
                             documentoUpload.descripcionDelDocumento = dr.documento.nombreDocumento;
                             documentoUpload.cargaDocumento = '';
                             documentoUpload.pesoCarga = 0;
                             documentoUpload.base64 = '';
+                            documentoUpload.observaciones = dr.observaciones;
     
-                            if (dr.documentoRequerido === 'S') {
-                                documentoUpload.requerido = true;
-                            } else {
+                            if (dr.documentoRequerido === 'N') {
                                 documentoUpload.requerido = false;
+                            } else {
+                                documentoUpload.requerido = true;
                             }
     
                             this.documentos.push(documentoUpload);
@@ -101,7 +102,7 @@ export class DocumentosDevolucionComponent {
         let reqDocumentos: RequestDocumento[] = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
 
         this.documentosRequest.numeroRadicado = this.incapacidadDevuelta.numeroRadicado;
-        this.documentosRequest.estadoRadicado = EstadosRadicadoEnum.PEN;
+        this.documentosRequest.estadoRadicado = 'EN ESTUDIO';
         this.documentosRequest.tipoACargar = 'A';
         this.documentosRequest.documentosACargar = reqDocumentos;
         
@@ -138,6 +139,9 @@ export class DocumentosDevolucionComponent {
     }
 
     capitalizeFirstLetter(str: string) {
+        if(str == null) {
+            return '';
+        }
         return this.appService.convertStringFirstCapitalLetter(str);
     }
 
