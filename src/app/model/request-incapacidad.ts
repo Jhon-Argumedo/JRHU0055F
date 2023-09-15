@@ -15,6 +15,7 @@ export class RequestIncapacidad {
     fechaFueroMaterno:string;
     fechaInicioIncapacidad: string;
     numeroDeDias: number;
+    numeroIncapacidad:number;
     prorroga: string;
     idUsuarioCrea: number;
     azCodigo: string;

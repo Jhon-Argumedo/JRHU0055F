@@ -63,7 +63,7 @@ export class RadicarIncapacidadComponent implements OnInit {
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
     numeroIncapacidad: string = '';
     diagnostico: Enfermedad;
-    codigoDiagnostico: string = '001';
+    codigoDiagnostico: string = '';
     fechaInicio: string = '';
     numeroDias: number;
     prorroga: string = '';
@@ -165,6 +165,12 @@ export class RadicarIncapacidadComponent implements OnInit {
         requestIncapacidad.numeroDeDias = this.numeroDias;
         requestIncapacidad.prorroga = this.prorroga;
 
+        if(this.numeroIncapacidad.length == 0) {
+            requestIncapacidad.numeroIncapacidad = 0;
+        } else {
+            requestIncapacidad.numeroIncapacidad = parseInt(this.numeroIncapacidad);
+        }
+
         this.appService.getIPAddress().subscribe((res: any) => {
             requestIncapacidad.direccionIp = res.ip;
         });
@@ -184,8 +190,14 @@ export class RadicarIncapacidadComponent implements OnInit {
         }
 
         let contratoDTO: ContratoDTO = new ContratoDTO(this.usuarioSesion.tipoDoc, parseInt(this.usuarioSesion.numeroDoc), this.usuarioSesion.tipoDocEmp, parseInt(this.usuarioSesion.numeroDocEmp));
-        let requestValidar: RequestValidarIncapacidad = new RequestValidarIncapacidad(requestIncapacidad.numeroDeDias,
-            requestIncapacidad.contrato, requestIncapacidad.fechaIncidente, this.tipoInc.codigoTipoIncapacidad, contratoDTO, requestIncapacidad.fechaInicioIncapacidad);
+        let requestValidar: RequestValidarIncapacidad = new RequestValidarIncapacidad(
+            requestIncapacidad.numeroDeDias,
+            requestIncapacidad.contrato, 
+            requestIncapacidad.fechaIncidente, 
+            this.tipoInc.codigoTipoIncapacidad, 
+            requestIncapacidad.numeroIncapacidad,
+            contratoDTO, 
+            requestIncapacidad.fechaInicioIncapacidad);
 
         console.log(requestIncapacidad);
         this.isLoadingValidacion = true;
