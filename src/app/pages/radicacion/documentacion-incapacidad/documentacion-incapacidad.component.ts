@@ -2,7 +2,6 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Tooltip } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
@@ -57,7 +56,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
         //this.appService.validFlujoRadicarIncapacidad();
 
-        Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
+        // Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
         this.getDataLocalStorage();
         this.findAllDocsBySubtipoInc();
@@ -89,8 +88,39 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
         console.log(this.requestIncapacidad);
 
-        this.openModalLoading(this.modalRadicacionLoading);
         this.radicarIncapacidad();
+    }
+    
+    radicarIncapacidad() {
+        this.isLoadingRequest = true;
+        this.openModalLoading(this.modalRadicacionLoading);
+        let httpResponse:HttpResponse<any>;
+        this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe({
+            next: (response) => {
+                console.log(response);
+                httpResponse = response;
+                this.responseRadicarIncapacidad = response.body;
+                console.log(this.responseRadicarIncapacidad);
+            },
+            error: (error) => {
+                console.log(error);
+                this.closeModalLoading();
+                this.openModalError(this.modalRadicacionError);
+                this.toastr.error(error.message);
+                this.appService.manageHttpError(error);
+            },
+            complete: () => {
+                this.isLoadingRequest = false;
+                this.closeModalLoading();
+                if(httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
+                    this.openModalOk(this.modalRadicacionOk);
+                    this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
+                    this.clearDataLocalStorage();
+                } else if(httpResponse.statusText != 'OK') {
+                    this.openModalError(this.modalRadicacionError);
+                }
+            }
+    });
     }
 
     findAllDocsBySubtipoInc() {
@@ -105,6 +135,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
                     documento.requerido = d.requerido;
                     documento.cargaDocumento = '';
                     documento.base64 = '';
+                    documento.observacionDelDocumento = d.observacionDelDocumento;
 
                     this.documentos.push(documento);
                 });
@@ -175,7 +206,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     openModalOk(modal: any) {
-        this.modalRadicacionOk = this.modalService.open(modal, {centered: true});
+        this.modalRadicacionOk = this.modalService.open(modal, { centered: true });
     }
 
     openModalLoading(modal: any) {
@@ -255,37 +286,6 @@ export class DocumentacionIncapacidadComponent implements OnInit {
             return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
         });
         return capitalizedWords.join(' ');
-    }
-
-    radicarIncapacidad() {
-        this.isLoadingRequest = true;
-        let httpResponse:HttpResponse<any>;
-        this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe({
-            next: (response) => {
-                console.log(response);
-                httpResponse = response;
-                this.responseRadicarIncapacidad = response.body;
-                console.log(this.responseRadicarIncapacidad);
-            },
-            error: (error) => {
-                console.log(error);
-                this.closeModalLoading();
-                this.openModalError(this.modalRadicacionError);
-                this.toastr.error(error.message);
-                this.appService.manageHttpError(error);
-            },
-            complete: () => {
-                this.isLoadingRequest = false;
-                this.closeModalLoading();
-                if(httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
-                    this.openModalOk(this.modalRadicacionOk);
-                    this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
-                    this.clearDataLocalStorage();
-                } else if(httpResponse.statusText != 'OK') {
-                    this.openModalError(this.modalRadicacionError);
-                }
-            }
-    });
     }
 
     clearDataLocalStorage() {

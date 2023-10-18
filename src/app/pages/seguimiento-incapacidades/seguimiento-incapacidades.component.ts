@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Table } from 'primeng/table';
 import { AppService } from 'src/app/app.service';
-import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
@@ -12,6 +11,7 @@ import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { SeguimientoIncapacidadesService } from './seguimiento-incapacidades.service';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { Observacion } from 'src/app/model/observacion';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-seguimiento-incapacidades',
@@ -20,13 +20,12 @@ import { Observacion } from 'src/app/model/observacion';
 })
 export class SeguimientoIncapacidadesComponent {
 
+    defaultTextFilterMode = 'contains';
     usuarioSesion:UsuarioSesion = new UsuarioSesion();
-    incapacidadSelected:Incapacidad;
+    incapacidadSelected:Incapacidad;    
     incapacidades:Incapacidad[] = [];
-
     numeroRadicadoSeleccionado:number;
     isLoadingObservaciones:boolean = false;
-
     isLoading:boolean = false;
     observacionesConsulta:Observacion[] = [];
 
@@ -34,7 +33,8 @@ export class SeguimientoIncapacidadesComponent {
         private toast:ToastrService,
         private storage:LocalStorageService,
         private appService:AppService,
-        private modalService:NgbModal) {}
+        private modalService:NgbModal,
+        private router:Router) {}
 
     ngOnInit(): void {
         if(!this.appService.isUserLogged()) {
@@ -53,6 +53,33 @@ export class SeguimientoIncapacidadesComponent {
         this.seguimientoService.findAllIncacidades(request).subscribe({
             next: (data) => {
                 this.incapacidades = data;
+                this.incapacidades.forEach(inc => {
+                    let dateFechaRadicacion: Date = new Date(inc.fechaRadicacion);
+                    let dateFechaInicial: Date = new Date(inc.fechaInicial);
+                    let dateFechaFinal: Date = new Date(inc.fechaFinal);
+
+                    let formattedFechaRadicacion: string = dateFechaRadicacion.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    let formattedFechaInicial: string = dateFechaInicial.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    let formattedFechaFinal: string = dateFechaFinal.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    inc.fechaRadicacion = formattedFechaRadicacion;
+                    inc.fechaInicial = formattedFechaInicial;
+                    inc.fechaFinal = formattedFechaFinal;
+                });
                 console.log(this.incapacidades);
             },
             error: (error) => {
@@ -72,16 +99,8 @@ export class SeguimientoIncapacidadesComponent {
         return request;
     }
 
-    getGlobalFilterFields() {
-        return ['numeroRadicado', 'estadoObservacionTrabajador', 'nombreEmpresa', 'tipoIncapacidad', 'subTipoIncapacidad', 'fechaInicial', 'fechaFinal', 'fechaRadicacion'];
-    }
-
     clearTable(table: Table) {
         table.clear();
-    }
-
-    filter(dtIncapacidades:any, event:any) {
-        return dtIncapacidades.filterGlobal(event.target.value, 'contains')
     }
 
     viewDetailsIncapacidad(incapacidad:Incapacidad, modal:any) {
@@ -115,4 +134,11 @@ export class SeguimientoIncapacidadesComponent {
             }
         });
     }
+
+    refreshComponent() {
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate([this.router.url]);
+    }
+
 }

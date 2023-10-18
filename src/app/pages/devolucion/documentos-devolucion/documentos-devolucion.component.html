@@ -196,7 +196,7 @@
         <div class="modal-body py-0 text-center">
             <i class="fa-regular fa-circle-check text-success fs-1"></i>
             <p class="fs-4 mb-0">Caso radicado</p>
-            <p class="fs-2 fw-bold">No. </p>
+            <p class="fs-2 fw-bold">No. {{ incapacidadDevuelta.numeroRadicado }}</p>
             <small></small>
             <p class="text-muted">
                 Este trámite pasa a un proceso de revisión documental , cuya respuesta y definición la podrá
@@ -204,7 +204,7 @@
             </p>
         </div>
         <div class="modal-footer flex-column border-top-0">
-            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')" class="btn btn-lg btn-secondary w-100 mx-0">Aceptar</button>
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')" class="btn btn-lg btn-dark w-100 mx-0">Aceptar</button>
         </div>
     </div>
 </ng-template>

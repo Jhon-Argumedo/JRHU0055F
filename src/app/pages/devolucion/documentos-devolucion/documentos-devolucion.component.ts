@@ -1,15 +1,15 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
 import { DocumentoUpload } from 'src/app/model/documento-upload';
-import { EstadosDocumentoCargadoEnum, EstadosDocumentoEnum, EstadosRadicadoEnum, SesionDataEnum } from 'src/app/model/enums';
+import { EstadosDocumentoCargadoEnum, EstadosDocumentoEnum, SesionDataEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestCargarDocumento } from 'src/app/model/request-cargar-documento';
 import { RequestDocumento } from 'src/app/model/request-documento';
-import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
 import { ResponseDocumentosRadicado } from 'src/app/model/response-documentos-radicado';
 import { DocumentosDevolucionService } from './documentos-devolucion.service';
 
@@ -56,7 +56,7 @@ export class DocumentosDevolucionComponent {
                 next: (data: ResponseDocumentosRadicado[]) => {
                     console.log(data);
                     data.forEach(dr => {
-                        if(dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO || dr.documentoRequerido === 'N') {
+                        if((dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO) || (dr.documentoRequerido === 'N' && dr.azCodigoCli === '0')) {
                             let documentoUpload: DocumentoUpload = new DocumentoUpload();
                             documentoUpload.idDocumento = parseInt(dr.documento.idDocumento);
                             documentoUpload.descripcionDelDocumento = dr.documento.nombreDocumento;
@@ -102,12 +102,11 @@ export class DocumentosDevolucionComponent {
         let reqDocumentos: RequestDocumento[] = this.getRequestDocumentoFromDocumentosUpload(this.documentos);
 
         this.documentosRequest.numeroRadicado = this.incapacidadDevuelta.numeroRadicado;
-        this.documentosRequest.estadoRadicado = 'EN ESTUDIO';
+        this.documentosRequest.estadoRadicado = 'EN CAPTURA';
         this.documentosRequest.tipoACargar = 'A';
         this.documentosRequest.documentosACargar = reqDocumentos;
         
         console.log(this.documentosRequest);
-        this.openModalLoading(modalLoading);
         this.devolverDocumentos();
     }
 
@@ -128,6 +127,7 @@ export class DocumentosDevolucionComponent {
             complete: () => {
                 this.isLoadingRequest = false;
                 this.closeModalLoading();
+                this.openModalOk(this.modalRadicacionOk);
                 this.toast.success('Radicación Gestionada correctamente!');
                 this.router.navigate(['/incapacidades/devolucion/incapacidades-devueltas']);
             }

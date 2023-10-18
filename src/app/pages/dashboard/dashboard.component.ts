@@ -49,7 +49,7 @@ export class DashboardComponent {
 
         console.log(this.activosEmp);
         console.log(this.serviolaEmp);
-        console.log(this.atecnoEmp);
+        console.log(this.atecnoEmp); 
     }
 
     go(route: string) {

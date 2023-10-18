@@ -107,7 +107,6 @@ export class RadicarIncapacidadComponent implements OnInit {
         }
 
         this.invalidClass = 'col-12 custom-select';
-        Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
 
         this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         this.tipoInc = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);

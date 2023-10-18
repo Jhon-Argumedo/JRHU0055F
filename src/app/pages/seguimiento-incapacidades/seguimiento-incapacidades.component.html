@@ -12,90 +12,102 @@
                 </ol>
             </nav>
         </div>
-        <div class="bg-white sticky-top py-2">
+        <div class="py-2">
             <p class="fs-1 text-center fw-light">Incapacidades Radicadas</p>
             <hr>
         </div>
-        <small class="text-muted mb-2">Aqui podras gestionar todas las incapacidades radicadas, viendo toda la información
-            necesaria.
+        <small class="text-muted mb-2">Aqui podras gestionar todas las incapacidades radicadas, viendo toda la
+            información necesaria.
         </small>
+
+        <div class="col-12" *ngIf="incapacidades.length == 0 && !isLoading">
+            <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
+                <strong class="option-tipo">No hay incapacidades registradas.</strong>
+            </div>
+        </div>
+
         <div class="col-12" *ngIf="isLoading">
             <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
                 <strong class="option-tipo">El historial de incapacidades estan cargando....</strong>
                 <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
             </div>
         </div>
-        <div class="col-12" *ngIf="!isLoading">
-            <p-table #dtIncapacidades
-                dataKey="id"
-                [value]="incapacidades" 
-                [paginator]="true"
-                [rows]="10"
-                [showCurrentPageReport]="true"
-                [tableStyle]="{ 'min-width': '50rem' }"
-                currentPageReportTemplate="Pagina {first} - {last} de {totalRecords} registros"
-                [globalFilterFields]="getGlobalFilterFields()"
-                [styleClass]="'p-datatable-sm'"
-                [rowsPerPageOptions]="[10, 25, 50]">
+
+        <div class="card px-0 border rounded" *ngIf="!isLoading">
+            <p-table #dtInc [value]="incapacidades" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [tableStyle]="{ 'min-width': '100rem' }" [styleClass]="'p-datatable-sm'">
 
                 <ng-template pTemplate="caption">
-                    <div class="justify-content-between d-flex">
-                        <button (click)="clearTable(dtIncapacidades)" class="btn btn-sm" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-danger' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}">
+                    <div class="justify-content-end d-flex">
+                        <button type="button" (click)="refreshComponent()" class="btn btn-sm me-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Refrescar página" tooltipPosition="top">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                        <button type="button" (click)="clearTable(dtInc)" class="btn btn-sm" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Limpiar filtro" tooltipPosition="top">
                             <i class="fa-solid fa-filter-circle-xmark"></i>
                         </button>
-                        <span class="p-input-icon-left ml-auto">
-                            <i class="pi pi-search"></i>
-                            <input pInputText class="form-control" type="text" (input)="filter(dtIncapacidades, $event)" placeholder="Escribe para buscar..." />
-                        </span>
                     </div>
                 </ng-template>
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th scope="col" pSortableColumn="numeroRadicado" style="width: 12%;">N° radicado</th>
-                        <th scope="col" pSortableColumn="estado" style="width: 8%;">Estado</th>
-                        <th scope="col" pSortableColumn="nombreEmpresa" style="width: 17%;">Empresa</th>
-                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 25%;">Tipo Incapacidad</th>
-                        <th scope="col" pSortableColumn="subTipoIncapacidad" style="width: 30%;">Subtipo Incapacidad</th>
+                        <th scope="col" pSortableColumn="numeroRadicado" style="width: 10%;" class="ps-3">N° Radicado</th>
+                        <th scope="col" pSortableColumn="fechaRadicacion" style="width: 10%;">Fecha Radicación</th>
                         <th scope="col" pSortableColumn="fechaInicial" style="width: 10%;">Fecha Inicio</th>
                         <th scope="col" pSortableColumn="fechaFinal" style="width: 10%;">Fecha Fin</th>
-                        <th scope="col" pSortableColumn="fechaRadicacion" style="width: 20%;">Fecha Radicación</th>
-                        <th scope="col" style="width: 5%;">Detalles</th>
-                        <th scope="col" style="width: 5%;">Observación</th>
+                        <th scope="col" pSortableColumn="numeroDeDias" style="width: 7%;">Dias</th>
+                        <th scope="col" pSortableColumn="estadoObservacionTrabajador" style="width: 13%;">Estado</th>
+                        <th scope="col" pSortableColumn="nombreEmpresa" style="width: 15%;">Empresa Usuaria</th>
+                        <th scope="col" pSortableColumn="tipoIncapacidad" style="width: 20%;">Tipo Incapacidad</th>
+                        <th scope="col" style="width: 10%;"></th>
+                    </tr>
+                    <tr>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="numeroRadicado" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaRadicacion" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaInicial" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaFinal" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="numeroDeDias" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="estadoObservacionTrabajador" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="nombreEmpresa" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col">
+                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="tipoIncapacidad" [showClearButton]="false"></p-columnFilter>
+                        </th>
+                        <th scope="col"></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-i>
                     <tr>
-                        <td>{{ i.numeroRadicado }}</td>
-                        <td>
-                            {{ i.estadoObservacionTrabajador.toUpperCase() }}
-                        </td>
+                        <td class="ps-3">{{ i.numeroRadicado }}</td>
+                        <td>{{ i.fechaRadicacion }}</td>
+                        <td>{{ i.fechaInicial }}</td>
+                        <td>{{ i.fechaFinal }}</td>
+                        <td>{{ i.numeroDeDias }}</td>
+                        <td>{{ i.estadoObservacionTrabajador.toUpperCase() }}</td>
                         <td>{{ i.nombreEmpresa }}</td>
                         <td>{{ i.tipoIncapacidad }}</td>
-                        <td>{{ i.subTipoIncapacidad }}</td>
-                        <td>{{ i.fechaInicial | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{ i.fechaFinal | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{ i.fechaRadicacion | date: 'dd/MM/yyyy'}}</td>
                         <td class="text-center">
                             <button (click)="viewDetailsIncapacidad(i, modal)"
-                            type="button"
+                            type="button" pTooltip="Ver detalles" tooltipPosition="top"
                             class="btn btn-info rounded-pill btn-sm">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
-                        <td class="text-center">
-                            <button (click)="viewObservacionesIncapacidad(i, modalObservaciones)"
-                            type="button" class="btn btn-dark rounded-pill btn-sm">
-                                <i class="fa-solid fa-file-circle-question"></i>
-                            </button>
-                        </td>
                     </tr>
-                </ng-template>
-                <ng-template pTemplate="paginatorleft">
-                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
-                </ng-template>
-                <ng-template pTemplate="paginatorright">
-                    <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
                 </ng-template>
             </p-table>
         </div>
@@ -129,7 +141,8 @@
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Estado: </span>
-                        <span class="text-muted">{{ incapacidadSelected.estadoObservacionTrabajador.toUpperCase() }}.</span>
+                        <span class="text-muted">{{ incapacidadSelected.estadoObservacionTrabajador.toUpperCase()
+                            }}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Seguro: </span>
@@ -137,21 +150,22 @@
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Periodo de incapacidad: </span>
-                        <span class="text-muted">{{ incapacidadSelected.fechaInicial | date: 'dd/MM/yyyy'}} - {{ incapacidadSelected.fechaFinal | date: 'dd/MM/yyyy'}}.</span>
+                        <span class="text-muted">{{ incapacidadSelected.fechaInicial | date: 'dd/MM/yyyy'}} - {{
+                            incapacidadSelected.fechaFinal | date: 'dd/MM/yyyy'}}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
                         <span class="text-dark">Tipo de incapacidad: </span>
                         <span class="text-muted">{{ incapacidadSelected.tipoIncapacidad }}.</span>
                     </p>
                     <p class="mb-0 fw-bold">
-                        <span class="text-dark">Subtipo de incapacidad: </span> 
+                        <span class="text-dark">Subtipo de incapacidad: </span>
                         <span class="text-muted">{{ incapacidadSelected.subTipoIncapacidad }}.</span>
                     </p>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            
+
         </div>
     </div>
 </ng-template>
@@ -181,8 +195,7 @@
             </div>
         </div>
         <div class="modal-footer border-top-0">
-            <button type="button" class="btn btn-dark" aria-label="Close"
-                (click)="d('Cross click')">Aceptar</button>
+            <button type="button" class="btn btn-dark" aria-label="Close" (click)="d('Cross click')">Aceptar</button>
         </div>
     </div>
 </ng-template>

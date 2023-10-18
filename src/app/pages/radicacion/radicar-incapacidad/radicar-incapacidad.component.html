@@ -36,9 +36,8 @@
                         <div class="col-12">
                             <label for="contrato" class="form-label">
                                 Contrato<span class="fw-bold text-danger me-1">*</span>
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="Seleccione el contrato correspondiente a la incapacidad a radicar."></i>
+                                <i class="fa-solid fa-circle-info text-primary" tooltipPosition="top"
+                                    pTooltip="Seleccione el contrato correspondiente a la incapacidad a radicar."></i>
                             </label>
                             <select id="contrato" name="contrato" formControlName="contrato" 
                                 class="form-select form-select-lg" required 
@@ -82,9 +81,7 @@
                         <div class="col-12 col-md-4">
                             <label for="numeroIncapacidad" class="form-label">
                                 N° Incapacidad
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="Digite el número único de su incapacidad."></i>
+                                <i class="fa-solid fa-circle-info text-primary" tooltipPosition="top" pTooltip="Digite el número único de su incapacidad."></i>
                             </label>
                             <input id="numeroIncapacidad" name="numeroIncapacidad" formControlName="numeroIncapacidad"
                                 [(ngModel)]="numeroIncapacidad"
@@ -181,7 +178,7 @@
 
                         <div class="col-12 col-md-4" *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL' || tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">
                             <label for="fechaAccidente" class="form-label">
-                                <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL'">Fecha calificación Accidente Laboral</span>
+                                <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL'">Fecha Accidente Laboral</span>
                                 <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">Fecha calificación Enfermedad Laboral</span>
                                 
                                 <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
@@ -215,8 +212,7 @@
                             <label for="prorroga" class="form-label">
                                 ¿Prorroga?
                                 <span class="fw-bold text-danger me-1">*</span>
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" data-bs-title="Se entiende por prórroga de la incapacidad, la 
+                                <i class="fa-solid fa-circle-info text-primary" tooltipPosition="top" pTooltip="Se entiende por prórroga de la incapacidad, la 
                                     que se expide con posterioridad a la inicial, por la misma enfermedad o lesión, o por 
                                     otra que tenga relación directa con esta, así se trate de código diferente de diagnóstico 
                                     (CIE), y siempre y cuando entre una y otra no haya una interrupción mayor a treinta (30) 
@@ -249,7 +245,7 @@
                                 <i class="fa-solid fa-arrow-left me-sm-2"></i>
                                 Regresar
                             </button>
-                            <button type="submit" class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-danger' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" [disabled]="isLoadingValidacion">
+                            <button type="submit" class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola': usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" [disabled]="isLoadingValidacion">
                                 <span *ngIf="!isLoadingValidacion">Siguiente</span> 
                                 <span *ngIf="isLoadingValidacion">Validando...</span> 
                                 <i class="fa-solid fa-arrow-right ms-sm-2" *ngIf="!isLoadingValidacion"></i>

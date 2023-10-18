@@ -106,7 +106,10 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let d of documentos">
-                                            <td>{{ capitalizeFirstLetter(d.descripcionDelDocumento) }}</td>
+                                            <td>
+                                                <i class="fa-solid fa-circle-info me-2 text-info" pTooltip="{{d.observacionDelDocumento}}" tooltipPosition="top"></i>
+                                                {{ capitalizeFirstLetter(d.descripcionDelDocumento) }}
+                                            </td>
                                             <td>
                                                 <span *ngIf="d.requerido" class="badge rounded-pill text-bg-danger">Requerido</span>
                                                 <span *ngIf="!d.requerido" class="badge rounded-pill text-bg-info">Opcional</span>
@@ -147,7 +150,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -161,7 +163,7 @@
                                 Regresar
                             </button>
                             <button (click)="radicar(modalRadicacionOk, modalRadicacionLoading, modalRadicacionError)" [disabled]="isLoadingRequest" 
-                            class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-danger' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}">
+                            class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}">
                                 <span *ngIf="!isLoadingRequest">Terminar radicacion</span>
                                 <span *ngIf="isLoadingRequest">Radicando incapacidad...</span>
 

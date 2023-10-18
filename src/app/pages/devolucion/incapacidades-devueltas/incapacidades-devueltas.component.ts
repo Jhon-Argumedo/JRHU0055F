@@ -5,7 +5,7 @@ import { Incapacidad } from 'src/app/model/incapacidad';
 import { IncapacidadesDevueltasService } from './incapacidades-devueltas.service';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
-import { EstadosPortalTrabajadorEnum, EstadosRadicadoEnum, SesionDataEnum } from 'src/app/model/enums';
+import { EstadosPortalTrabajadorEnum, SesionDataEnum } from 'src/app/model/enums';
 import { LocalStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
 import { Table } from 'primeng/table';
@@ -22,15 +22,13 @@ import { SeguimientoIncapacidadesService } from '../../seguimiento-incapacidades
 export class IncapacidadesDevueltasComponent {
 
     usuarioSesion:UsuarioSesion = new UsuarioSesion();
-
     incapacidades: Incapacidad[] = [];
     incapacidadSelected: Incapacidad;
     isLoading:boolean = false;
-
     numeroRadicadoSeleccionado:number;
     isLoadingObservaciones:boolean = false;
-
     observacionesConsulta:Observacion[] = [];
+    defaultTextFilterMode = 'contains';
 
     constructor(private incDevService: IncapacidadesDevueltasService,
         private toast: ToastrService,
@@ -56,6 +54,33 @@ export class IncapacidadesDevueltasComponent {
             next: (data) => {
                 this.incapacidades = data;
                 this.incapacidades = this.incapacidades.filter(i => i.estadoObservacionTrabajador.includes(EstadosPortalTrabajadorEnum.Devolución));
+                this.incapacidades.forEach(inc => {
+                    let dateFechaRadicacion: Date = new Date(inc.fechaRadicacion);
+                    let dateFechaInicial: Date = new Date(inc.fechaInicial);
+                    let dateFechaFinal: Date = new Date(inc.fechaFinal);
+
+                    let formattedFechaRadicacion: string = dateFechaRadicacion.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    let formattedFechaInicial: string = dateFechaInicial.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    let formattedFechaFinal: string = dateFechaFinal.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    inc.fechaRadicacion = formattedFechaRadicacion;
+                    inc.fechaInicial = formattedFechaInicial;
+                    inc.fechaFinal = formattedFechaFinal;
+                });
                 console.log(this.incapacidades);
             },
             error: (error) => {
@@ -126,5 +151,11 @@ export class IncapacidadesDevueltasComponent {
                 this.isLoadingObservaciones = false;
             }
         });
+    }
+
+    refreshComponent() {
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate([this.router.url]);
     }
 }

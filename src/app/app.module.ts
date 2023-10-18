@@ -26,6 +26,7 @@ import { Error404Component } from './pages/error/error404/error404.component';
 import { Error500Component } from './pages/error/error500/error500.component';
 import { UnknownErrorComponent } from './pages/error/unknown-error/unknown-error.component';
 import { DatePipe, Location } from '@angular/common';
+import { TooltipModule } from 'primeng/tooltip';
 import { UserNotLoggedComponent } from './pages/error/user-not-logged/user-not-logged.component';
 import { TableModule } from 'primeng/table';
 import { ErrorAzComponent } from './pages/error/error-az/error-az.component';
@@ -67,7 +68,8 @@ import { AyudaComponent } from './pages/soporte/ayuda/ayuda.component';
     DropdownModule,
     ButtonModule,
     NgbModule,
-    TableModule
+    TableModule,
+    TooltipModule
   ],
   providers: [Location, DatePipe],
   bootstrap: [AppComponent]
