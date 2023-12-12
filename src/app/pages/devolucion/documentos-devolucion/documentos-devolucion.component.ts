@@ -54,7 +54,6 @@ export class DocumentosDevolucionComponent {
         this.appService.getIPAddress().subscribe((data: any) => {
             this.documentoService.getDocumentosDevolucion(parseInt(this.numeroRadicado), data.ip).subscribe({
                 next: (data: ResponseDocumentosRadicado[]) => {
-                    console.log(data);
                     data.forEach(dr => {
                         if((dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO) || (dr.documentoRequerido === 'N' && dr.azCodigoCli === '0')) {
                             let documentoUpload: DocumentoUpload = new DocumentoUpload();
@@ -105,8 +104,6 @@ export class DocumentosDevolucionComponent {
         this.documentosRequest.estadoRadicado = 'EN CAPTURA';
         this.documentosRequest.tipoACargar = 'A';
         this.documentosRequest.documentosACargar = reqDocumentos;
-        
-        console.log(this.documentosRequest);
         this.devolverDocumentos();
     }
 
@@ -166,7 +163,6 @@ export class DocumentosDevolucionComponent {
         this.fileToBase64(file)
             .then((base64String) => {
                 documento.base64 = base64String.split(',')[1].toString();
-                console.log(documento.base64);
             })
             .catch((error) => {
                 console.error(error);

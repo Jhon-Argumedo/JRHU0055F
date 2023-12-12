@@ -81,7 +81,8 @@
                         <div class="col-12 col-md-4">
                             <label for="numeroIncapacidad" class="form-label">
                                 N° Incapacidad
-                                <i class="fa-solid fa-circle-info text-primary" tooltipPosition="top" pTooltip="Digite el número único de su incapacidad."></i>
+                                <i class="fa-solid fa-circle-info text-primary custom-tooltip" tooltipPosition="top" pTooltip="Digite el número único de su incapacidad." ></i>
+
                             </label>
                             <input id="numeroIncapacidad" name="numeroIncapacidad" formControlName="numeroIncapacidad"
                                 [(ngModel)]="numeroIncapacidad"
@@ -96,7 +97,7 @@
 
                         <div class="col-12">
                             <label for="diagnostico" class="form-label">
-                                Enfermedad
+                                Codigo de diagnóstico
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <p-dropdown  id="diagnostico" name="diagnostico" formControlName="diagnostico"
@@ -180,10 +181,8 @@
                             <label for="fechaAccidente" class="form-label">
                                 <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL'">Fecha Accidente Laboral</span>
                                 <span *ngIf="tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'">Fecha calificación Enfermedad Laboral</span>
-                                
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad."></i>
+                                <i *ngIf="tipoInc.nombreTipoIncapacidad === 'ACCIDENTE LABORAL'" class="fa-solid fa-circle-info text-primary custom-tooltip ms-1" tooltipPosition="top" pTooltip="Digite la fecha del día exacto del Accidente de Trabajo asociado a esta incapacidad." ></i>
+                                <i *ngIf="tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'" class="fa-solid fa-circle-info text-primary custom-tooltip ms-1" tooltipPosition="top" pTooltip="Digite la fecha del día exacto de la calificacion de Enfermedad Laboral vigente asociado a esta incapacidad." ></i>
                             </label>
                             <input id="fechaAccidente" name="fechaAccidente" formControlName="fechaAccidente" 
                                 type="date" class="form-control form-control-lg" required
@@ -194,10 +193,10 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-4"
-                            *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
+                        <div class="col-12 col-lg-4" *ngIf="tipoInc.nombreTipoIncapacidad == 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
                             <label for="fechaFueroMaterno" class="form-label">
-                                Fecha Nacimiento en Registro Civil
+                                Fecha Nacimiento en Registro Civil 
+                                <i class="fa-solid fa-circle-info text-primary custom-tooltip" tooltipPosition="top" pTooltip="Digite la fecha de nacimiento, si cuenta con este dato." ></i>
                             </label>
                             <input id="fechaFueroMaterno" name="fechaFueroMaterno" formControlName="fechaFueroMaterno"
                                 type="date" class="form-control form-control-lg" required
@@ -245,7 +244,7 @@
                                 <i class="fa-solid fa-arrow-left me-sm-2"></i>
                                 Regresar
                             </button>
-                            <button type="submit" class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola': usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" [disabled]="isLoadingValidacion">
+                            <button type="submit" class="btn btn-lg rounded-pill ms-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola': usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-atecno' : usuarioSesion.nombreEmp === 'ATECNO'}" [disabled]="isLoadingValidacion">
                                 <span *ngIf="!isLoadingValidacion">Siguiente</span> 
                                 <span *ngIf="isLoadingValidacion">Validando...</span> 
                                 <i class="fa-solid fa-arrow-right ms-sm-2" *ngIf="!isLoadingValidacion"></i>

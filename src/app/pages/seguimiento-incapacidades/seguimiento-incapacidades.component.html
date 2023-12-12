@@ -41,10 +41,10 @@
 
                 <ng-template pTemplate="caption">
                     <div class="justify-content-end d-flex">
-                        <button type="button" (click)="refreshComponent()" class="btn btn-sm me-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Refrescar página" tooltipPosition="top">
+                        <button type="button" (click)="refreshComponent()" class="btn btn-sm me-2" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-atecno' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Refrescar página" tooltipPosition="top">
                             <i class="fa-solid fa-rotate"></i>
                         </button>
-                        <button type="button" (click)="clearTable(dtInc)" class="btn btn-sm" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-secondary' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Limpiar filtro" tooltipPosition="top">
+                        <button type="button" (click)="clearTable(dtInc)" class="btn btn-sm" [ngClass]="{'btn-warning': usuarioSesion.nombreEmp === 'ACTIVOS', 'btn-serviola' : usuarioSesion.nombreEmp === 'SERVIOLA', 'btn-atecno' : usuarioSesion.nombreEmp === 'ATECNO'}" pTooltip="Limpiar filtro" tooltipPosition="top">
                             <i class="fa-solid fa-filter-circle-xmark"></i>
                         </button>
                     </div>
@@ -64,28 +64,28 @@
                     </tr>
                     <tr>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="numeroRadicado" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="numeroRadicado" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaRadicacion" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="fechaRadicacion" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaInicial" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="fechaInicial" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="fechaFinal" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="fechaFinal" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="numeroDeDias" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="numeroDeDias" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="estadoObservacionTrabajador" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="estadoObservacionTrabajador" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="nombreEmpresa" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="nombreEmpresa" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col">
-                            <p-columnFilter [matchMode]="defaultTextFilterMode" type="text" field="tipoIncapacidad" [showClearButton]="false"></p-columnFilter>
+                            <p-columnFilter [matchModeOptions]="matchModeOptions" [matchMode]="defaultTextFilterMode" type="text" field="tipoIncapacidad" [showClearButton]="false"></p-columnFilter>
                         </th>
                         <th scope="col"></th>
                     </tr>
@@ -116,50 +116,56 @@
 
 <ng-template #modal let-c="close" let-d="dismiss">
     <div class="modal-content shadow">
-        <div class="modal-header">
-            <p class="fs-2 mb-0 mt-2 text-center">
-                <i class="fa-solid fa-magnifying-glass text-info fs-2 me-3"></i>
-                <span class="fw-light">Radicación #</span>
-                <strong>{{incapacidadSelected.numeroRadicado}}</strong>
-            </p>
+        <div class="modal-header border-0">
             <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
         </div>
         <div class="modal-body">
+            <div class="text-center">
+                <i class="fa-solid fa-magnifying-glass text-info fs-1"></i>
+                <p class="fs-2 mb-0 mt-2">
+                    <span class="fw-light">Radicación </span>
+                    <strong>{{incapacidadSelected.numeroRadicado}}</strong>
+                </p>
+            </div>
             <div class="row">
                 <div class="col">
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Empresa: </span>
+                    <p class="mb-0 text-center">
+                        <span class="text-dark fw-bold">EMPRESA </span>
                         <span class="text-muted">{{ incapacidadSelected.nombreEmpresa }}</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Numero contrato: </span>
-                        <span class="text-muted">{{ incapacidadSelected.numeroContrato }}.</span>
+                    <p class="mb-0 text-center">
+                        <span class="text-dark fw-bold">CONTRATO </span>
+                        <span class="text-muted">{{ incapacidadSelected.numeroContrato }}</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Fecha de radicacion: </span>
-                        <span class="text-muted">{{ incapacidadSelected.fechaRadicacion | date: 'dd/MM/yyyy'}}.</span>
+                    <hr>
+                    <p class="mb-0 text-center text-muted">
+                        <span>INCAPACIDAD NO. </span>
+                        <span class="fw-bold text-dark">{{ incapacidadSelected.numeroRadicado}}</span>
+                        <span> RADICADA EL </span>
+                        <span class="fw-bold text-dark">{{ incapacidadSelected.fechaRadicacion}}</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Estado: </span>
-                        <span class="text-muted">{{ incapacidadSelected.estadoObservacionTrabajador.toUpperCase()
-                            }}.</span>
+                    <p class="mb-0 text-center text-muted">
+                        <span>INICIANDO EL </span>
+                        <span class="fw-bold text-dark">{{ incapacidadSelected.fechaInicial }}</span>
+                        <span> Y TERMINANDO EL </span>
+                        <span class="fw-bold text-dark">{{ incapacidadSelected.fechaFinal }}</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Seguro: </span>
-                        <span class="text-muted">{{ incapacidadSelected.nombreEps }}.</span>
+                    <p class="mb-0 text-center text-muted">
+                        <span> CON ESTADO EN </span>
+                        <span class="fw-bold text-dark">{{ incapacidadSelected.estadoObservacionTrabajador.toUpperCase() }}.</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Periodo de incapacidad: </span>
-                        <span class="text-muted">{{ incapacidadSelected.fechaInicial | date: 'dd/MM/yyyy'}} - {{
-                            incapacidadSelected.fechaFinal | date: 'dd/MM/yyyy'}}.</span>
-                    </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Tipo de incapacidad: </span>
+                    <hr>
+                    <p class="mb-0">
+                        <span class="text-dark fw-bold">TIPO </span>
                         <span class="text-muted">{{ incapacidadSelected.tipoIncapacidad }}.</span>
                     </p>
-                    <p class="mb-0 fw-bold">
-                        <span class="text-dark">Subtipo de incapacidad: </span>
+                    <p class="mb-0">
+                        <span class="text-dark fw-bold">SUBTIPO </span>
                         <span class="text-muted">{{ incapacidadSelected.subTipoIncapacidad }}.</span>
+                    </p>
+                    <p class="mb-0">
+                        <span class="text-dark fw-bold">SEGURO </span>
+                        <span class="text-muted">{{ incapacidadSelected.nombreEps }}.</span>
                     </p>
                 </div>
             </div>

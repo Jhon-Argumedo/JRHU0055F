@@ -198,11 +198,9 @@ export class RadicarIncapacidadComponent implements OnInit {
             contratoDTO, 
             requestIncapacidad.fechaInicioIncapacidad);
 
-        console.log(requestIncapacidad);
         this.isLoadingValidacion = true;
         this.radicarService.validIncapacidad(requestValidar).subscribe({
             next: (data) => {
-                console.log(data);
                 this.responseValidacionInc = data;
                 
                 if(this.responseValidacionInc.status === 'ERROR' && this.responseValidacionInc.mensaje.length > 0) {
@@ -250,7 +248,6 @@ export class RadicarIncapacidadComponent implements OnInit {
 
         this.radicarService.findAllContratos(this.requestContrato).subscribe({
             next: (data) => {
-                console.log(data);
                 this.contratos = data;
             },
             error: (error) => {
@@ -272,7 +269,6 @@ export class RadicarIncapacidadComponent implements OnInit {
                 this.enfermedades.forEach(e => {
                     e.nombreEnfermedad = e.codigoEnfermedad + ' - ' + e.nombreEnfermedad;
                 });
-                console.log(this.enfermedades);
             },
             error: (error) => {
                 console.log(error);

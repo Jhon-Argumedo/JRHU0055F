@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observacion } from 'src/app/model/observacion';
 import { SeguimientoIncapacidadesService } from '../../seguimiento-incapacidades/seguimiento-incapacidades.service';
+import { SelectItem } from 'primeng/api';
 
 @Component({
     selector: 'app-incapacidades-devueltas',
@@ -29,6 +30,7 @@ export class IncapacidadesDevueltasComponent {
     isLoadingObservaciones:boolean = false;
     observacionesConsulta:Observacion[] = [];
     defaultTextFilterMode = 'contains';
+    matchModeOptions: SelectItem[];
 
     constructor(private incDevService: IncapacidadesDevueltasService,
         private toast: ToastrService,
@@ -44,7 +46,19 @@ export class IncapacidadesDevueltasComponent {
 
         
         this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.generateMatchModeOptions();
         this.findAllIncapacidadesPEN();
+    }
+
+    generateMatchModeOptions() {
+        this.matchModeOptions = [
+            { label: 'Comienza con', value: 'startsWith' },
+            { label: 'Contiene', value: 'contains' },
+            { label: 'No contiene', value: 'notContains' },
+            { label: 'Termina en', value: 'endsWith' },
+            { label: 'Igual', value: 'equals' },
+            { label: 'Diferente', value: 'notEquals' },
+        ];
     }
 
     findAllIncapacidadesPEN() {
@@ -81,7 +95,6 @@ export class IncapacidadesDevueltasComponent {
                     inc.fechaInicial = formattedFechaInicial;
                     inc.fechaFinal = formattedFechaFinal;
                 });
-                console.log(this.incapacidades);
             },
             error: (error) => {
                 console.log(error);
@@ -98,10 +111,6 @@ export class IncapacidadesDevueltasComponent {
         let usuarioSesion:UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
         let request:RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
         return request;
-    }
-
-    getGlobalFilterFields() {
-        return ['numeroRadicado', 'fechaInicial', 'fechaFinal', 'fechaRadicacion', 'tipoIncapacidad', 'subTipoIncapacidad', 'nombreEmpresa'];
     }
 
     clearTable(table: Table) {

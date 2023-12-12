@@ -12,6 +12,7 @@ import { SeguimientoIncapacidadesService } from './seguimiento-incapacidades.ser
 import { SesionDataEnum } from 'src/app/model/enums';
 import { Observacion } from 'src/app/model/observacion';
 import { Router } from '@angular/router';
+import { SelectItem } from 'primeng/api';
 
 @Component({
     selector: 'app-seguimiento-incapacidades',
@@ -21,30 +22,43 @@ import { Router } from '@angular/router';
 export class SeguimientoIncapacidadesComponent {
 
     defaultTextFilterMode = 'contains';
-    usuarioSesion:UsuarioSesion = new UsuarioSesion();
-    incapacidadSelected:Incapacidad;    
-    incapacidades:Incapacidad[] = [];
-    numeroRadicadoSeleccionado:number;
-    isLoadingObservaciones:boolean = false;
-    isLoading:boolean = false;
-    observacionesConsulta:Observacion[] = [];
+    usuarioSesion: UsuarioSesion = new UsuarioSesion();
+    incapacidadSelected: Incapacidad;
+    incapacidades: Incapacidad[] = [];
+    numeroRadicadoSeleccionado: number;
+    isLoadingObservaciones: boolean = false;
+    isLoading: boolean = false;
+    observacionesConsulta: Observacion[] = [];
+    matchModeOptions: SelectItem[];
 
-    constructor(private seguimientoService:SeguimientoIncapacidadesService,
-        private toast:ToastrService,
-        private storage:LocalStorageService,
-        private appService:AppService,
-        private modalService:NgbModal,
-        private router:Router) {}
+    constructor(private seguimientoService: SeguimientoIncapacidadesService,
+        private toast: ToastrService,
+        private storage: LocalStorageService,
+        private appService: AppService,
+        private modalService: NgbModal,
+        private router: Router) { }
 
     ngOnInit(): void {
-        if(!this.appService.isUserLogged()) {
+        if (!this.appService.isUserLogged()) {
             this.toast.info("No se ha detectado una sesion de usuario activa.");
             window.location.href = SitioTrabajador.URL;
         }
 
         this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
 
+        this.generateMatchModeOptions();
         this.findAllIncapacidadesCPT();
+    }
+
+    generateMatchModeOptions() {
+        this.matchModeOptions = [
+            { label: 'Comienza con', value: 'startsWith' },
+            { label: 'Contiene', value: 'contains' },
+            { label: 'No contiene', value: 'notContains' },
+            { label: 'Termina en', value: 'endsWith' },
+            { label: 'Igual', value: 'equals' },
+            { label: 'Diferente', value: 'notEquals' },
+        ];
     }
 
     findAllIncapacidadesCPT() {
@@ -80,22 +94,21 @@ export class SeguimientoIncapacidadesComponent {
                     inc.fechaInicial = formattedFechaInicial;
                     inc.fechaFinal = formattedFechaFinal;
                 });
-                console.log(this.incapacidades);
             },
             error: (error) => {
                 console.log(error);
                 this.toast.error(error.message);
-                this.appService.manageHttpError(error); 
+                this.appService.manageHttpError(error);
             },
             complete: () => {
                 this.isLoading = false;
-            } 
+            }
         });
     }
 
-    buildRequestIncapacidadesUsuario():RequestIncapacidadesUsuario {
-        let usuarioSesion:UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
-        let request:RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
+    buildRequestIncapacidadesUsuario(): RequestIncapacidadesUsuario {
+        let usuarioSesion: UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        let request: RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
         return request;
     }
 
@@ -103,32 +116,30 @@ export class SeguimientoIncapacidadesComponent {
         table.clear();
     }
 
-    viewDetailsIncapacidad(incapacidad:Incapacidad, modal:any) {
+    viewDetailsIncapacidad(incapacidad: Incapacidad, modal: any) {
         this.modalService.open(modal, { centered: true });
         this.incapacidadSelected = incapacidad;
     }
 
-    viewObservacionesIncapacidad(incapacidad:Incapacidad, modal:any) {
+    viewObservacionesIncapacidad(incapacidad: Incapacidad, modal: any) {
         this.observacionesConsulta = [];
         this.modalService.open(modal, { centered: true });
         this.findObservacionesByNumeroRadicado(incapacidad.numeroRadicado);
     }
 
-    findObservacionesByNumeroRadicado(radicado:number) {
-        console.log(radicado);
+    findObservacionesByNumeroRadicado(radicado: number) {
         this.numeroRadicadoSeleccionado = radicado;
         this.isLoadingObservaciones = true;
         this.observacionesConsulta = [];
         this.seguimientoService.findObservacionesByNumeroRadicado(radicado).subscribe({
             next: (data) => {
-                console.log(data);
                 this.observacionesConsulta = data;
             },
             error: (error) => {
                 console.log(error);
                 this.toast.error(error.message);
                 this.appService.manageHttpError(error);
-            }, 
+            },
             complete: () => {
                 this.isLoadingObservaciones = false;
             }

@@ -10,40 +10,40 @@
             <div class="row mb-3 text-center">
                 <div class="col-12 col-lg-4">
                     <div class="card mb-4 shadow">
-                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-danger' : serviolaEmp, 'bg-secondary border-secondary' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
+                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-warning' : serviolaEmp, 'bg-atecno border-warning' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
                             <i class="fa-sharp fa-solid fa-file-medical text-dark d-none d-md-block" style="font-size: 2em"></i>
                             <p class="fs-item-menu mt-2 mb-0" [ngClass]="{'text-light': activosEmp || serviolaEmp, 'text-dark' : atecnoEmp }">RADICAR</p>
                         </div>
                         <div class="card-body">
                             <img src="assets/img/radicacion_incapacidad.png" class="img-fluid" alt="imagen radicar" width="180"/>
                             <hr/>
-                            <button type="button" (click)="go('/incapacidades/radicacion/tipo-incapacidad')" class="btn w-100 rounded-pill" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-secondary' : atecnoEmp}">Radicar</button> 
+                            <button type="button" (click)="go('/incapacidades/radicacion/tipo-incapacidad')" class="btn w-100 rounded-pill" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-atecno' : atecnoEmp}">Radicar</button> 
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-lg-4">
                     <div class="card mb-4 shadow">
-                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-danger' : serviolaEmp, 'bg-secondary border-secondary' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
+                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-danger' : serviolaEmp, 'bg-atecno border-warning' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
                             <i class="fa-solid fa-rotate-left icon-size text-dark d-none d-md-block" style="font-size: 2em"></i>
                             <p class="fs-item-menu mt-2 mb-0" [ngClass]="{'text-light': activosEmp || serviolaEmp, 'text-dark' : atecnoEmp }" style="letter-spacing: 5px">DEVOLUCION</p>
                         </div>
                         <div class="card-body">
                             <img src="assets/img/devolucion_incapacidad.png" class="img-fluid" alt="..." width="180"/>
                             <hr/>
-                            <a routerLink="/incapacidades/devolucion/incapacidades-devueltas" class="w-100 btn rounded-pill" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-secondary' : atecnoEmp}">Gestionar</a>
+                            <a routerLink="/incapacidades/devolucion/incapacidades-devueltas" class="w-100 btn rounded-pill" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-atecno' : atecnoEmp}">Gestionar</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-lg-4">
                     <div class="card mb-4 shadow">
-                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-danger' : serviolaEmp, 'bg-secondary border-secondary' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
+                        <div class="card-header py-3" [ngClass]="{'bg-warning border-warning' : activosEmp, 'bg-serviola border-danger' : serviolaEmp, 'bg-atecno border-warning' : atecnoEmp}" style="border-top-left-radius: 40px;border-top-right-radius: 40px;">
                             <i class="fa-sharp fa-solid fa-magnifying-glass icon-size text-dark d-none d-md-block" style="font-size: 2em"></i>
                             <p class="fs-item-menu mt-2 mb-0" [ngClass]="{'text-light': activosEmp || serviolaEmp, 'text-dark' : atecnoEmp }" style="letter-spacing: 5px">SEGUIMIENTO</p>
                         </div>
                         <div class="card-body">
                             <img src="assets/img/seguimiento_incapacidades.png" class="img-fluid" alt="..." width="180"/>
                             <hr/>
-                            <a routerLink="/incapacidades/seguimiento/historial-incapacidad" class="w-100 btn rounded-pill btn-serviola" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-secondary' : atecnoEmp}">Consultar</a>
+                            <a routerLink="/incapacidades/seguimiento/historial-incapacidad" class="w-100 btn rounded-pill btn-serviola" [ngClass]="{'btn-warning': activosEmp, 'btn-serviola' : serviolaEmp, 'btn-atecno' : atecnoEmp}">Consultar</a>
                         </div>
                     </div>
                 </div>
