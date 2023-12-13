@@ -46,19 +46,7 @@ export class IncapacidadesDevueltasComponent {
 
         
         this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
-        this.generateMatchModeOptions();
         this.findAllIncapacidadesPEN();
-    }
-
-    generateMatchModeOptions() {
-        this.matchModeOptions = [
-            { label: 'Comienza con', value: 'startsWith' },
-            { label: 'Contiene', value: 'contains' },
-            { label: 'No contiene', value: 'notContains' },
-            { label: 'Termina en', value: 'endsWith' },
-            { label: 'Igual', value: 'equals' },
-            { label: 'Diferente', value: 'notEquals' },
-        ];
     }
 
     findAllIncapacidadesPEN() {
