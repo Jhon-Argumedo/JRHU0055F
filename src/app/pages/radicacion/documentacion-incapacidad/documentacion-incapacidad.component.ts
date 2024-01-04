@@ -26,7 +26,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
     tipoIncapacidad: TipoIncapacidad = new TipoIncapacidad();
     subtipoIncapacidad: SubtipoIncapacidad = new SubtipoIncapacidad();
-    usuarioSesion:UsuarioSesion = new UsuarioSesion();
+    usuarioSesion: UsuarioSesion = new UsuarioSesion();
     requestIncapacidad: RequestIncapacidad = new RequestIncapacidad();
     incapacidad: Incapacidad = new Incapacidad();
     documentos: DocumentoUpload[] = [];
@@ -90,11 +90,11 @@ export class DocumentacionIncapacidadComponent implements OnInit {
 
         this.radicarIncapacidad();
     }
-    
+
     radicarIncapacidad() {
         this.isLoadingRequest = true;
         this.openModalLoading(this.modalRadicacionLoading);
-        let httpResponse:HttpResponse<any>;
+        let httpResponse: HttpResponse<any>;
         this.docService.radicarIncapacidad(this.requestIncapacidad).subscribe({
             next: (response) => {
                 console.log(response);
@@ -112,15 +112,15 @@ export class DocumentacionIncapacidadComponent implements OnInit {
             complete: () => {
                 this.isLoadingRequest = false;
                 this.closeModalLoading();
-                if(httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
+                if (httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
                     this.openModalOk(this.modalRadicacionOk);
                     this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
                     this.clearDataLocalStorage();
-                } else if(httpResponse.statusText != 'OK') {
+                } else if (httpResponse.statusText != 'OK') {
                     this.openModalError(this.modalRadicacionError);
                 }
             }
-    });
+        });
     }
 
     findAllDocsBySubtipoInc() {
@@ -158,16 +158,29 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     onFileSelected(event: any, documento: DocumentoUpload) {
-        let file: File = event.target.files[0];
+        let file: File = new File([], "empty-file.txt", { type: "text/plain" });
+        file = event.target.files[0];
 
-        documento.cargaDocumento = file.name;
-        documento.pesoCarga = this.bytesToMB(file.size);
+        if (file.size == 0) {
+            this.errorMessage = '<strong>Documento no cargado, por favor intente nuevamente. </strong>';
+            window.scroll(0, 0);
+            return;
+        }
 
         if (!this.appService.isFileValid(file)) {
             this.errorMessage = '<strong>Extensión de documento no permitida, solo archivos PDF. </strong>';
             window.scroll(0, 0);
             return;
         }
+
+        if(!this.validarTamañoDocumento(file)) {
+            this.errorMessage = '<strong>Tamaño o peso de documento no permitida, máximo 10MB. </strong>';
+            window.scroll(0, 0);
+            return;
+        }
+
+        documento.cargaDocumento = file.name;
+        documento.pesoCarga = this.bytesToMB(file.size);
 
         this.fileToBase64(file)
             .then((base64String) => {
@@ -214,7 +227,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     openModalError(modal: any) {
-        this.modalRadicacionError = this.modalService.open(modal, {centered: true});
+        this.modalRadicacionError = this.modalService.open(modal, { centered: true });
     }
 
     closeModalOk() {
@@ -293,6 +306,15 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         this.storage.clear(SesionDataEnum.subtipoIncapacidad);
         this.storage.clear(SesionDataEnum.tipoIncapacidad);
         this.storage.clear(SesionDataEnum.checkObservacion);
+    }
+
+    validarTamañoDocumento(file: File): boolean {
+        let tamañoMaximoBytes = 10 * 1024 * 1024; // 10 MB en bytes
+
+        if (file.size > tamañoMaximoBytes) {
+            return false;
+        }
+        return true;
     }
 
 }

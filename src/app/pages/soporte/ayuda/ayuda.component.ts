@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -16,7 +17,8 @@ export class AyudaComponent {
     usuarioSesion:UsuarioSesion;
 
     constructor(private localStorage:LocalStorageService,
-        private toastr:ToastrService) { }
+        private toastr:ToastrService,
+        private router:Router) { }
 
     
     ngOnInit(): void {
@@ -25,8 +27,8 @@ export class AyudaComponent {
     
     logoutSession() {
         this.localStorage.clear();
-        this.toastr.warning('Sesion cerrada correctamente');
-        window.open(SitioTrabajador.URL);
+        this.toastr.info('Sesion cerrada correctamente');
+        window.location.href = SitioTrabajador.URL;
     }
 
     goToCoberturaNacional() {

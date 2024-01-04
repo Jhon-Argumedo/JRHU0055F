@@ -17,4 +17,5 @@ export class Incapacidad {
     subTipoIncapacidadCodigo:number;
     tipoDocumentoEmpleado:string;
     tipoIncapacidad:string;
+    observacionGeneralDevolucion:string;
 }

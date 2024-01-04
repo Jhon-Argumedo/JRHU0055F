@@ -199,12 +199,7 @@
                                 <i class="fa-solid fa-circle-info text-primary custom-tooltip" tooltipPosition="top" pTooltip="Digite la fecha de nacimiento, si cuenta con este dato." ></i>
                             </label>
                             <input id="fechaFueroMaterno" name="fechaFueroMaterno" formControlName="fechaFueroMaterno"
-                                type="date" class="form-control form-control-lg" required
-                                [(ngModel)]="fechaFueroMaterno"
-                                [ngClass]="{'is-invalid': f['fechaFueroMaterno'].errors && submitted}"/>
-                            <div *ngIf="f['fechaFueroMaterno'].errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f['fechaFueroMaterno'].errors['required']">Este campo es requerido</div>
-                            </div>
+                                type="date" class="form-control form-control-lg" [(ngModel)]="fechaFueroMaterno"/>
                         </div>
 
                         <div class="text-center" [ngClass]="{'col-12 col-md-4': tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL','col-12' : tipoInc.nombreTipoIncapacidad !== 'ACCIDENTE LABORAL'}">

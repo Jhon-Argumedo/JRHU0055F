@@ -21,14 +21,14 @@
                 <span class="fs-1 fw-light">Cargar documentos </span>
                 <span class="fs-2 fw-bold text-muted">(Devolución {{ incapacidadDevuelta.numeroRadicado }})</span>
             </p>
-            <hr>
         </div>
-
+        <hr>
+        <span class="text-center">Motivo de la Devolución:</span>
+        <p class="text-center h5 text-danger text-uppercase">{{ incapacidadDevuelta.observacionGeneralDevolucion }}</p>
+        <hr>
         <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="errorMessage">
             <div [innerHTML]="errorMessage"></div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
         <div class="col-12" *ngIf="isLoadingDocumentos">
             <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
                 <strong class="option-tipo">Los documentos para radicar una incapacidad estan cargando....</strong>
@@ -43,46 +43,117 @@
                             <h3 class="fw-light text-center text-muted">{{ incapacidadDevuelta.tipoIncapacidad }}</h3>
                             <h6 class="fw-light text-center text-muted">{{ incapacidadDevuelta.subTipoIncapacidad }}</h6>
                             <hr>
-                            <p>
-                                <strong>Concepto:</strong>
-                                Afectación de la salud de una persona, que compromete su bienestar físico o mental,
-                                derivada de eventos
-                                ajenos a su actividad laboral.
-                            </p>
-                            <p>
-                                <strong>Observaciones:</strong>
-                                Recordar que deben ser expedidas por profesional e IPS adscrito a la red asistencial de
-                                la EPS, salvo
-                                que se trate de una Urgencia Médica categorizada como Triage I o II y que no se admiten
-                                o reconocen
-                                incapacidades por tratamientos estéticos ni sus consecuencias, tampoco expedidas por
-                                Medicina Legal o
-                                fuera del territorio nacional.
-                            </p>
-                            <p>
-                                <strong>Incapacidad prórroga:</strong>
-                                Se entiende por prórroga de la incapacidad, la que se expide con posterioridad a la
-                                inicial, por la
-                                misma enfermedad o lesión, o por otra que tenga relación directa con esta, así se trate
-                                de código
-                                diferente de diagnóstico (CIE), y siempre y cuando entre una y otra no haya una
-                                interrupción mayor a
-                                treinta (30) días calendario.
-                            </p>
-                            <p>
-                                Si usted se encuentra afiliado a las EPS, SURA EPS o NUEVA EPS y la incapacidad que va a
-                                adjuntar
-                                es prórroga o mayor a 2 días deberá haber realizado previamente la respectiva
-                                transcripción conforme
-                                lo exigen estas entidades.
-                            </p>
-                            <p>
-                                Para pago de incapacidades posteriores al día 540 a partir del primero de agosto de
-                                2017, según
-                                Sentencia T 401 y por políticas de la EPS es necesario que el usuario (a) allegue la
-                                documentación
-                                requerida.
-                            </p>
+                            <div *ngIf="incapacidadDevuelta.tipoIncapacidad === 'ENFERMEDAD GENERAL'">
+                                <ul>
+                                    <li>
+                                        <p>
+                                            <strong>Concepto: </strong>
+                                            Afectación de la salud de una persona, que compromete su bienestar físico o mental, derivada de eventos ajenos a su actividad laboral.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p>
+                                            <strong>Observaciones: </strong>
+                                            Recordar que deben ser expedidas por profesional e IPS adscrito a la red asistencial de la EPS, salvo que se trate de una Urgencia 
+                                            Médica categorizada como Triage I o II y que no se admiten o reconocen incapacidades por tratamientos estéticos ni sus consecuencias, 
+                                            tampoco expedidas por Medicina Legal o fuera del territorio nacional.  
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p>
+                                            <strong>Incapacidad prórroga: </strong>
+                                            Se entiende por prórroga de la incapacidad, la que se expide con posterioridad a la inicial, por la misma enfermedad o lesión, 
+                                            o por otra que tenga relación directa con esta, así se trate de código diferente de diagnóstico (CIE), y siempre y cuando 
+                                            entre una y otra no haya una interrupción mayor a treinta (30) días calendario.
+                                            <br><br>
+                                            Si usted se encuentra afiliado a las EPS, SURA EPS o NUEVA EPS  y la incapacidad que va a adjuntar es prórroga o mayor a 2 días 
+                                            deberá haber realizado previamente la respectiva transcripción conforme lo exigen estas entidades.
+                                            <br><br>
+                                            Para pago de incapacidades posteriores al día 540 a partir del primero de agosto de 2017,  según Sentencia T 401 y por políticas 
+                                            de la EPS es necesario que el usuario (a) allegue la documentación requerida.
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="incapacidadDevuelta.tipoIncapacidad === 'LICENCIA MATERNIDAD, ABORTO Y PATERNIDAD'">
+                                <ul>
+                                    <li>
+                                        <p>
+                                            <strong>Concepto: </strong>
+                                            Licencia por Maternidad: Configura una protección constitucional especial en interés del menor recién nacido y 
+                                            de la madre, y conforme a los términos de la norma que la regula, toda trabajadora en estado de embarazo tiene
+                                            derecho a una licencia de dieciocho (18) semanas o más en la época de parto. La licencia de Maternidad preparto: 
+                                            Licencia de maternidad preparto, Esta será de una (1 o 2) semanas con anterioridad a la fecha probable del parto 
+                                            debidamente acreditada.
+                                            <br><br>
+                                            Licencia de paternidad: El padre tendrá derecho a dos (2) semanas de licencia remunerada de Paternidad. 
+                                            El único soporte válido para el otorgamiento de la licencia remunerada de paternidad es el Registro Civil de Nacimiento,
+                                             el cual deberá presentarse a la EPS a más tardar dentro de los 30 días siguientes a la fecha del nacimiento del menor. 
+                                             (Por lo anterior se requiere que sea entregado al empleador máximo 25 días posteriores al nacimiento del menor). 
+                                             La licencia remunerada de paternidad estará a cargo de la EPS y será reconocida proporcionalmente a las semanas cotizadas
+                                             por el padre durante el periodo de gestación. 
+                                            <br><br>
+                                            Licencia de Paternidad Compartida: Los padres podrán distribuir libremente entre sí las últimas seis (6) semanas de la 
+                                            licencia de la madre.
+                                            <br><br>
+                                            Licencia parental flexible de tiempo parcial. La madre y/o padre podrán optar por una licencia parental flexible de tiempo 
+                                            parcial, en la cual, podrán cambiar un periodo determinado de su licencia de maternidad o de paternidad por un período de 
+                                            trabajo de medio tiempo, equivalente al doble del tiempo correspondiente al período de tiempo seleccionado. Esta licencia, 
+                                            en el caso de la madre, es independiente del permiso de lactancia y debe existir mutuo acuerdo entre los empleadores y 
+                                            los trabajadores. 
+                                            <br><br>
+                                            Debe existir mutuo acuerdo entre los padres acerca de la distribución de las semanas de licencia. Ambos padres deberán 
+                                            realizar un documento firmado explicando la distribución acordada y presentarla ante sus empleadores, en un término de 
+                                            treinta (30) días contados a partir del nacimiento del menor. 
+                                            <br><br>
+                                            Licencia de Maternidad por Extensión: Consiste en el derecho a disfrutar de una licencia de dieciocho (18) semanas remuneradas 
+                                            o el tiempo que falte para completar estas, y cuya prestación económica se encuentra a cargo del SGSSS, asimilando la fecha 
+                                            del parto a la de la entrega oficial del menor que se ha adoptado, o del que adquiere la custodia justo después del nacimiento, 
+                                            Se aplicará con respecto a los niños prematuros y adoptivos para lo cual se extiende a la madre adoptante, al padre que quede 
+                                            a cargo del recién nacido sin apoyo de la madre, sea por enfermedad, abandono o muerte, o al que adquiere la custodia justo 
+                                            después del nacimiento 
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="incapacidadDevuelta.tipoIncapacidad === 'ACCIDENTE LABORAL'">
+                                <ul>
+                                    <li>
+                                        <p>
+                                            <strong>Concepto: </strong>
+                                            La ley 1562 de 2012 (Sistema General de Riesgos Laborales) en su artículo 3 nos define un accidente de trabajo
+                                             como todo suceso repentino que sobrevenga por causa o con ocasión del trabajo, y que produzca en el trabajador 
+                                             una lesión orgánica, una perturbación funcional o psiquiátrica, una invalidez o la muerte. 
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p>
+                                            <strong>Observaciones: </strong>
+                                            Todo accidente de origen laboral se debe reportar dentro de las primeras 48 horas al personal de Seguridad y 
+                                            Salud en el Trabajo de la empresa para que el analista encargado diligencie el formato Único de Reporte de 
+                                            Accidente de Trabajo FURAT y así exista oficialmente un documento formal que describa las circunstancias 
+                                            detalladas del accidente ocurrido. 
+                  
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="incapacidadDevuelta.tipoIncapacidad === 'ENFERMEDAD LABORAL'">
+                                <ul>
+                                    <li>
+                                        <p>
+                                            <strong>Concepto: </strong>
+                                            Es enfermedad laboral la contraída como resultado de la exposición a factores de riesgo inherentes a la 
+                                            actividad laboral o del medio en el que el trabajador se ha visto obligado a trabajar.
+                                            <br><br>
+                                            Recordemos que una Enfermedad Laboral solo se constituye como tal cuando la respectiva patología es calificada 
+                                            por una junta médica de alguna de las Instituciones avaladas por la Ley 100 de 1993 entre ellas Entidades promotoras 
+                                            de Salud EPS, Administradoras de Régimen de Pensiones AFP y Administradoras de Riesgos Laborales ARL.
+                 
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
                             <hr />
                         </div>
                     </div>

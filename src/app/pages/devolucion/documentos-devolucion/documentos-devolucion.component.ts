@@ -55,7 +55,8 @@ export class DocumentosDevolucionComponent {
             this.documentoService.getDocumentosDevolucion(parseInt(this.numeroRadicado), data.ip).subscribe({
                 next: (data: ResponseDocumentosRadicado[]) => {
                     data.forEach(dr => {
-                        if((dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO) || (dr.documentoRequerido === 'N' && dr.azCodigoCli === '0')) {
+                        console.log(dr);
+                        if(((dr.estadoDelDocumento === EstadosDocumentoEnum.RECHAZADO) || (dr.documentoRequerido === 'N' && dr.azCodigoCli === '0')) || (dr.azCodigoCli === '0' && dr.estadoDelDocumento === EstadosDocumentoEnum.SIN_VALIDAR)) {
                             let documentoUpload: DocumentoUpload = new DocumentoUpload();
                             documentoUpload.idDocumento = parseInt(dr.documento.idDocumento);
                             documentoUpload.descripcionDelDocumento = dr.documento.nombreDocumento;
@@ -143,7 +144,8 @@ export class DocumentosDevolucionComponent {
     }
 
     onFileSelected(event: any, documento: DocumentoUpload) {
-        let file: File = event.target.files[0];
+        let file: File = new File([], "empty-file.txt", { type: "text/plain" });
+        file = event.target.files[0];
 
         if (file.size == 0) {
             this.errorMessage = '<strong>Documento no cargado, por favor intente nuevamente. </strong>';
@@ -153,6 +155,12 @@ export class DocumentosDevolucionComponent {
         
         if (!this.appService.isFileValid(file)) {
             this.errorMessage = '<strong>Extensión de documento no permitida, solo archivos PDF. </strong>';
+            window.scroll(0, 0);
+            return;
+        }
+
+        if(!this.validarTamañoDocumento(file)) {
+            this.errorMessage = '<strong>Tamaño o peso de documento no permitida, máximo 10MB. </strong>';
             window.scroll(0, 0);
             return;
         }
@@ -279,5 +287,14 @@ export class DocumentosDevolucionComponent {
         });
 
         return reqDocumentos;
+    }
+
+    validarTamañoDocumento(file: File): boolean {
+        let tamañoMaximoBytes = 10 * 1024 * 1024; // 10 MB en bytes
+
+        if (file.size > tamañoMaximoBytes) {
+            return false;
+        }
+        return true;
     }
 }

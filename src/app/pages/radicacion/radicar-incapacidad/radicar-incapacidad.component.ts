@@ -345,7 +345,6 @@ export class RadicarIncapacidadComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(300),
             ]],
-            fechaFueroMaterno: ['', Validators.required],
             prorroga: ['', Validators.required]
         });
     }

@@ -46,10 +46,6 @@ export class DashboardComponent {
         } else if(this.usuarioSesion.nombreEmp === EmpresasPrincipalesEnum.SERVIOLA) {
             this.serviolaEmp = true;
         }
-
-        console.log(this.activosEmp);
-        console.log(this.serviolaEmp);
-        console.log(this.atecnoEmp); 
     }
 
     go(route: string) {
