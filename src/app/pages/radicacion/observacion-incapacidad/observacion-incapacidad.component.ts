@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { AuthService } from 'src/app/model/auth.service';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
@@ -37,27 +38,24 @@ export class ObservacionIncapacidadComponent implements OnInit {
 
     constructor(private fb: FormBuilder,
         private router: Router,
-        private storage: LocalStorageService,
+        private sessionStorage: SessionStorageService,
         private observacionService: ObservacionIncapacidadService,
         private toastr:ToastrService,
-        private appService:AppService) { }
+        private appService:AppService,
+        private authService:AuthService) { }
 
     ngOnInit(): void {
-        if(!this.appService.isUserLogged()) {
-            this.toastr.info("No se ha detectado una sesion de usuario activa.");
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
-        //this.appService.validFlujoRadicarIncapacidad();
-
         this.buildForm();
 
-        this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
-        this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.tipoIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.tipoIncapacidad);
+        this.subtipoIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.subtipoIncapacidad);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
 
         this.getObservacionText();
-
     }
     
     onSubmit() {
@@ -73,7 +71,7 @@ export class ObservacionIncapacidadComponent implements OnInit {
             return;
         }
 
-        this.storage.store(SesionDataEnum.checkObservacion, true);
+        this.sessionStorage.store(SesionDataEnum.checkObservacion, true);
         this.router.navigate(['incapacidades/radicacion/documentacion-incapacidad']);
         window.scroll(0, 0);
     }

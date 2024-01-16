@@ -1,13 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tooltip } from 'bootstrap';
-
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { TipoIncapacidad } from 'src/app/model/tipo-incapacidad';
 import { SubtipoIncapacidad } from 'src/app/model/subtipo-incapacidad';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { Contrato } from 'src/app/model/contrato';
 import { RequestContratosList } from 'src/app/model/request-contratos-list';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
@@ -18,9 +16,10 @@ import { AppService } from 'src/app/app.service';
 import { RequestValidarIncapacidad } from 'src/app/model/request-validar-incapacidad';
 import { ResponseValidacionIncapacidad } from 'src/app/model/response-validacion-incapacidad';
 import { ContratoDTO } from 'src/app/model/contrato-dto';
-import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { SesionDataEnum, TipoIncapacidadEnum } from 'src/app/model/enums';
 import { DatePipe } from '@angular/common';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
+import { AuthService } from 'src/app/model/auth.service';
 
 @Component({
     selector: 'app-radicar-incapacidad',
@@ -93,23 +92,23 @@ export class RadicarIncapacidadComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private toastr: ToastrService,
-        private storage: LocalStorageService,
+        private sessionStorage: SessionStorageService,
         private radicarService: RadicarIncapacidadService,
         private appService: AppService,
-        private datePipe: DatePipe) {
+        private datePipe: DatePipe,
+        private authService:AuthService) {
 
     }
 
     ngOnInit(): void {
-        if(!this.appService.isUserLogged()) {
-            this.toastr.info("No se ha detectado una sesion de usuario activa.");
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
         this.invalidClass = 'col-12 custom-select';
 
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
-        this.tipoInc = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
+        this.tipoInc = this.sessionStorage.retrieve(SesionDataEnum.tipoIncapacidad);
 
         switch (this.tipoInc.nombreTipoIncapacidad) {
             case TipoIncapacidadEnum.ACCIDENTE_LABORAL:
@@ -153,7 +152,7 @@ export class RadicarIncapacidadComponent implements OnInit {
             return;
         }
 
-        let requestIncapacidad: RequestIncapacidad = this.storage.retrieve(SesionDataEnum.requestIncapacidad);
+        let requestIncapacidad: RequestIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.requestIncapacidad);
         let enfermedad: Enfermedad = JSON.parse(JSON.stringify(this.diagnostico));
 
         requestIncapacidad.contrato = this.contrato.numeroContrato;
@@ -183,7 +182,6 @@ export class RadicarIncapacidadComponent implements OnInit {
 
         if (this.tipoInc.nombreTipoIncapacidad === TipoIncapacidadEnum.LICENCIA_MATERNIDAD_PATERNIDAD) {
             requestIncapacidad.fechaFueroMaterno = this.castStringDate(this.fechaFueroMaterno);
-
         } else {
             requestIncapacidad.fechaFueroMaterno = '';
         }
@@ -209,8 +207,8 @@ export class RadicarIncapacidadComponent implements OnInit {
                     return;
                 }
 
-                this.storage.store(SesionDataEnum.requestIncapacidad, requestIncapacidad);
-                this.storage.store(SesionDataEnum.subtipoIncapacidad, this.subtipoIncapacidad);
+                this.sessionStorage.store(SesionDataEnum.requestIncapacidad, requestIncapacidad);
+                this.sessionStorage.store(SesionDataEnum.subtipoIncapacidad, this.subtipoIncapacidad);
                 this.router.navigate(['incapacidades/radicacion/observaciones-incapacidad']);
                 window.scroll(0, 0);
             },
@@ -345,7 +343,8 @@ export class RadicarIncapacidadComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(300),
             ]],
-            prorroga: ['', Validators.required]
+            prorroga: ['', Validators.required],
+            fechaFueroMaterno: ['', ]
         });
     }
 

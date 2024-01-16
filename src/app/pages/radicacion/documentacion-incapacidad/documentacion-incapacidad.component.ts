@@ -3,8 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { AuthService } from 'src/app/model/auth.service';
 import { DocumentoUpload } from 'src/app/model/documento-upload';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
@@ -40,33 +41,29 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     modalRadicacionError: any;
     modalRadicacionLoading: any;
 
-    constructor(private storage: LocalStorageService,
+    constructor(private sessionStorage: SessionStorageService,
         private documentosService: DocumentacionIncapacidadService,
         private toastr: ToastrService,
         private modalService: NgbModal,
         private docService: DocumentacionIncapacidadService,
         private router: Router,
-        private appService: AppService) { }
+        private appService: AppService,
+        private authService:AuthService) { }
 
     ngOnInit() {
-        if (!this.appService.isUserLogged()) {
-            this.toastr.info("No se ha detectado una sesion de usuario activa.");
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
-        //this.appService.validFlujoRadicarIncapacidad();
-
-        // Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"]')).forEach(tooltipNode => new Tooltip(tooltipNode));
-
-        this.getDataLocalStorage();
+        this.getDataSessionStorage();
         this.findAllDocsBySubtipoInc();
     }
 
-    getDataLocalStorage() {
-        this.tipoIncapacidad = this.storage.retrieve(SesionDataEnum.tipoIncapacidad);
-        this.subtipoIncapacidad = this.storage.retrieve(SesionDataEnum.subtipoIncapacidad);
-        this.requestIncapacidad = this.storage.retrieve(SesionDataEnum.requestIncapacidad);
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+    getDataSessionStorage() {
+        this.tipoIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.tipoIncapacidad);
+        this.subtipoIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.subtipoIncapacidad);
+        this.requestIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.requestIncapacidad);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
     }
 
     radicar(modalOk: any, modalLoading: any, modalError: any) {
@@ -115,7 +112,7 @@ export class DocumentacionIncapacidadComponent implements OnInit {
                 if (httpResponse.ok && httpResponse.status === 200 && httpResponse.statusText === 'OK') {
                     this.openModalOk(this.modalRadicacionOk);
                     this.router.navigate(['incapacidades/seguimiento/historial-incapacidad']);
-                    this.clearDataLocalStorage();
+                    this.clearDataSessionStorage();
                 } else if (httpResponse.statusText != 'OK') {
                     this.openModalError(this.modalRadicacionError);
                 }
@@ -158,8 +155,11 @@ export class DocumentacionIncapacidadComponent implements OnInit {
     }
 
     onFileSelected(event: any, documento: DocumentoUpload) {
-        let file: File = new File([], "empty-file.txt", { type: "text/plain" });
-        file = event.target.files[0];
+        documento.cargaDocumento = '';
+        documento.pesoCarga = Number();
+        documento.base64 = '';
+        
+        let file: File = event.target.files[0];
 
         if (file.size == 0) {
             this.errorMessage = '<strong>Documento no cargado, por favor intente nuevamente. </strong>';
@@ -301,11 +301,11 @@ export class DocumentacionIncapacidadComponent implements OnInit {
         return capitalizedWords.join(' ');
     }
 
-    clearDataLocalStorage() {
-        this.storage.clear(SesionDataEnum.requestIncapacidad);
-        this.storage.clear(SesionDataEnum.subtipoIncapacidad);
-        this.storage.clear(SesionDataEnum.tipoIncapacidad);
-        this.storage.clear(SesionDataEnum.checkObservacion);
+    clearDataSessionStorage() {
+        this.sessionStorage.clear(SesionDataEnum.requestIncapacidad);
+        this.sessionStorage.clear(SesionDataEnum.subtipoIncapacidad);
+        this.sessionStorage.clear(SesionDataEnum.tipoIncapacidad);
+        this.sessionStorage.clear(SesionDataEnum.checkObservacion);
     }
 
     validarTamañoDocumento(file: File): boolean {

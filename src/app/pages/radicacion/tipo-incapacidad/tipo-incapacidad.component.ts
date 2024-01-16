@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { AuthService } from 'src/app/model/auth.service';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { RequestIncapacidad } from 'src/app/model/request-incapacidad';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
@@ -25,14 +26,14 @@ export class TipoIncapacidadComponent {
     constructor(private router: Router, private route: ActivatedRoute,
         private tipoIncService: TipoIncapacidadService,
         private appService:AppService,
-        private storage: LocalStorageService,
-        private toast:ToastrService) {
+        private sessionStorage: SessionStorageService,
+        private toast:ToastrService,
+        private authService:AuthService) {
 
     }
 
     ngOnInit(): void {
-        if(!this.appService.isUserLogged()) {
-            this.toast.info("No se ha detectado una sesion de usuario activa.");
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
@@ -41,7 +42,7 @@ export class TipoIncapacidadComponent {
 
     go(tipoInc: TipoIncapacidad) {
         let requestIncapacidad = new RequestIncapacidad();
-        let usuarioSesion:UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        let usuarioSesion:UsuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         
         requestIncapacidad.azCodigo = usuarioSesion.azCodigo;
         requestIncapacidad.contrato = Number();
@@ -65,8 +66,8 @@ export class TipoIncapacidadComponent {
         requestIncapacidad.tipoDocumentoEmpresaPrincipal = usuarioSesion.tipoDocEmp;
 
         console.log(requestIncapacidad);
-        this.storage.store(SesionDataEnum.requestIncapacidad, requestIncapacidad);
-        this.storage.store(SesionDataEnum.tipoIncapacidad, tipoInc);
+        this.sessionStorage.store(SesionDataEnum.requestIncapacidad, requestIncapacidad);
+        this.sessionStorage.store(SesionDataEnum.tipoIncapacidad, tipoInc);
         this.router.navigate(['/incapacidades/radicacion/radicar-incapacidad']);
 
         window.scroll(0, 0);

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { SesionDataEnum } from './model/enums';
 import { RequestIncapacidad } from './model/request-incapacidad';
 import { TipoIncapacidad } from './model/tipo-incapacidad';
@@ -15,7 +15,7 @@ export class AppService {
     private readonly PDF_EXTENSION_REGEX = /\.pdf$/i;
 
     constructor(private router: Router,
-        private localStorage: LocalStorageService,
+        private sessionStorage: SessionStorageService,
         private http:HttpClient,
         private toast:ToastrService) { }
 
@@ -32,7 +32,7 @@ export class AppService {
     }
 
     isUserLogged() {
-        if(!this.localStorage.retrieve('usuarioSesion')) {
+        if(!this.sessionStorage.retrieve('usuarioSesion')) {
             return false;
         }
         return true;
@@ -65,9 +65,9 @@ export class AppService {
     }
 
     validFlujoRadicarIncapacidad() {
-        let tipoIncapacidad:TipoIncapacidad = this.localStorage.retrieve(SesionDataEnum.tipoIncapacidad);
-        let requestIncapacidad:RequestIncapacidad = this.localStorage.retrieve(SesionDataEnum.requestIncapacidad);
-        let checkObservacion:boolean = this.localStorage.retrieve(SesionDataEnum.checkObservacion);
+        let tipoIncapacidad:TipoIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.tipoIncapacidad);
+        let requestIncapacidad:RequestIncapacidad = this.sessionStorage.retrieve(SesionDataEnum.requestIncapacidad);
+        let checkObservacion:boolean = this.sessionStorage.retrieve(SesionDataEnum.checkObservacion);
 
         if(tipoIncapacidad == null && requestIncapacidad.contrato == 0 && !checkObservacion) {
             this.router.navigate(['/incapacidades/radicacion/tipo-incapacidad']);

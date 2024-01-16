@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'ngx-webstorage';
+import { ToastrService } from 'ngx-toastr';
+import { SessionStorageService } from 'ngx-webstorage';
 import { PrimeNGConfig } from 'primeng/api';
+import { AuthService } from './model/auth.service';
+import { SitioTrabajador } from './model/sitio-trabajador';
 
 @Component({
     selector: 'app-root',
@@ -10,26 +13,28 @@ import { PrimeNGConfig } from 'primeng/api';
 export class AppComponent implements OnInit {
 
     title = 'Gestor de Incapacidades';
-    displayError:string;
+    displayError: string;
 
-    constructor(private storage:LocalStorageService,
-        private primengConfig:PrimeNGConfig) { }
+    constructor(private storage: SessionStorageService,
+        private primengConfig: PrimeNGConfig) {
+            
+    }
 
     ngOnInit(): void {
         this.displayError = this.storage.retrieve('displayError');
 
         this.primengConfig.setTranslation({
-          startsWith: 'Empieza con',
-          contains: 'Contiene',
-          notContains: 'No contiene',
-          endsWith: 'Acaba en',
-          equals: 'Igual a',
-          notEquals: 'No igual a',
-          noFilter: 'Sin filtro',
-          lt: 'Menor que',
-          lte: 'Menor o igual a',
-          gt: 'Mayor que',
-          gte: 'Mayor o igual a'
+            startsWith: 'Empieza con',
+            contains: 'Contiene',
+            notContains: 'No contiene',
+            endsWith: 'Acaba en',
+            equals: 'Igual a',
+            notEquals: 'No igual a',
+            noFilter: 'Sin filtro',
+            lt: 'Menor que',
+            lte: 'Menor o igual a',
+            gt: 'Mayor que',
+            gte: 'Mayor o igual a'
         });
     }
 }

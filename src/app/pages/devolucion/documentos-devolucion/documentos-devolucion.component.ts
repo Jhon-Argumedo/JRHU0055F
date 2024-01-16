@@ -3,14 +3,16 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { AuthService } from 'src/app/model/auth.service';
 import { DocumentoUpload } from 'src/app/model/documento-upload';
 import { EstadosDocumentoCargadoEnum, EstadosDocumentoEnum, SesionDataEnum } from 'src/app/model/enums';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestCargarDocumento } from 'src/app/model/request-cargar-documento';
 import { RequestDocumento } from 'src/app/model/request-documento';
 import { ResponseDocumentosRadicado } from 'src/app/model/response-documentos-radicado';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { DocumentosDevolucionService } from './documentos-devolucion.service';
 
 @Component({
@@ -39,12 +41,18 @@ export class DocumentosDevolucionComponent {
         private router: Router,
         private route: ActivatedRoute,
         private appService: AppService,
-        private storage: LocalStorageService,
-        private modalService: NgbModal) { }
+        private sessionStorage: SessionStorageService,
+        private modalService: NgbModal,
+        private authService:AuthService) { }
 
     ngOnInit(): void {
+
+        if(!this.authService.getIsAuthenticated()) {
+            window.location.href = SitioTrabajador.URL;
+        }
+
         this.numeroRadicado = this.route.snapshot.params['numeroRadicado'];
-        this.incapacidadDevuelta = this.storage.retrieve(SesionDataEnum.incapacidadDevuelta);
+        this.incapacidadDevuelta = this.sessionStorage.retrieve(SesionDataEnum.incapacidadDevuelta);
 
         this.getDocumentosDevolucion();
     }

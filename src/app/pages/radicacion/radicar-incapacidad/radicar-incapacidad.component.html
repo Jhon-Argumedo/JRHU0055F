@@ -40,7 +40,7 @@
                                     pTooltip="Seleccione el contrato correspondiente a la incapacidad a radicar."></i>
                             </label>
                             <select id="contrato" name="contrato" formControlName="contrato" 
-                                class="form-select form-select-lg" required 
+                                class="form-select" required 
                                 [(ngModel)]="contrato"
                                 (change)="onChangeContrato(contrato)" #contratoSelect>
                                 <option *ngFor="let c of contratos" [ngValue]="c" class="text-uppercase">
@@ -53,13 +53,13 @@
 
                         <div class="col-12 col-md-6">
                             <label for="empresaPrincipal" class="form-label">Empresa Principal</label>
-                            <input id="empresaPrincipal" name="empresaPrincipal" type="text" class="form-control form-control-lg" disabled 
+                            <input id="empresaPrincipal" name="empresaPrincipal" type="text" class="form-control" disabled 
                                 [value]="empresaPrincipal" />
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="empresaUsuaria" class="form-label">Empresa Usuaria</label>
-                            <input id="empresaUsuaria" name="empresaUsuaria" type="text" class="form-control form-control-lg" disabled
+                            <input id="empresaUsuaria" name="empresaUsuaria" type="text" class="form-control" disabled
                                 [value]="empresaUsuaria" />
                         </div>
 
@@ -69,7 +69,7 @@
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <select id="subtipo" name="subtipo" formControlName="subtipo" 
-                                class="form-select form-select-lg" required
+                                class="form-select" required
                                 [(ngModel)]="subtipoIncapacidad" #subtipoIncapacidadSelect>
                                 <option *ngFor="let si of subtiposIncapacidad" [ngValue]="si">
                                     {{si.nombreSubTipoIncapacidad}}</option>
@@ -87,7 +87,7 @@
                             <input id="numeroIncapacidad" name="numeroIncapacidad" formControlName="numeroIncapacidad"
                                 [(ngModel)]="numeroIncapacidad"
                                 [ngClass]="{'is-invalid': f['numeroIncapacidad'].errors && submitted}" 
-                                type="number" class="form-control form-control-lg"/>
+                                type="number" class="form-control"/>
                             
                             <div *ngIf="f['numeroIncapacidad'].errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f['numeroIncapacidad'].errors['minLength']">2 caracter minimo.</div>
@@ -130,7 +130,7 @@
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <input id="fechaInicio" name="fechaInicio" formControlName="fechaInicio"
-                                type="date" class="form-control form-control-lg" required
+                                type="date" class="form-control" required
                                 [(ngModel)]="fechaInicio"
                                 [ngClass]="{'is-invalid': f['fechaInicio'].errors && submitted}" />
                             <div *ngIf="f['fechaInicio'].errors && submitted" class="invalid-feedback">
@@ -144,7 +144,7 @@
                                 <span class="fw-bold text-danger me-1">*</span>
                             </label>
                             <input id="numeroDias" name="numeroDias" formControlName="numeroDias"
-                                type="number" class="form-control form-control-lg" required
+                                type="number" class="form-control" required
                                 [(ngModel)]="numeroDias" (change)="onChangeFechaInicio()"
                                 [ngClass]="{'is-invalid': f['numeroDias'].errors && submitted}" />
                             <div *ngIf="f['numeroDias'].errors && submitted" class="invalid-feedback">
@@ -173,7 +173,7 @@
                             <input id="fechaFin" 
                                 [value]="fechaFin"
                                 name="fechaFin" 
-                                class="form-control form-control-lg" 
+                                class="form-control" 
                                 [disabled]="true"/>
                         </div>
 
@@ -185,7 +185,7 @@
                                 <i *ngIf="tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD LABORAL'" class="fa-solid fa-circle-info text-primary custom-tooltip ms-1" tooltipPosition="top" pTooltip="Digite la fecha del día exacto de la calificacion de Enfermedad Laboral vigente asociado a esta incapacidad." ></i>
                             </label>
                             <input id="fechaAccidente" name="fechaAccidente" formControlName="fechaAccidente" 
-                                type="date" class="form-control form-control-lg" required
+                                type="date" class="form-control" required
                                 [(ngModel)]="fechaAccidente"
                                 [ngClass]="{'is-invalid': f['fechaAccidente'].errors && submitted}"/>
                             <div *ngIf="f['fechaAccidente'].errors && submitted" class="invalid-feedback">
@@ -199,7 +199,7 @@
                                 <i class="fa-solid fa-circle-info text-primary custom-tooltip" tooltipPosition="top" pTooltip="Digite la fecha de nacimiento, si cuenta con este dato." ></i>
                             </label>
                             <input id="fechaFueroMaterno" name="fechaFueroMaterno" formControlName="fechaFueroMaterno"
-                                type="date" class="form-control form-control-lg" [(ngModel)]="fechaFueroMaterno"/>
+                                type="date" class="form-control" [(ngModel)]="fechaFueroMaterno"/>
                         </div>
 
                         <div class="text-center" [ngClass]="{'col-12 col-md-4': tipoInc.nombreTipoIncapacidad === 'ENFERMEDAD GENERAL','col-12' : tipoInc.nombreTipoIncapacidad !== 'ACCIDENTE LABORAL'}">

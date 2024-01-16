@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
+import { AuthService } from 'src/app/model/auth.service';
 import { EmpresasPrincipalesEnum, SesionDataEnum } from 'src/app/model/enums';
 import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
@@ -25,17 +26,19 @@ export class DashboardComponent {
     idUsuario:string;
 
     constructor(private router: Router,
-        private storage: LocalStorageService,
-        private appService:AppService,
-        private toast:ToastrService) { }
+        private sessionStorage: SessionStorageService,
+        private authService:AuthService,
+        private toastr:ToastrService) {
+            
+        }
 
     ngOnInit(): void {
-        if(!this.appService.isUserLogged()) {
-            this.toast.info("No se ha detectado una sesion de usuario activa.");
+        
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         this.nombreUsuario = this.usuarioSesion.nombreUsuario.split(' ', 1)[0];
         this.nombreUsuario = this.capitalizeFirstLetter(this.nombreUsuario);
 

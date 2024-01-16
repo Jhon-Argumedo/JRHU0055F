@@ -6,7 +6,7 @@ import { IncapacidadesDevueltasService } from './incapacidades-devueltas.service
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { EstadosPortalTrabajadorEnum, SesionDataEnum } from 'src/app/model/enums';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { AppService } from 'src/app/app.service';
 import { Table } from 'primeng/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { Observacion } from 'src/app/model/observacion';
 import { SeguimientoIncapacidadesService } from '../../seguimiento-incapacidades/seguimiento-incapacidades.service';
 import { SelectItem } from 'primeng/api';
+import { AuthService } from 'src/app/model/auth.service';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 
 @Component({
     selector: 'app-incapacidades-devueltas',
@@ -34,18 +36,24 @@ export class IncapacidadesDevueltasComponent {
 
     constructor(private incDevService: IncapacidadesDevueltasService,
         private toast: ToastrService,
-        private storage:LocalStorageService,
+        private sessionStorage:SessionStorageService,
         private appService:AppService,
         private modalService:NgbModal,
         private router:Router,
-        private seguimientoService:SeguimientoIncapacidadesService) { }
+        private seguimientoService:SeguimientoIncapacidadesService,
+        private authService:AuthService) { }
 
     ngOnInit(): void {
+
+        if(!this.authService.getIsAuthenticated()) {
+            window.location.href = SitioTrabajador.URL;
+        }
+
         Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"], i[data-bs-toggle="tooltip"], a[data-bs-toggle="tooltip"]'))
             .forEach(tooltipNode => new Tooltip(tooltipNode))
 
         
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         this.findAllIncapacidadesPEN();
     }
 
@@ -96,7 +104,7 @@ export class IncapacidadesDevueltasComponent {
     }
 
     buildRequestIncapacidadesUsuario():RequestIncapacidadesUsuario {
-        let usuarioSesion:UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        let usuarioSesion:UsuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         let request:RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
         return request;
     }
@@ -119,7 +127,7 @@ export class IncapacidadesDevueltasComponent {
     }
 
     goCargarDocumentos(incapacidad:Incapacidad) {
-        this.storage.store(SesionDataEnum.incapacidadDevuelta, incapacidad);
+        this.sessionStorage.store(SesionDataEnum.incapacidadDevuelta, incapacidad);
         this.router.navigate(['/incapacidades/devolucion/documentos-devolucion/' + incapacidad.numeroRadicado]);
     }
 

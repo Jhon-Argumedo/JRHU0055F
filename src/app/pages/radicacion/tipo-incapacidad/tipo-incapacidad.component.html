@@ -12,10 +12,10 @@
             </div>
             <div class="row align-items-md-stretch" *ngIf="!isLoading">
                 <div class="col-12 col-sm-6 col-lg-3 mb-3" *ngFor="let ti of tiposIncList">
-                    <a (click)="go(ti)" class="nav-item-link">
-                        <div class="h-100 p-3 bg-light border rounded-4 text-center align-items-center d-flex">
-                            <i class="fa-sharp fa-solid fa-viruses d-block fs-2 text-danger me-2"></i>
-                            <strong class="option-tipo">{{ti.nombreTipoIncapacidad}}</strong>
+                    <a (click)="go(ti)" class="text-center nav-item-link h-100 p-3 bg-light border rounded-4 d-flex justify-content-center align-items-center">
+                        <div>
+                            <i class="text-center fa-sharp fa-solid fa-viruses fs-2 text-danger my-2 d-block"></i>
+                            <strong>{{ti.nombreTipoIncapacidad}}</strong>
                         </div>
                     </a>
                 </div>

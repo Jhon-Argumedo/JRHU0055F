@@ -1,18 +1,19 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { Table } from 'primeng/table';
 import { AppService } from 'src/app/app.service';
 import { Incapacidad } from 'src/app/model/incapacidad';
 import { RequestIncapacidadesUsuario } from 'src/app/model/request-incapacidades-usuario';
-import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 import { UsuarioSesion } from 'src/app/model/usuario-sesion';
 import { SeguimientoIncapacidadesService } from './seguimiento-incapacidades.service';
 import { SesionDataEnum } from 'src/app/model/enums';
 import { Observacion } from 'src/app/model/observacion';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
+import { AuthService } from 'src/app/model/auth.service';
 
 @Component({
     selector: 'app-seguimiento-incapacidades',
@@ -33,18 +34,18 @@ export class SeguimientoIncapacidadesComponent {
 
     constructor(private seguimientoService: SeguimientoIncapacidadesService,
         private toast: ToastrService,
-        private storage: LocalStorageService,
+        private sessionStorage: SessionStorageService,
         private appService: AppService,
         private modalService: NgbModal,
-        private router: Router) { }
+        private router: Router,
+        private authService:AuthService) { }
 
     ngOnInit(): void {
-        if (!this.appService.isUserLogged()) {
-            this.toast.info("No se ha detectado una sesion de usuario activa.");
+        if(!this.authService.getIsAuthenticated()) {
             window.location.href = SitioTrabajador.URL;
         }
 
-        this.usuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        this.usuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         
         this.findAllIncapacidadesCPT();
     }
@@ -95,7 +96,7 @@ export class SeguimientoIncapacidadesComponent {
     }
 
     buildRequestIncapacidadesUsuario(): RequestIncapacidadesUsuario {
-        let usuarioSesion: UsuarioSesion = this.storage.retrieve(SesionDataEnum.usuarioSesion);
+        let usuarioSesion: UsuarioSesion = this.sessionStorage.retrieve(SesionDataEnum.usuarioSesion);
         let request: RequestIncapacidadesUsuario = new RequestIncapacidadesUsuario(usuarioSesion.tipoDoc, parseInt(usuarioSesion.numeroDoc), usuarioSesion.tipoDocEmp, parseInt(usuarioSesion.numeroDocEmp));
         return request;
     }

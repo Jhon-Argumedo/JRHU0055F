@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/model/auth.service';
+import { SitioTrabajador } from 'src/app/model/sitio-trabajador';
 
 @Component({
   selector: 'app-error500',
@@ -7,4 +9,11 @@ import { Component } from '@angular/core';
 })
 export class Error500Component {
 
+  constructor(private authService:AuthService) { }
+
+  ngOnInit(): void {
+    if (!this.authService.getIsAuthenticated()) {
+      window.location.href = SitioTrabajador.URL;
+    }
+  }
 }
